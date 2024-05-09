@@ -158,25 +158,25 @@ def sitter_delete(request, id):
 @login_required
 def sitter_arrival(request):
     if request.method == 'POST':
-        form = Sitterarrivalform(request.POST)
+        form = SitterArrivalForm(request.POST)
         if form.is_valid():
             sitter_arrival = form.save(commit=False)
             sitter_arrival.save()
             form.save_m2m()
-
             sitter_arrival.calculate_total_babies()
 
             messages.success(request, 'Attendance successful')
             return redirect('/sitterarrival')
     else:
-        form = Sitterarrivalform()
+        form = SitterArrivalForm()
     return render(request, 'sitterarrival.html', {'form': form})
 
 @login_required
 def sitter_arrival_list(request):
-    sitter_arrival_list = Arrivalsitter.objects.all()
-    return render(request,'sitter_arrival_list.html', {'sitter_arrival_list': sitter_arrival_list})
-
+    sitter_arrival_list = Arrivalsitter.objects.prefetch_related('Assigned_Babies').all()
+    print(sitter_arrival_list)  # Add this line for debugging
+    return render(request, 'sitter_arrival_list.html', {'sitter_arrival_list': sitter_arrival_list})
+   
 #tables(babies)
 @login_required
 def baby_list(request):

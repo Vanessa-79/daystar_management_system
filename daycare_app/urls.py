@@ -11,7 +11,7 @@ path('login/',auth_views.LoginView.as_view(template_name ='login.html'), name = 
 path('logout', views.logout_view, name='logout'),
 
 
-
+ 
  #babies
 path('babie/', views.Babie, name='babie'),
 path('baby_list/', views.baby_list, name='baby_list'),

@@ -47,17 +47,16 @@ class AddPayment(ModelForm):
         model = BabyPayment
         fields = '__all__'
 
-class Sitterarrivalform(forms.ModelForm):
+class SitterArrivalForm(forms.ModelForm):
     class Meta:
         model = Arrivalsitter
-        fields = ['Sitter_name', 'Arrival_Date', 'Assigned_Babies', 'Status']
-        widgets = {
-            'Assigned_Babies': forms.Select(attrs={'class': 'form-select'})
-        }
+        fields = ['Sitter_name', 'Arrival_Date', 'Assigned_Babies']  # Include the 'Assigned_Babies' field in the form
 
-    
-
-
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Populate the choices for the 'Assigned_Babies' field with the available baby names
+        self.fields['Assigned_Babies'].queryset = Babie_registration.objects.all()
+        
 class SitterPaymentForm(ModelForm):
     class Meta:
         model = SitterPayment

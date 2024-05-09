@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.db.models import Count
 from django.contrib.auth.models import User
 import datetime
 import re
@@ -92,16 +93,8 @@ class Arrivalsitter(models.Model):
     Status = models.CharField(max_length=10)
 
     def calculate_total_babies(self):
-        if self.Assigned_Babies:  # Check if there are assigned babies
-            return 1  # If assigned, return 1
-        else:
-            return 0
-
-    def save(self, *args, **kwargs):
-        # Calculate the total babies attended before saving
-        self.Total_Babies_Attended = self.calculate_total_babies()
-        super().save(*args, **kwargs)
-
+        return self.Assigned_Babies.count() 
+    
     def __str__(self):
         return str(self.Sitter_name)
 
