@@ -1,0 +1,155 @@
+{% extends 'base.html' %} 
+{% load crispy_forms_tags %} 
+{% block content %}
+
+<style>
+  .container {
+    padding-top: 20px;
+    margin-top: 10px;
+    max-width: 950px;
+    background-color: #abc7e5;
+    padding: 20px;
+    margin-left: 90px;
+  }
+
+  h2 {
+    text-align: center;
+    color: white; 
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white; 
+  }
+
+  th,
+  td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    white-space: nowrap;
+  }
+
+  th {
+    background-color: #4CAF50; 
+    color: white; 
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2; 
+  }
+
+  .modal-header {
+    background-color: #594caf; 
+    color: white; 
+  }
+</style>
+
+<!-- Search Form -->
+<form method="GET" action="#" class="mb-3">
+  <div class="input-group" style="margin-left: 40px; width: 80%; margin-bottom: 10px;">
+      <input type="text" class="form-control" placeholder="Search Babies" name="search_query">
+      <button class="btn btn-outline-secondary" type="submit">Search</button>
+  </div>
+</form>
+
+<!-- Filter Form -->
+<form method="GET" action="#" class="mb-3">
+  <div class="input-group" style="margin-left: 40px; width: 80%; margin-bottom: 10px;">
+    <select class="form-select" name="filter_option">
+      <option value="">Select..</option>
+      <option value="specific_person">Females</option>
+      <option value="males_only">Males Males</option>
+    </select>
+    <button class="btn btn-outline-secondary" type="submit">Apply Filter</button>
+  </div>
+</form>
+
+<!-- Sitter Button -->
+<a href="{% url 'sitter_arrival' %}" class="btn  mb-3" style="margin-left: 40px; background-color: #658ecc; color: white;">Add Sitter</a>
+
+<div class="container" style="margin-top: 90px;">
+  <h2 style="color: black;">On Duty Sitters</h2>
+  <table class="table table-striped" style="width: 90%; margin-left: 20px;">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Sitter No</th>
+            <th scope="col">Name</th>
+            <th scope="col">Date</th>
+            <th scope="col">Assigned Babies</th>
+            <th scope="col">Total Babies Attended</th>
+            <th scope="col">Status</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for sitter in sitter_arrival_list %}
+        <tr>
+            <th scope="row">{{ sitter.id }}</th>
+            <td>S{{ sitter.Sitter_Number }}</td>
+            <td>{{ sitter.Sitter_name }}</td>
+            <td>{{ sitter.Arrival_Date }}</td>
+            <td>
+              {% for baby in sitter.Assigned_Babies.all %}
+                {{ baby.baby_name }}{% if not forloop.last %}, {% endif %}
+              {% empty %}
+                No babies assigned
+              {% endfor %}
+            </td>            
+            <td>{{ sitter.calculate_total_babies }}</td>
+            <td>{{ sitter.Status }}</td>
+            <td style="white-space: nowrap;">
+                <div class="btn-group" role="group">
+                    <a href="#" class="btn  mr-1 btn-info" style="background-color: #5679C0;" data-bs-toggle="modal" data-bs-target="#myModal{{ sitter.id }}">
+                        <i class="fa-solid fa-circle-info fa-lg" style="color: white;"></i>
+                    </a>
+                    <a class="btn mr-1 btn-warning" style="background-color: #5679C0;" href="{% url 'sitter_edit' sitter.id %}">
+                        <i class="fa-solid fa-pen-to-square fa-lg" style="color: white;"></i>
+                    </a>
+                    <form action="{% url 'sitter_delete' sitter.id %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn mr-1 btn-danger" style="background-color: #5679C0;">
+                            <i class="fa-solid fa-trash fa-lg" style="color: white;"></i>
+                        </button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% for sitter in sitter_arrival_list %}
+<!-- Modal -->
+<div class="modal fade" id="myModal{{ sitter.id }}" tabindex="-1" role="dialog" aria-labelledby="myModallabel1" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Sitter: {{ sitter.Sitter_name }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ul class="list-unstyled">
+          <li>Sitter No: <strong>{{ sitter.Sitter_Number }}</strong></li>
+          <li>Sitter Name: <strong>{{ sitter.Sitter_name }}</strong></li>
+          <li>Arrival Date: <strong>{{ sitter.Arrival_Date }}</strong></li>
+          <li>Total Babies Attended: <strong>{{ sitter.calculate_total_babies }}</strong></li>
+          <li>Status: <strong>{{ sitter.Status }}</strong></li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+{% endblock %}

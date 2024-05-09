@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+  .container {
+    padding-top: 20px;
+    margin-top: 20px;
+    max-width: 950px;
+    background-color: #abc7e5;
+    padding: 20px;
+    margin-left: 90px;
+  }
+
+  h2 {
+    text-align: center;
+    color: black; 
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #cddef0; 
+  }
+
+  th,
+  td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    white-space: nowrap;
+  }
+
+  th {
+    background-color: #4CAF50; 
+    color: white; 
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2; 
+  }
+
+  /* Button Styles */
+  .btn-issue {
+    background-color: #5679C0;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 2px 0px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  .btn-issue:hover {
+    background-color: #4568b7;
+  }
+
+  .btn-issue a {
+    color: white; /* Change link color to white */
+    text-decoration: none; /* Remove underline */
+  }
+
+  .btn-issue a:hover {
+    color: white; /* Change link color to white on hover */
+    text-decoration: none; /* Remove underline on hover */
+  }
+
+</style>
+
+<!-- Search Form -->
+<form method="GET" action="#" class="mb-3">
+  <div class="input-group" style="margin-left: 40px; width: 80%; margin-bottom: 10px;">
+      <input type="text" class="form-control" placeholder="Search Babies" name="search_query">
+      <button class="btn btn-outline-secondary" type="submit">Search</button>
+  </div>
+</form>
+
+<!-- Filter Form -->
+<form method="GET" action="#" class="mb-3">
+  <div class="input-group" style="margin-left: 40px; width: 80%; margin-bottom: 10px;">
+    <select class="form-select" name="filter_option">
+      <option value="">Select..</option>
+      <option value="specific_person">Females</option>
+      <option value="males_only">Males Males</option>
+    </select>
+    <button class="btn btn-outline-secondary" type="submit">Apply Filter</button>
+  </div>
+</form>
+
+<!-- Sitter Button -->
+<a href="{% url 'procurement' %}" class="btn  mb-3" style="margin-left: 40px; background-color: #658ecc; color: white;">Add Item</a>
+
+<div class="container">
+  <h2>Items in Stock</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Item name</th>
+        <th scope="col">Quantity in stock</th>
+        <th scope="col">Total amount</th>
+        <th scope="col">Date of purchase</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in item_list %}
+      <tr>
+        <th scope="row">{{ item.id }}</th>
+        <td>{{ item.item_name }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.Total_amount }}</td>
+        <td>{{ item.Date_of_purchase }}</td>
+        <td>
+          <div class="btn-group" role="group">
+            <button type="button" class="btn-issue mr-1">
+              <a href="{% url 'issue_out' pk=item.id %}">Issue Out</a>
+            </button>
+
+            <button type="button" class="btn-issue mr-1">
+              <a href="{% url 'issue_in' pk=item.id %}">Issue In</a>
+            </button>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

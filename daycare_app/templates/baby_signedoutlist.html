@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    /* Modal Styles */
+    .modal-dialog {
+        max-width: 800px;
+    }
+    
+    .modal-content {
+        border-radius: 10px;
+    }
+    
+    .modal-header {
+        background-color: #594caf;
+        color: white;
+        border-radius: 10px 10px 0 0;
+    }
+    
+    .modal-body {
+        padding: 20px;
+    }
+    
+    .modal-footer {
+        border-top: none;
+        border-radius: 0 0 10px 10px;
+    }
+    
+    .btn-close {
+        color: white;
+    }
+    
+    /* Adjust modal size for small screens */
+    @media (max-width: 576px) {
+        .modal-dialog {
+            max-width: calc(100% - 20px);
+            margin: 10px;
+        }
+    }
+    
+    /* Table Styles */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    th,
+    td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+        white-space: nowrap;
+    }
+    
+    th {
+        background-color: #4CAF50;
+        color: white;
+        font-size: 10px;
+    }
+    
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+    
+    
+    table {
+        margin-top: 20px;
+    }
+
+    h2{
+        text-align: center;
+    }
+</style>
+
+
+<!-- Search Form -->
+<form method="GET" action="#" class="mb-3">
+    <div class="input-group" style="margin-left: 40px; width: 80%; margin-bottom: 10px;">
+        <input type="text" class="form-control" placeholder="Search Babies" name="search_query">
+        <button class="btn btn-outline-secondary" type="submit">Search</button>
+    </div>
+</form>
+
+<!-- Add Baby Button -->
+<a href="#" class="btn btn-primary mb-3" style="margin-left: 40px; background-color: #5679C0; color: white;">Back</a>
+
+<!-- Display the search query -->
+{% if search_query %}
+<p>Search Results for: "{{ search_query }}"</p>
+{% endif %}
+
+<h2>Signed Out Babies</h2>
+<div class="container">
+    <table class="table table-striped" style="width: 90%; margin-left: 20px;">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Departure Time</th>
+                <th scope="col">Picked By</th>
+                <th scope="col">Comment</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for baby in baby_signedoutlist %}
+            <tr>
+                <th scope="row">{{ baby.id }}</th>
+                <td>{{ baby.baby_name }}</td>
+                <td>{{ baby.departure_time }}</td>
+                <td>{{ baby.person_taking_baby }}</td>
+                <td>{{ baby.comment }}</td>
+                <td>
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-success mr-1" style="background-color: #5679C0;" data-bs-toggle="modal"
+                            data-bs-target="#myModal{{ baby.id }}">
+                            <i class="fa-solid fa-circle-info fa-lg"></i>
+                        </button>
+
+                        <a class="btn btn-warning mr-1" style="background-color: #5679C0;" href="{% url 'edit_baby' baby.id %}">
+                            <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                        </a>
+
+                        <button type="button" class="btn btn-danger" style="background-color: #5679C0;" data-bs-toggle="modal"
+                            data-bs-target="#delete{{ baby.id }}">
+                            <i class="fa-solid fa-trash fa-lg"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% for baby in baby_signedoutlist %}
+<!-- Modal -->
+<div class="modal fade" id="myModal{{ baby.id }}" tabindex="-1" aria-labelledby="myModallabel{{ baby.id }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Baby: {{ baby.baby_name }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-unstyled">
+                    <li>Name: <strong>{{ baby.baby_name }}</strong></li>
+                    <li>Departure Time: <strong>{{ baby.departure_time }}</strong></li>
+                    <li>Picked By: <strong>{{ baby.person_taking_baby }}</strong></li>
+                    <li>Comment: <strong>{{ baby.comment }}</strong></li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="delete{{ baby.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ baby.id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel{{ baby.id }}">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the baby "{{ baby.baby_name }}"?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form method="post" action="{% url 'delete_baby' baby.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}

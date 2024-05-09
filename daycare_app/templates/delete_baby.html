@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Delete Baby</h2>
+<div class="container">
+    <p>Are you sure you want to delete the baby "{{ baby.Name }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form | crispy }}
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a href="{% url 'baby_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+{% endblock %}

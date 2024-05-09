@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+  .container {
+    padding-top: 20px;
+    margin-top: 20px;
+    max-width: 950px;
+    background-color: #abc7e5;
+    padding: 20px;
+    margin-left: 90px;
+  }
+
+  h2 {
+    text-align: center;
+    color: black; 
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #cddef0; 
+  }
+
+  th,
+  td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    white-space: nowrap;
+  }
+
+  th {
+    background-color: #4CAF50; 
+    color: white; 
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2; 
+  }
+
+  
+</style>
+
+<!-- Search Form -->
+<form method="GET" action="#" class="mb-3">
+  <div class="input-group" style="margin-left: 40px; width: 80%; margin-bottom: 10px;">
+      <input type="text" class="form-control" placeholder="Search Babies" name="search_query">
+      <button class="btn btn-outline-secondary" type="submit">Search</button>
+  </div>
+</form>
+
+<!-- Filter Form -->
+<form method="GET" action="#" class="mb-3">
+  <div class="input-group" style="margin-left: 40px; width: 80%; margin-bottom: 10px;">
+    <select class="form-select" name="filter_option">
+      <option value="">Select..</option>
+      <option value="specific_person">Females</option>
+      <option value="males_only">Males Males</option>
+      
+    </select>
+    <button class="btn btn-outline-secondary" type="submit">Apply Filter</button>
+  </div>
+</form>
+
+<!-- Sitter Button -->
+<a href="{% url 'sitter' %}" class="btn  mb-3" style="margin-left: 40px; background-color: #658ecc; color: white;">Add Sitter</a>
+
+
+<div class="container">
+  <h2>List of registered sitters</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Sitter No</th>
+        <th scope="col">Name</th>
+        <th scope="col">Gender</th>
+        <th scope="col">Contact</th>
+        <th scope="col">Religion</th>
+        <th scope="col">Location</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for sitter in sitters_list %}
+      <tr>
+        <th scope="row">{{ sitter.id }}</th>
+        <td>S{{ sitter.Sitter_No }}</td>
+        <td>{{ sitter.Name }}</td>
+        <td>{{ sitter.Gender }}</td>
+        <td>{{ sitter.Sitter_Contact }}</td>
+        <td>{{ sitter.Religion }}</td>
+        <td>{{ sitter.Location }}</td>
+        <td>
+          <div class="btn-group" role="group">
+            <button type="button" class="btn  mr-1" style="background-color: #5679C0;" data-bs-toggle="modal" data-bs-target="#myModal{{ sitter.id }}">
+              <i class="fa-solid fa-circle-info fa-lg" style="color: white;"></i>
+            </button>
+
+            <!-- Modal -->
+            <div class="modal" id="myModal{{ sitter.id }}" tabindex="-1" aria-labelledby="myModallabel1" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Sitter: {{ sitter.Name }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true"></span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <ul class="list-unstyled">
+                      <li>Sitter No: <strong>{{ sitter.Sitter_No }}</strong></li>
+                      <li>Name: <strong>{{ sitter.Name }}</strong></li>
+                      <li>Gender: <strong>{{ sitter.Gender }}</strong></li>
+                      <li>Contact: <strong>{{ sitter.Contact }}</strong></li>
+                      <li>Religion: <strong>{{ sitter.Religion }}</strong></li>
+                      <li>Location: <strong>{{ sitter.Location }}</strong></li>
+                    </ul>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <a class="btn  mr-1" style="background-color: #5679C0;" href="{% url 'sitter_edit' sitter.id %}">
+              <i class="fa-solid fa-pen-to-square fa-lg" style="color: white;"></i>
+            </a>
+
+            <button type="button" class="btn " style="background-color: #5679C0;" data-bs-toggle="modal" data-bs-target="#delete{{ sitter.id }}">
+              <i class="fa-solid fa-trash fa-lg" style="color: white;"></i>
+            </button>
+
+            <!-- Delete Modal -->
+            <div class="modal" id="delete{{ sitter.id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            
+              <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete the sitter "{{ sitter.Name }}"?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Cancel</button>
+                        <form method="post" action="{% url 'sitter_delete' sitter.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

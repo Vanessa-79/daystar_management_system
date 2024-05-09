@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1 style="margin-top: 50px; font-size: 30px; text-align: center;">DOLLS STOCK</h1>
+
+<div class="container">
+  <div class="row mt-4">
+    {% for product in products %}
+    <div class="col-md-4">
+      <div class="card mb-3">
+        <img class="card-img-top" src="https://via.placeholder.com/150" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">Doll Name: {{ product.item_name | title }}</h5>
+          <p class="card-text">Amount : {{ product.unit_price }}</p>
+          <p class="card-text">Quantity : {{ product.total_quantity }}</p>
+          <div class="card-buttons">
+            <form action="{% url 'dollsale' pk=product.pk %}" method="post" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-primary">Sell</button>
+            </form>
+            <!-- Add the following form for adding dolls -->
+            <form action="{% url 'add_doll' pk=product.pk %}" method="post" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-success">Add</button>
+            </form>
+          </div>
+          <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}
