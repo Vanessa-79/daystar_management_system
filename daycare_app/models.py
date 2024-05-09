@@ -129,11 +129,12 @@ class Baby_departure(models.Model):
 class BabyPayment(models.Model):
     name = models.CharField(max_length=100)
     payment_date = models.DateField()
-    full_day = models.BooleanField(default=False)
-    half_day = models.BooleanField(default=False)
-    monthly = models.BooleanField(default=False)
-    total_amount_due = models.DecimalField(max_digits=10, decimal_places=2)
+    full_day = models.BooleanField(default=False, blank=True)
+    half_day = models.BooleanField(default=False,blank=True)
+    monthly = models.BooleanField(default=False, blank=True)
+    total_amount_due = models.DecimalField(max_digits=10, decimal_places=2,blank=True)
     amount_paid = models.DecimalField(max_digits=10, decimal_places=2)
+    remaining_balance = models.DecimalField(max_digits=10, decimal_places=2,default=False,blank=True)
 
     def __str__(self):
         return self.name

@@ -3,13 +3,17 @@
 {% block content %}
 
 <style>
+     /* body {
+  overflow-y: hidden; 
+  overflow-x: hidden; 
+} */
   .container {
     padding-top: 20px;
     margin-top: 10px;
     max-width: 950px;
     background-color: #abc7e5;
     padding: 20px;
-    margin-left: 90px;
+    margin-left: 50px;
   }
 
   h2 {
@@ -20,8 +24,7 @@
   table {
     width: 100%;
     border-collapse: collapse;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 10px;
     background-color: white;
   }
 
@@ -50,7 +53,7 @@
 
 <!-- Search Form -->
 <form method="GET" action="#" class="mb-3">
-  <div class="input-group" style="margin-left: 40px; width: 80%; margin-bottom: 10px;">
+  <div class="input-group" style="margin-left: 10px; width: 80%; margin-bottom: 10px;">
     <input type="text" class="form-control" placeholder="Search Babies" name="search_query">
     <button class="btn btn-outline-secondary" type="submit">Search</button>
   </div>
@@ -78,11 +81,10 @@
     <thead>
         <tr>
             <th scope="col">#</th>
-            <th scope="col">Sitter No</th>
             <th scope="col">Name</th>
             <th scope="col">Date</th>
             <th scope="col">Assigned Babies</th>
-            <th scope="col">Total Babies Attended</th>
+            <th scope="col">Total Babies</th>
             <th scope="col">Status</th>
             <th scope="col">Actions</th>
         </tr>
@@ -91,7 +93,6 @@
         {% for sitter in sitter_arrival_list %}
         <tr>
             <th scope="row">{{ sitter.id }}</th>
-            <td>S{{ sitter.Sitter_Number }}</td>
             <td>{{ sitter.Sitter_name }}</td>
             <td>{{ sitter.Arrival_Date }}</td>
             <td>

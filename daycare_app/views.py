@@ -10,7 +10,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
-import datetime
+from datetime import *
 
 
 
@@ -60,15 +60,16 @@ def home(request):
     count_sitters = Sitter_registration.objects.count()
     count_babies = Babie_registration.objects.count()
     count_departure = Baby_departure.objects.count()
+    count_arrival = Arrivalsitter.objects.filter(Arrival_Date=date.today()).count()
     context = {
         "count_sitters": count_sitters,
         "count_babies": count_babies,
         "count_departure": count_departure,
+        "count_arrival": count_arrival,
+        "data" : {'attended sitters': count_arrival , 'not attended sitters': count_sitters - count_arrival},
     }
     template = loader.get_template("home.html")
     return HttpResponse(template.render(context))
-
-
 
 
 #Babie views(forms)
@@ -238,20 +239,53 @@ def delete_baby(request, baby_id):
 
 #payments
 
+# @login_required
+# def payment_baby(request):
+#     if request.method == 'POST':
+#         form = AddPayment(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('payment_list')  
+#         else:
+#             print(form.errors)
+#     else:
+#         form = AddPayment()
+#     return render(request, 'payment_baby.html', {'form': form})
+
+
+
 @login_required
 def payment_baby(request):
     if request.method == 'POST':
-        form = AddPayment(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('payment_list')  # Redirect to the payment list view
-        else:
-            print(form.errors)
+        # Extract data from the POST request
+        name = request.POST.get('name')
+        payment_date = request.POST.get('date')
+        full_day = request.POST.get('full_day') == 'on'  # Convert checkbox value to boolean
+        half_day = request.POST.get('half_day') == 'on'  # Convert checkbox value to boolean
+        monthly = request.POST.get('monthly') == 'on'  # Convert checkbox value to boolean
+        total_amount_due = request.POST.get('total_amount')
+        amount_paid = request.POST.get('amount_paid')
+        remaining_balance = request.POST.get('remaining_balance')
+
+        # Create a new BabyPayment instance
+        payment = BabyPayment(
+            name=name,
+            payment_date=payment_date,
+            full_day=full_day,
+            half_day=half_day,
+            monthly=monthly,
+            total_amount_due=total_amount_due,
+            amount_paid=amount_paid,
+            remaining_balance=remaining_balance
+        )
+        
+        # Save the instance to the database
+        payment.save()
+
+        # Redirect to a new page to prevent form resubmission
+        return redirect('payment_list')
     else:
-        form = AddPayment()
-    return render(request, 'payment_baby.html', {'form': form})
-
-
+        return render(request, 'payment_baby.html')
 @login_required
 def payment_list(request):
     payment_list = BabyPayment.objects.all()

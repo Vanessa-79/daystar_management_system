@@ -1,101 +1,53 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
 {% block content %}
 
+
 <script>
-    window.onload = function () {
-        document.getElementById("exampleCheck1").addEventListener("change", calculateAmountDue);
-        document.getElementById("exampleCheck2").addEventListener("change", calculateAmountDue);
-        document.getElementById("exampleCheck3").addEventListener("change", calculateAmountDue);
-        document.getElementById("form1").addEventListener("input", calculateAmountDue);
-    };
+    window.onload = function() {
+        document.getElementById("form").value = 0
+        document.getElementById("exampleCheck1").addEventListener("change", calculateamountdue)
+        document.getElementById("exampleCheck2").addEventListener("change", calculateamountdue)
+        document.getElementById("exampleCheck3").addEventListener("change", calculateamountdue)
+        document.getElementById("form1").addEventListener("input", calculateamountdue)
 
-    function calculateAmountDue() {
-        var halfDay = document.getElementById("exampleCheck2").checked;
-        var fullDay = document.getElementById("exampleCheck1").checked;
-        var monthly = document.getElementById("exampleCheck3").checked;
-        var amount = 0;
 
-        if (halfDay) {
-            amount = 10000;
+    }
+
+    function calculateamountdue() {
+        var halfday = document.getElementById("exampleCheck2").checked
+        var fullday = document.getElementById("exampleCheck1").checked
+        var monthly = document.getElementById("exampleCheck3").checked
+        var amount = 0
+        if (halfday == true) {
+            amount = 10000
         }
-        if (fullDay) {
-            amount = 15000;
+        if (fullday == true) {
+            amount = 15000
         }
-        if (monthly) {
-            amount *= 30;
+        if (monthly == true) {
+            amount = amount * 30
         }
-        
-        document.getElementById("form").innerText = amount;
-        
-        var paid = parseInt(document.getElementById("form1").value) || 0; // Convert to integer or default to 0
-        console.log(paid);
-        
-        var due = amount - paid;
-        document.getElementById("form2").innerText = due;
+        document.getElementById("form").value = amount
+        var paid = document.getElementById("form1").value
+        console.log(document.getElementById("form1").value)
+        var due = amount - paid
+        document.getElementById("form2").value = due
+
     }
 </script>
-
-{% for message in messages %}
-<div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: #0E98E7;">
-    {{ message }}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-{% endfor %}
-
-<div class="babe-form">
-    <div class="form-container">
-        <h2>BABIE PAYMENT</h2>
-        <hr>
-        <div class="container">
-            <form method="POST" action="{% url 'payment_list' %}">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Name</label>
-                    <input type="text" class="form-control" id="exampleInputEmail1" name="name" aria-describedby="emailHelp" placeholder="Name">
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputPassword1">Payment Date</label>
-                    <input type="date" class="form-control" id="exampleInputPassword1" name="payment_date" placeholder="Date">
-                </div>
-                <div class="form-check form-check-inline">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck1" name="full_day">
-                    <label class="form-check-label" for="exampleCheck1">Full day</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck2" name="half_day">
-                    <label class="form-check-label" for="exampleCheck2">Half day</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck3" name="monthly">
-                    <label class="form-check-label" for="exampleCheck3">Monthly</label>
-                </div>
-                <div class="form-group">
-                    <label for="form">Total Amount Due</label>
-                    <div class="form-control" id="form"></div>
-                </div>
-                <div class="form-group">
-                    <label for="form1">Amount Paid</label>
-                    <input type="text" class="form-control" id="form1" name="amount_paid">
-                </div>
-                <div class="form-group">
-                    <label for="form2">Remaining Balance</label>
-                    <div class="form-control" id="form2"></div>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-        </div>
-    </div>
-</div>
 <style>
     /* Add your custom styles here */
     .container {
-        width: 98%;
+        width: 95%;
         padding: 10px;
         border: 1px solid #ccc;
         margin-top: 10px;
         border-radius: 5px;
         background-color: #cddef0;
         margin-top: 0;
+        margin-right: 50%;
         color: black;
     }
 
@@ -104,11 +56,8 @@
         width: 70%;
         border-radius: 20px;
         padding: 20px;
-        margin: 0 auto;
-        /* Center the form horizontally */
-        margin-top: 50px;
-        /* Adjust top margin for spacing */
-        line-height: 20px;
+        margin: 50px auto;
+        
     }
 
     .form-container h2 {
@@ -116,75 +65,36 @@
         text-align: center;
         font-weight: bolder;
         font-style: inter;
-        margin-top: 5px;
+        margin-top: 10px;
         color: black;
     }
 
     .babe-form {
-        width: 500px;
-        margin: 0 auto;
-        /* Center the form horizontally */
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 20px;
     }
 
     .babe-form label {
         font-weight: bold;
     }
 
-    hr {
-        width: 70%;
-        margin: auto;
-        margin-top: 10px;
-        margin-bottom: 10px;
-    }
-
-    .babe-form button[type="submit"] {
-        width: 30%;
+    .babe-form button {
+        grid-column: span 2; 
+        width: 50%;
         padding: 10px;
         border: none;
         border-radius: 5px;
-        background-color: #5679C0;
-        /* Background color */
+        background-color: #658ecc;
         color: #fff;
-        /* Text color */
         font-size: 16px;
         cursor: pointer;
-        margin-top: 5px;
         margin-left: 100px;
-        transition: background-color 0.3s;
-        /* Smooth transition for hover effect */
     }
-
-    .babe-form button[type="submit"]:hover {
-        background-color: #7ab0ea;
-        /* New background color on hover */
-    }
-
-    .form-check-inline {
-    display: inline-block !important; /* Ensure the style is applied */
-    margin-right: 10px; /* Add spacing between checkboxes */
-}
-
-
-
-.form-group .form-check-inline {
-    display: inline-block !important; /* Ensure the style is applied */
-    margin-right: 10px; /* Add spacing between checkboxes */
-}
-
-
-    /* Increase the width of the input fields */
-    .form-group input[type="text"],
-    .form-group input[type="date"],
-    .form-group input[type="checkbox"] {
-        width: 100%;
-        height: 30px;
-        margin-bottom: 10px;
-        /* Add spacing between input fields */
-    }
-
 
     
-  .alert {
+
+    .alert {
   position: fixed;
   top: 70px; /* Adjust this value to increase margin-top */
   right: 20px;
@@ -222,8 +132,9 @@
   transform: scale(1.2);
 }
 
-</style>
 
+    
+</style>
 
 
 {% for message in messages %}
@@ -233,6 +144,70 @@
 </div>
 {% endfor %}
 
+<div class="babe-form">
+    <div class="form-container">
+
+      
+    
+        <div class="container">
+            <h2 >BABIE PAYMENT</h2>
+            <form method="POST" action="/payment_baby/" enctype="multipart/form-data">
+                  {% csrf_token %}
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Name</label>
+                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                        placeholder="Name" name="name">
+
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Payment Date</label>
+                    <input type="date" name="date" class="form-control" id="exampleInputPassword1" placeholder="Date">
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                    <label class="form-check-label" for="exampleCheck1" name="Full day">Full day</label>
+
+
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="exampleCheck2">
+                    <label class="form-check-label" for="exampleCheck2"name="Half day">Half day</label>
+
+                </div>
+
+                <div class="form-check">
+
+                    <input type="checkbox" class="form-check-input" id="exampleCheck3">
+                    <label class="form-check-label" for="exampleCheck3" name="monthly">Monthly</label>
+
+                </div>
+
+
+                <div class="form-group">
+                    <label for="form">Total Amount Due</label>
+                    <input type="textfield"  name="total_amount" class="form-control" id="form">
+
+                
+                </div>
+
+                <div class="form-group">
+                    <label for="form1">Amount Paid</label>
+                    <input type="textfield" name="amount_paid"class="form-control" id="form1">
+
+
+                </div>
+
+
+                <div class="form-group">
+                    <label for="form2">Remaining Balance</label>
+                    <input type="textfield" name="remaining_balance" class="form-control" id="form2">
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary bg bg-success" style="border: none;">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
 
 
 {% endblock %}

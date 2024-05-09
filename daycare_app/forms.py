@@ -42,6 +42,15 @@ class BabyDepartureForm(forms.ModelForm):
 
 
 #PAYMENTS
+
+
+class BabyPaymentForm(forms.ModelForm):
+    class Meta:
+        model = BabyPayment
+        fields = ['name', 'payment_date', 'full_day', 'half_day', 'monthly', 'total_amount_due', 'amount_paid', 'remaining_balance']
+
+
+        
 class AddPayment(ModelForm):
     class Meta:
         model = BabyPayment
@@ -50,7 +59,7 @@ class AddPayment(ModelForm):
 class SitterArrivalForm(forms.ModelForm):
     class Meta:
         model = Arrivalsitter
-        fields = ['Sitter_name', 'Arrival_Date', 'Assigned_Babies']  # Include the 'Assigned_Babies' field in the form
+        fields = ['Sitter_name', 'Arrival_Date', 'Assigned_Babies', 'Status']  # Include the 'Assigned_Babies' field in the form
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
