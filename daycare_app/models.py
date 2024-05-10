@@ -50,7 +50,7 @@ class Babie_registration(models.Model):
     Location = models.CharField(max_length=80)
     Parent_name = models.CharField(max_length=100, validators=[validate_letters])   
     Brought_by = models.CharField(max_length=200, validators=[validate_letters])
-    Arrival_Time = models.DateTimeField()
+    Arrival_Date = models.DateField(default=timezone.now)
     created_at = models.DateTimeField(auto_now_add=True)
        
     

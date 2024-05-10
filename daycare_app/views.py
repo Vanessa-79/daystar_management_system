@@ -61,12 +61,17 @@ def home(request):
     count_babies = Babie_registration.objects.count()
     count_departure = Baby_departure.objects.count()
     count_arrival = Arrivalsitter.objects.filter(Arrival_Date=date.today()).count()
+    count_arrivalbaby = Babie_registration.objects.filter(Arrival_Date=date.today()).count()
+    data_colors = ["#ff0000", "#00ff00", "#0000ff"]
+    baby_colors = ["#ff0000", "#00ff00", "#0000ff"]
+    
     context = {
         "count_sitters": count_sitters,
         "count_babies": count_babies,
         "count_departure": count_departure,
         "count_arrival": count_arrival,
         "data" : {'attended sitters': count_arrival , 'not attended sitters': count_sitters - count_arrival},
+        "baby" : {'attended babies': count_arrivalbaby},
     }
     template = loader.get_template("home.html")
     return HttpResponse(template.render(context))
