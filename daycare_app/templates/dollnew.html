@@ -3,9 +3,9 @@
 {% load static %}
 {% block content %}
 <style>
-  body {
+  /* body {
     overflow-x: hidden;
-  }
+  } */
 
   /* Add your custom styles here */
   .container {
@@ -117,14 +117,14 @@
 
 <div class="form" style=" margin-left: 200px; margin-top: 5px;">
   <div class="form-container">
-    <h2>ISSUE IN DOLLS</h2>
+    <h2>NEW DOLLS</h2>
     <hr>
     <div class="container">
       <!-- Add form -->
-      <form action="" method="POST" class="babe-form">
+      <form action="" method="POST" class="babe-form" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form | crispy }}
-        <button type="submit">Submit</button>
+        <button type="submit">Save</button>
       </form>
 
 

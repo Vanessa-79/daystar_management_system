@@ -4,6 +4,9 @@
 {% block content %}
 
 <style>
+    body{
+        overflow-x: hidden;
+    }
     /* Modal Styles */
     .modal-dialog {
         max-width: 800px;
@@ -84,7 +87,7 @@
 </form>
 
 <!-- Add Baby Button -->
-<a href="#" class="btn btn-primary mb-3" style="margin-left: 40px; background-color: #5679C0; color: white;">Back</a>
+<a href="{% url 'baby_departure' %}" class="btn btn-primary mb-3" style="margin-left: 40px; background-color: #5679C0; color: white;">Back</a>
 
 <!-- Display the search query -->
 {% if search_query %}

@@ -101,9 +101,15 @@ class AddDoll(forms.ModelForm):
         fields = [ 'recieved_quantity']
 
 
+class DollForm(forms.ModelForm):
+    class Meta:
+        model = Stock
+        fields = ['item_name','total_quantity', 'unit_price', 'doll_image']
+
+
 
 class SellDoll(forms.ModelForm):
     class Meta:
         model = Sellingdoll
-        fields = ['quantity', 'amount_received', 'issued_to', 'sold_quantity']
+        fields = ['sold_quantity','amount_received', 'issued_to', ]
 

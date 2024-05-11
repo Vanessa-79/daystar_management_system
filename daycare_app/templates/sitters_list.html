@@ -4,25 +4,29 @@
 {% block content %}
 
 <style>
+body {
+  overflow-x: hidden;
+}
   .container {
     padding-top: 20px;
     margin-top: 20px;
-    max-width: 950px;
-    background-color: #abc7e5;
+    width: calc(100% - 50px); /* Adjust the width of the container */
+    /* background-color: #abc7e5; */
     padding: 20px;
-    margin-left: 70px;
+    margin-left: 60px; /* Align the container to the right */
+    margin-right: 50px; /* Add margin to the right */
   }
 
   h2 {
     text-align: center;
     color: black; 
+    margin-top: 50px;
   }
 
   table {
-    width: 100%;
+    width: 100%; /* Extend the table to fill the container */
     border-collapse: collapse;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: -60px; /* Adjust margin-left to overlap with the sidebar */
     background-color: #cddef0; 
   }
 
@@ -34,42 +38,41 @@
     white-space: nowrap;
   }
 
-  
-
   tr:nth-child(even) {
     background-color: #f2f2f2; 
   }
 
-  
+  /* Adjustments for the sidebar */
+  .sidebar {
+    margin-left: 0; /* Reduce the space between the sidebar and the table */
+  }
+
+  .modal-header {
+    background-color: #83aad7;
+    color: white;
+  }
 </style>
 
-<!-- Search Form -->
-<form method="GET" action="#" class="mb-3">
-  <div class="input-group" style="margin-left: 40px; width: 80%; margin-bottom: 10px;">
-      <input type="text" class="form-control" placeholder="Search Babies" name="search_query">
-      <button class="btn btn-outline-secondary" type="submit">Search</button>
-  </div>
-</form>
 
-<!-- Filter Form -->
-<form method="GET" action="#" class="mb-3">
-  <div class="input-group" style="margin-left: 40px; width: 80%; margin-bottom: 10px;">
-    <select class="form-select" name="filter_option">
-      <option value="">Select..</option>
-      <option value="specific_person">Females</option>
-      <option value="males_only">Males Males</option>
-      
-    </select>
-    <button class="btn btn-outline-secondary" type="submit">Apply Filter</button>
-  </div>
-</form>
-
+<h2>List of registered sitters</h2>
 <!-- Sitter Button -->
 <a href="{% url 'sitter' %}" class="btn  mb-3" style="margin-left: 40px; background-color: #658ecc; color: white;">Add Sitter</a>
+<!-- <a href="{% url 'sitters_list' %}" class="btn  mb-3" style="margin-left: 100px; background-color: #658ecc; color: white;">Go Back</a> -->
+<a href="{% url 'sitters_list' %}" class="btn btn-secondary mb-3" style="float: right; margin-right: 40px; background-color: #658ecc; color: white;">Go Back</a>
+
+
+<!-- Filter Form -->
+<form method="GET" action="{% url 'sitters_list' %}" class="mb-3">
+  <div class="input-group" style="margin-left: 40px; width: 80%; margin-bottom: 10px;">
+    <input type="text" class="form-control" placeholder="Filter" name="search_query" value="{{ request.GET.search_query }}">
+    <input type="text" class="form-control" placeholder="Filter Gender" name="gender" value="{{ request.GET.gender }}">
+    <button class="btn btn-outline-secondary" type="submit">Filter</button>
+  </div>
+</form>
 
 
 <div class="container">
-  <h2>List of registered sitters</h2>
+  
   <table class="table table-striped">
     <thead>
       <tr>
@@ -114,9 +117,15 @@
                       <li>Sitter No: <strong>{{ sitter.Sitter_No }}</strong></li>
                       <li>Name: <strong>{{ sitter.Name }}</strong></li>
                       <li>Gender: <strong>{{ sitter.Gender }}</strong></li>
-                      <li>Contact: <strong>{{ sitter.Contact }}</strong></li>
+                      <li>Contact: <strong>{{ sitter.Sitter_Contact }}</strong></li>
                       <li>Religion: <strong>{{ sitter.Religion }}</strong></li>
                       <li>Location: <strong>{{ sitter.Location }}</strong></li>
+                      <li>Date of birth: <strong>{{ sitter.Date_of_birth }}</strong></li>
+                      <li>Next of kin: <strong>{{ sitter.Next_of_kin }}</strong></li>
+                      <li>NIN: <strong>{{ sitter.NIN }}</strong></li>
+                      <li>Recommenders name: <strong>{{ sitter.Recommenders_name }}</strong></li>
+                      <li>Recommenders contact: <strong>{{ sitter.Recommenders_contact }}</strong></li>
+                      <li>Level of education : <strong>{{ sitter.Level_of_education  }}</strong></li>
                     </ul>
                   </div>
                   <div class="modal-footer">
@@ -152,7 +161,7 @@
                             data-bs-dismiss="modal">Cancel</button>
                         <form method="post" action="{% url 'sitter_delete' sitter.id %}">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            <button type="submit" class="btn " style="background-color: #83aad7;">Delete</button>
                         </form>
                     </div>
                 </div>

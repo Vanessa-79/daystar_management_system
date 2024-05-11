@@ -49,8 +49,13 @@ path('paymentsitter_list/', views.paymentsitter_list, name='paymentsitter_list')
 
 #dolls
 path('doll_stock/', views.doll_stock, name='doll_stock'),
-path('dolladd/', views.add_doll, name='add_doll'),
+path('dolladd/<int:pk>/', views.add_doll, name='add_doll'),
 path('dollsale/<int:pk>/', views.dollsale, name='dollsale'),
+path('delete_doll/<int:pk>/', views.doll_delete, name='delete_doll'),
+path('add_newdoll/<int:pk>/',views.add_newdoll, name='add_newdoll'),
+path('update_doll/<int:pk>/', views.update_doll, name='update_doll'),
+path('doll_sell_list/', views.doll_sell_list, name='doll_sell_list'),
+path('receipt/<int:pk>/', views.receipt, name='receipt'),
 
 
 #procurement

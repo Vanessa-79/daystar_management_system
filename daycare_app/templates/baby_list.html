@@ -5,29 +5,31 @@
 
 <style>
     body {
-  overflow-y: hidden; 
+
   overflow-x: hidden; 
 }
-    .container {
-        padding-top: 20px;
-        margin-top: 20px;
-        width: 110%;
-        background-color: #abc7e5;
-        padding: 20px;
-        margin-left: 0;
-    }
+.container {
+    padding-top: 20px;
+    margin-top: 20px;
+    width: calc(100% - 250px); /* Adjusted width considering the sidebar width */
+    padding: 20px;
+    margin-left: 2px; /* Ensure content doesn't overlap with the sidebar */
+    margin-right: 20px; /* Add margin to the right */
+    background-color: #f8f9fa; /* Match background color with the body */
+}
+
+table {
+    width: 100%; /* Make the table occupy the full width of its container */
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #cddef0;
+}
 
     h2 {
         text-align: center;
         color: black;
-    }
-
-    table {
-        width: 50%;
-        border-collapse: collapse;
-        margin-left: auto;
-        margin-right: auto;
-        background-color: #cddef0;
+        margin-top: 50px;
     }
 
     th,
@@ -49,26 +51,27 @@
     }
 </style>
 
+
+<h2>Overall Babies</h2>
+<!-- Sitter Button -->
+<a href="{% url 'babie' %}" class="btn  mb-3" style="margin-left: 40px; background-color: #658ecc; color: white;">Add Babie</a>
+<!-- <a href="{% url 'sitters_list' %}" class="btn  mb-3" style="margin-left: 100px; background-color: #658ecc; color: white;">Go Back</a> -->
+<a href="{% url 'baby_list' %}" class="btn btn-secondary mb-3" style="float: right; margin-right: 40px; background-color: #658ecc; color: white;">Go Back</a>
+
+
 <!-- Filter Form -->
-<form method="GET" action="#" style="margin-top: 5%; margin-left: 10px;">
-    <div class="input-group">
-        <select class="form-select" name="filter_option">
-            <option value="">Select Filter Option</option>
-            <option value="specific_person">Specific Person</option>
-            <option value="males_only">Males Only</option>
-            <!-- Add more options as needed -->
-        </select>
-        <button class="btn btn-outline-secondary" type="submit">Apply Filter</button>
-    </div>
+<form method="GET" action="{% url 'baby_list' %}" class="mb-3">
+  <div class="input-group" style="margin-left: 40px; width: 80%; margin-bottom: 10px;">
+    <input type="text" class="form-control" placeholder="Filter" name="search_query" value="{{ request.GET.search_query }}">
+    <input type="text" class="form-control" placeholder="Filter Gender" name="gender" value="{{ request.GET.gender }}">
+    <button class="btn btn-outline-secondary" type="submit">Filter</button>
+  </div>
 </form>
 
-<!-- Add Baby Button -->
-<a href="{% url 'babie' %}" class="btn mb-3"
-    style="background-color: #5679C0; color: white; margin-left: 20px; margin-bottom: 10px;">Add Baby</a>
+
 
 <div class="container">
 
-    <h2>List of registered Babies</h2>
 
     <table class="table table-striped" style="width: 90%;">
         <!-- Inside the table -->
@@ -79,9 +82,9 @@
                 <th scope="col">Name</th>
                 <th scope="col">Gender</th>
                 <th scope="col">Age</th>
-                <th scope="col">Location</th>
+                <!-- <th scope="col">Location</th> -->
                 <th scope="col">Period of Stay</th>
-                <th scope="col">Parent Name</th>
+                <!-- <th scope="col">Parent Name</th> -->
                 <th scope="col">Brought By</th>
                 <th scope="col">Arrival Time</th>
                 <th scope="col">Actions</th>
@@ -95,11 +98,11 @@
                 <td>{{ baby.Baby_Name }}</td>
                 <td>{{ baby.Gender }}</td>
                 <td>{{ baby.Age }}</td>
-                <td>{{ baby.Location }}</td>
+                <!-- <td>{{ baby.Location }}</td> -->
                 <td>{{ baby.Period_of_stay }}</td>
-                <td>{{ baby.Parent_name }}</td>
+                <!-- <td>{{ baby.Parent_name }}</td> -->
                 <td>{{ baby.Brought_by }}</td>
-                <td>{{ baby.Arrival_Time }}</td>
+                <td>{{ baby.Arrival_Date }}</td>
                 <td>
                     <div class="btn-group" role="group">
                         <a href="#" class="btn btn-success mr-1" style="background-color: #5679C0;"
@@ -125,7 +128,7 @@
                                             <li>Period of Stay: <strong>{{ baby.Period_of_stay }}</strong></li>
                                             <li>Age: <strong>{{ baby.Age }}</strong></li>
                                             <li>Parent_name: <strong>{{ baby.Parent_name }}</strong></li>
-                                            <li>Arrival_Time: <strong>{{ baby.Arrival_Time }}</strong></li>
+                                            <li>Arrival_Date: <strong>{{ baby.Arrival_Date }}</strong></li>
                                             <li>Brought_by: <strong>{{ baby.Brought_by }}</strong></li>
                                         </ul>
                                     </div>
@@ -158,7 +161,7 @@
                                             aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <p>Are you sure you want to delete the baby "{{ baby.Name }}"?</p>
+                                        <p>Are you sure you want to delete the baby "{{ baby.Baby_Name }}"?</p>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"

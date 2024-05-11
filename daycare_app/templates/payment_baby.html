@@ -3,9 +3,8 @@
 {% load static %}
 {% block content %}
 
-
 <script>
-    window.onload = function() {
+    window.onload = function () {
         document.getElementById("form").value = 0
         document.getElementById("exampleCheck1").addEventListener("change", calculateamountdue)
         document.getElementById("exampleCheck2").addEventListener("change", calculateamountdue)
@@ -38,33 +37,36 @@
     }
 </script>
 <style>
+    body{
+        overflow-x: hidden;
+    }
     /* Add your custom styles here */
     .container {
-        width: 95%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        margin-top: 10px;
+        width: 100%;
+        padding: 20px;
         border-radius: 5px;
         background-color: #cddef0;
-        margin-top: 0;
-        margin-right: 50%;
         color: black;
+        margin-top: 20px;
     }
 
     .form-container {
-        background-color: #abc7e5;
-        width: 70%;
-        border-radius: 20px;
-        padding: 20px;
-        margin: 50px auto;
-        
-    }
+    background-color: #abc7e5;
+    width: 80%;
+    border-radius: 20px;
+    padding: 20px;
+    margin: 50px auto; /* Center the form horizontally */
+    display: flex;
+    justify-content: center; /* Center the form horizontally */
+    margin-top: 40px;
+    margin-right: 10%;
+}
+
 
     .form-container h2 {
-        font-size: 20px;
+        font-size: 24px;
         text-align: center;
-        font-weight: bolder;
-        font-style: inter;
+        font-weight: bold;
         margin-top: 10px;
         color: black;
     }
@@ -80,62 +82,35 @@
     }
 
     .babe-form button {
-        grid-column: span 2; 
-        width: 50%;
+        grid-column: span 2;
+        width: 100%;
         padding: 10px;
         border: none;
         border-radius: 5px;
-        background-color: #658ecc;
-        color: #fff;
+        background-color: #5679C0;
+        color: white;
         font-size: 16px;
         cursor: pointer;
-        margin-left: 100px;
     }
 
-    
+    .form-check-group {
+        display: flex;
+    }
 
-    .alert {
-  position: fixed;
-  top: 70px; /* Adjust this value to increase margin-top */
-  right: 20px;
-  z-index: 1000;
-  opacity: 0; /* Initially hide the alert */
-  transition: opacity 0.5s ease; /* Add transition effect */
-}
+    .form-check {
+        margin-right: 20px;
+    }
 
-.alert.show {
-  opacity: 1; /* Show the alert when it has the 'show' class */
-}
+    .form-check input[type="checkbox"] {
+        margin-right: 5px;
+    }
 
-.alert-warning {
-  background-color: #658ecc;
-  color: white;
-  border-color: #658ecc;
-}
-
-.alert-dismissible {
-  padding-right: 2.5rem;
-}
-
-.alert button.close {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 0.75rem 1.25rem;
-  background-color: transparent;
-  border: 0;
-  color: inherit;
-  transition: transform 0.3s ease;
-}
-
-.alert button.close:hover {
-  transform: scale(1.2);
-}
-
-
-    
+    .form-check-label {
+        font-weight: normal;
+        margin-bottom: 0;
+        white-space: nowrap;
+    }
 </style>
-
 
 {% for message in messages %}
 <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: #0E98E7;">
@@ -146,68 +121,53 @@
 
 <div class="babe-form">
     <div class="form-container">
-
-      
-    
         <div class="container">
-            <h2 >BABIE PAYMENT</h2>
+            <h2>BABIE PAYMENT</h2>
             <form method="POST" action="/payment_baby/" enctype="multipart/form-data">
-                  {% csrf_token %}
+                {% csrf_token %}
                 <div class="form-group">
                     <label for="exampleInputEmail1">Name</label>
                     <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
                         placeholder="Name" name="name">
-
                 </div>
                 <div class="form-group">
                     <label for="exampleInputPassword1">Payment Date</label>
                     <input type="date" name="date" class="form-control" id="exampleInputPassword1" placeholder="Date">
                 </div>
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                    <label class="form-check-label" for="exampleCheck1" name="Full day">Full day</label>
-
-
+                <div class="form-group">
+                    <label>Choose Payment Option:</label>
+                    <div class="form-check-group">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                            <label class="form-check-label" for="exampleCheck1">Full day</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="exampleCheck2">
+                            <label class="form-check-label" for="exampleCheck2">Half day</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="exampleCheck3">
+                            <label class="form-check-label" for="exampleCheck3">Monthly</label>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck2">
-                    <label class="form-check-label" for="exampleCheck2"name="Half day">Half day</label>
-
-                </div>
-
-                <div class="form-check">
-
-                    <input type="checkbox" class="form-check-input" id="exampleCheck3">
-                    <label class="form-check-label" for="exampleCheck3" name="monthly">Monthly</label>
-
-                </div>
-
-
                 <div class="form-group">
                     <label for="form">Total Amount Due</label>
-                    <input type="textfield"  name="total_amount" class="form-control" id="form">
-
-                
+                    <input type="text" name="total_amount" class="form-control" id="form">
                 </div>
-
                 <div class="form-group">
                     <label for="form1">Amount Paid</label>
-                    <input type="textfield" name="amount_paid"class="form-control" id="form1">
-
-
+                    <input type="text" name="amount_paid" class="form-control" id="form1">
                 </div>
-
-
                 <div class="form-group">
                     <label for="form2">Remaining Balance</label>
-                    <input type="textfield" name="remaining_balance" class="form-control" id="form2">
+                    <input type="text" name="remaining_balance" class="form-control" id="form2">
                 </div>
                 <br>
-                <button type="submit" class="btn btn-primary bg bg-success" style="border: none;">Submit</button>
+                <button type="submit" class="btn  ">Submit</button>
             </form>
         </div>
     </div>
 </div>
-
 
 {% endblock %}

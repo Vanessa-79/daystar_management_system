@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .container {
+        margin-top: 60px;
+    }
+
+    h2{
+        font-size: 30px;
+        text-align: center;
+    }
+</style>
+<div class="container">
+    <h2>DOLL SALES</h2>
+    <hr>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Doll Name</th>
+                <th>Quantity Sold</th>
+                <th>Amount Received</th>
+                <th>Issued To</th>
+                <th>Stock Status</th>
+                <th>Receipt</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sale in doll_sales %}
+            <tr>
+                <td>{{ sale.item.item_name }}</td> <!-- Accessing the item_name attribute of the item field -->
+                <td>{{ sale.sold_quantity }}</td>
+                <td>{{ sale.amount_received }}</td>
+                <td>{{ sale.issued_to }}</td>
+                <td>
+                    {% if sale.item.total_quantity <= 0 %}
+                        Out of Stock
+                    {% elif sale.item.total_quantity <= 20 %}
+                        Stock Soon Getting Done
+                    {% else %}
+                        Still Having Stock
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'receipt' pk=sale.pk %}" class="btn " style="background-color: #5679C0; color: white;"> Generate Receipt</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

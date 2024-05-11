@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipt</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        .receipt-details {
+            margin-bottom: 20px;
+        }
+        .receipt-details p {
+            margin: 5px 0;
+        }
+        .receipt-items {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Receipt</h1>
+        <div class="receipt-details">
+            <p><strong>Receipt Number:</strong> {{ sale.id }}</p>
+            <p><strong>Doll Name:</strong> {{ sale.item }}</p>
+            <p><strong>Date:</strong> {{ sale.date }}</p>
+            <p><strong>Amount Received:</strong> {{ sale.amount_received }}</p>
+            <p><strong>Issued To:</strong> {{ sale.issued_to }}</p>
+        </div>
+
+            </table>
+        </div>
+    </div>
+</body>
+</html>
+
+{% endblock %}

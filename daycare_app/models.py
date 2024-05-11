@@ -173,13 +173,13 @@ class Issueout(models.Model):
 
 
        
-#Dolls
+#Dolls  
 class Stock(models.Model):
     item_name = models.CharField(max_length=100, null=True, blank=True)
     total_quantity = models.IntegerField(default=0, null=True, blank=True)
-    issued_quantity = models.IntegerField(default=0, null=True, blank=True)
     recieved_quantity = models.IntegerField(default=0, null=True, blank=True)
     unit_price = models.IntegerField(default=0, null=True, blank=True)
+    doll_image = models.ImageField(null=True, blank=True, upload_to='images/')
 
     def __str__(self):
         return self.item_name
@@ -187,8 +187,9 @@ class Stock(models.Model):
 class Sellingdoll(models.Model):
     item = models.ForeignKey(Stock, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0, null=True, blank=True)
+    date = models.DateField(default=timezone.now())
     amount_received = models.IntegerField(default=0, null=True, blank=True)
-    issued_to = models.CharField(max_length=100, null=True, blank=True)
+    issued_to = models.ForeignKey(Babie_registration, on_delete=models.CASCADE, null=True, blank=True)
     sold_quantity = models.IntegerField(default=0, null=True, blank=True)
     # unit_price = models.IntegerField(default=0, null=True, blank=True)
 

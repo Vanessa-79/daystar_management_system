@@ -86,9 +86,7 @@
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
                 <th scope="col">Date</th>
-                <th scope="col">Full day</th>
-                <th scope="col">Half Day</th>
-                <th scope="col">Monthly</th>
+                <th scope="col">Stay Type</th>
                 <th scope="col">Amount due</th>
                 <th scope="col">Amount Paid</th>
                 <th scope="col">Actions</th>
@@ -100,9 +98,18 @@
                 <th scope="row">{{ payment.id }}</th>
                 <td>{{ payment.name }}</td>
                 <td>{{ payment.payment_date }}</td>
-                <td>{{ payment.full_day }}</td>
-                <td>{{ payment.half_day }}</td>
-                <td>{{ payment.monthly }}</td>
+                <td>
+                  {% if payment.full_day %}
+                      Full day
+                  {% elif payment.half_day %}
+                      Half day
+                  {% elif payment.monthly %}
+                      Monthly
+                  {% else %}
+                      <!-- If none of the stay types are selected -->
+                      Not specified
+                  {% endif %}
+              </td>
                 <td>{{ payment.total_amount_due }}</td>
                 <td>{{ payment.amount_paid }}</td>
                 <td>

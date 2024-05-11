@@ -1,28 +1,55 @@
 {% extends 'base.html' %}
 {% block content %}
-
+<style>
+  body {
+    overflow-x: hidden;
+  }
+  .card {
+    position: relative;
+  }
+  .card-actions {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+  }
+</style>
 <h1 style="margin-top: 50px; font-size: 30px; text-align: center;">DOLLS STOCK</h1>
+<a href="{% url 'add_newdoll' pk=1 %}" class="btn  mb-3" style="margin-left: 70%; background-color: #658ecc; color: white;">Add new Stock</a>
 
 <div class="container">
   <div class="row mt-4">
     {% for product in products %}
     <div class="col-md-4">
       <div class="card mb-3">
-        <img class="card-img-top" src="https://via.placeholder.com/150" alt="Card image cap">
+        <p class="card-text">
+          {% if product.doll_image  %}
+          <img src="{{ product.doll_image.url }}" alt="Doll Image" style="width: 100px; height: 100px;">
+          <!-- {{ product.doll_image }} -->
+
+          {% endif %}
+
+        </p>
         <div class="card-body">
           <h5 class="card-title">Doll Name: {{ product.item_name | title }}</h5>
-          <p class="card-text">Amount : {{ product.unit_price }}</p>
-          <p class="card-text">Quantity : {{ product.total_quantity }}</p>
+          <p class="card-text">Amount: UGX:{{ product.unit_price }}</p>
+          <p class="card-text">Quantity: {{ product.total_quantity }}</p>
+         
           <div class="card-buttons">
             <form action="{% url 'dollsale' pk=product.pk %}" method="post" style="display: inline;">
               {% csrf_token %}
               <button type="submit" class="btn btn-primary">Sell</button>
+              <a href="{% url 'add_doll' pk=product.id %}" class="btn btn-success">Add</a>
             </form>
-            <!-- Add the following form for adding dolls -->
-            <form action="{% url 'add_doll' pk=product.pk %}" method="post" style="display: inline;">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-success">Add</button>
-            </form>
+          </div>
+          <div class="card-actions">
+            <!-- Update Icon -->
+            <a href="{% url 'update_doll' pk=product.id %}">
+              <i class="fas fa-edit" style="color: blue;"></i>
+            </a>
+            <!-- Delete Icon -->
+            <a href="{% url 'delete_doll' pk=product.id %}">
+              <i class="fas fa-trash-alt" style="color: red;"></i>
+            </a>
           </div>
           <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
         </div>

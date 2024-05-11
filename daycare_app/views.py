@@ -11,6 +11,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from datetime import *
+from django.db.models import Q
+
 
 
 
@@ -129,7 +131,23 @@ def Sitter(request):
 #tables(sitters)
 @login_required
 def sitters_list(request):
+    search_query = request.GET.get('search_query')
+    gender_filter = request.GET.get('gender')
+
     sitters_list = Sitter_registration.objects.all()
+
+    if search_query:
+        sitters_list = sitters_list.filter(
+            Q(Name__icontains=search_query) |  
+            Q(Sitter_No__icontains=search_query) |  
+            Q(Sitter_Contact__icontains=search_query) |  
+            Q(Religion__icontains=search_query) |  
+            Q(Location__icontains=search_query)  
+        )
+
+    if gender_filter:
+        sitters_list = sitters_list.filter(Gender__iexact=gender_filter)  # Use iexact for case-insensitive exact match
+
     return render(request, 'sitters_list.html', {'sitters_list': sitters_list})
 
 
@@ -179,18 +197,46 @@ def sitter_arrival(request):
 
 @login_required
 def sitter_arrival_list(request):
-    sitter_arrival_list = Arrivalsitter.objects.prefetch_related('Assigned_Babies').all()
-    print(sitter_arrival_list)  # Add this line for debugging
+    search_query = request.GET.get('search_query')
+ 
+
+    sitter_arrival_list = Arrivalsitter.objects.all()
+
+    if search_query:
+        sitter_arrival_list = sitter_arrival_list.filter(
+            Q(Sitter_name__Name__icontains=search_query) |  
+            Q(Sitter_Number__icontains=search_query) |  
+            Q(Arrival_Date__icontains=search_query) |  
+            Q(Assigned_Babies__Baby_Name__icontains=search_query)
+
+        )
+
+
     return render(request, 'sitter_arrival_list.html', {'sitter_arrival_list': sitter_arrival_list})
-   
+
+
 #tables(babies)
 @login_required
 def baby_list(request):
-    babies = Babie_registration.objects.all()
-    if 'filter' in request.GET:
-        filter_value = request.GET['filter']
-        babies = babies.filter( )
-    return render(request, 'baby_list.html', {'baby_list': babies})
+    search_query = request.GET.get('search_query')
+    gender_filter = request.GET.get('gender')
+
+    baby_list = Babie_registration.objects.all()
+
+    if search_query:
+        baby_list = baby_list.filter(
+            Q(Baby_Name__icontains=search_query) |  
+            Q(Baby_No__icontains=search_query) |  
+            Q(Age__icontains=search_query) |  
+            Q(Gender__icontains=search_query) |  
+            Q(Period_of_stay__name__icontains=search_query)  
+        )
+
+    if gender_filter:
+        baby_list = baby_list.filter(Gender__iexact=gender_filter)  # Use iexact for case-insensitive exact match
+
+    return render(request, 'baby_list.html', {'baby_list': baby_list})
+
 
 @login_required
 def add_baby(request):
@@ -239,58 +285,52 @@ def delete_baby(request, baby_id):
         baby.delete()
         return redirect('baby_list')
     return render(request, 'confirmation_delete.html', {'baby': baby})
-
-
-
-#payments
-
-# @login_required
-# def payment_baby(request):
-#     if request.method == 'POST':
-#         form = AddPayment(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('payment_list')  
-#         else:
-#             print(form.errors)
-#     else:
-#         form = AddPayment()
-#     return render(request, 'payment_baby.html', {'form': form})
-
-
-
 @login_required
 def payment_baby(request):
     if request.method == 'POST':
-        # Extract data from the POST request
-        name = request.POST.get('name')
-        payment_date = request.POST.get('date')
-        full_day = request.POST.get('full_day') == 'on'  # Convert checkbox value to boolean
-        half_day = request.POST.get('half_day') == 'on'  # Convert checkbox value to boolean
-        monthly = request.POST.get('monthly') == 'on'  # Convert checkbox value to boolean
-        total_amount_due = request.POST.get('total_amount')
-        amount_paid = request.POST.get('amount_paid')
-        remaining_balance = request.POST.get('remaining_balance')
+        form = AddPayment(request.POST)
+        if form.is_valid():
+            # Extract form data
+            name = form.cleaned_data.get('name')
+            payment_date = form.cleaned_data.get('date')
+            full_day = form.cleaned_data.get('full_day')
+            half_day = form.cleaned_data.get('half_day')
+            monthly = form.cleaned_data.get('monthly')
 
-        # Create a new BabyPayment instance
-        payment = BabyPayment(
-            name=name,
-            payment_date=payment_date,
-            full_day=full_day,
-            half_day=half_day,
-            monthly=monthly,
-            total_amount_due=total_amount_due,
-            amount_paid=amount_paid,
-            remaining_balance=remaining_balance
-        )
-        
-        # Save the instance to the database
-        payment.save()
+            # Determine the stay type
+            if full_day:
+                stay_type = 'Full day'
+            elif half_day:
+                stay_type = 'Half day'
+            elif monthly:
+                stay_type = 'Monthly'
+            else:
+                stay_type = 'Not specified'
 
-        # Redirect to a new page to prevent form resubmission
-        return redirect('payment_list')
+            total_amount_due = form.cleaned_data.get('total_amount')
+            amount_paid = form.cleaned_data.get('amount_paid')
+            remaining_balance = form.cleaned_data.get('remaining_balance')
+
+            # Create and save the payment instance
+            payment = BabyPayment(
+                name=name,
+                payment_date=payment_date,
+                full_day=full_day,
+                half_day=half_day,
+                monthly=monthly,
+                total_amount_due=total_amount_due,
+                amount_paid=amount_paid,
+                remaining_balance=remaining_balance
+            )
+            payment.save()
+
+            # Redirect to the payment list view
+            return redirect('payment_list')
     else:
-        return render(request, 'payment_baby.html')
+        form = AddPayment()
+    
+    return render(request, 'payment_baby.html', {'form': form})
+
 @login_required
 def payment_list(request):
     payment_list = BabyPayment.objects.all()
@@ -409,12 +449,17 @@ def issued_in(request, pk):
 @login_required
 def doll_stock(request):
     products = Stock.objects.all().order_by('-id')
-    return render(request, 'doll_stock.html')
+    return render(request, 'doll_stock.html', {'products': products})
 
 
-@login_required
-def add_doll(request):
-    issued_item = Stock.objects.get()
+def add_doll(request, pk):
+    try:
+        issued_item = Stock.objects.get(pk=pk)
+    except Stock.DoesNotExist:
+        # Handle the case where the Stock object with the given primary key does not exist
+        messages.error(request, 'Stock not found.')
+        return redirect('doll_stock')
+    
     form = AddDoll(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
@@ -442,9 +487,66 @@ def dollsale(request, pk):
                 sold_quantity = int(sold_quantity)
                 product.total_quantity -= sold_quantity
                 product.save()
+                
+                # Create a Sellingdoll instance to record the sale
+                Sellingdoll.objects.create(item=product, quantity=sold_quantity, amount_received=form.cleaned_data['amount_received'], issued_to=form.cleaned_data['issued_to'], sold_quantity=sold_quantity)
+                
                 # Logic for selling dolls goes here
                 messages.success(request, 'Stock sold successfully')
-                return redirect('doll_stock')
+                return redirect('doll_sell_list')
     else:
         form = SellDoll()
     return render(request, 'dollsale.html', {'form': form, 'product': product})
+
+def doll_delete(request, pk):
+    stock_item = get_object_or_404(Stock, pk=pk)
+    if request.method == 'POST':
+        stock_item.delete()
+        return redirect('doll_stock')
+    return render(request, 'doll_delete.html', {'stock_item': stock_item})
+
+
+def add_newdoll(request, pk):
+    if request.method == 'POST':
+        form = DollForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('doll_stock')
+    else:
+        form = DollForm()
+    return render(request, 'dollnew.html', {'form': form})
+
+
+# View for updating a doll
+@login_required
+def update_doll(request, pk):
+    # Retrieve the doll object
+    item = get_object_or_404(Stock, pk=pk)
+    
+    # Check if the request method is POST
+    if request.method == 'POST':
+        # Create a form instance and populate it with data from the request
+        form = DollForm(request.POST, instance=item)
+        # Check if the form is valid
+        if form.is_valid():
+            # Save the form data to the database
+            form.save()
+            # Redirect to a success page
+            return redirect('doll_stock')
+    else:
+        # Create a form instance and populate it with data from the doll object
+        form = DollForm(instance=item)
+    
+    # Render the template with the form
+    return render(request, 'doll_update.html', {'form': form})
+
+
+
+def doll_sell_list(request):
+    doll_sales = Sellingdoll.objects.all()
+    return render(request, 'doll_sell_list.html', {'doll_sales': doll_sales})
+
+def receipt(request, pk):
+    sale = get_object_or_404(Sellingdoll, pk=pk)
+    return render(request, 'dollreciept.html', {'sale': sale})
+    
