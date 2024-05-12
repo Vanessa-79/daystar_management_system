@@ -4,81 +4,74 @@
 {% block content %}
 
 <style>
-  .container {
-    padding-top: 20px;
-    margin-top: 20px;
-    max-width: 950px;
-    background-color: #abc7e5;
-    padding: 20px;
-    margin-left: 90px;
-  }
+    body {
+        overflow-x: hidden;
+    }
 
-  h2 {
-    text-align: center;
-    color: black; 
-  }
+    .container {
+        padding-top: 20px;
+        margin-top: 20px;
+        width: calc(100% - 250px);
+        padding: 20px;
+        margin-left: 60px;
+        margin-right: 20px;
+        background-color: #f8f9fa;
+    }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-left: auto;
-    margin-right: auto;
-    background-color: white; 
-  }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: #cddef0;
+    }
 
-  th,
-  td {
-    border: 1px solid #dddddd;
-    text-align: left;
-    padding: 8px;
-    white-space: nowrap;
-  }
+    h2 {
+        text-align: center;
+        color: black;
+        margin-top: 50px;
+    }
 
-  th {
-    background-color: #4CAF50; 
-    color: white; 
-  }
+    th,
+    td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+        white-space: nowrap;
+        width: auto;
+    }
 
-  tr:nth-child(even) {
-    background-color: #f2f2f2; 
-  }
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
 
-  .modal-header {
-    background-color: #594caf; 
-    color: white; 
-  }
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
 </style>
 
-<!-- Search Form -->
-<form method="GET" action="#" class="mb-3">
-  <div class="input-group" style="margin-left: 40px; width: 80%; margin-bottom: 10px;">
-      <input type="text" class="form-control" placeholder="Search Babies" name="search_query">
-      <button class="btn btn-outline-secondary" type="submit">Search</button>
-  </div>
-</form>
-
+<h2>Baby Payments</h2>
 <!-- Filter Form -->
 <form method="GET" action="#" class="mb-3">
-  <div class="input-group" style="margin-left: 40px; width: 80%; margin-bottom: 10px;">
-    <select class="form-select" name="filter_option">
-      <option value="">Select..</option>
-      <option value="specific_person">All</option>
-      <option value="males_only">Completed</option>
-      <option value="males_only">Pending</option>
-      
-    </select>
-    <button class="btn btn-outline-secondary" type="submit">Apply Filter</button>
-  </div>
+    <div class="input-group" style="margin-left: 40px; width: 80%; margin-bottom: 10px;">
+        <select class="form-select" name="filter_option">
+            <option value="">Select..</option>
+            <option value="specific_person">All</option>
+            <option value="males_only">Completed</option>
+            <option value="males_only">Pending</option>
+
+        </select>
+        <button class="btn btn-outline-secondary" type="submit">Apply Filter</button>
+    </div>
 </form>
 
 <!-- Sitter Button -->
-<a href="{% url 'payment_baby' %}" class="btn mb-3" style="margin-left: 40px; background-color: #5679C0;">Add Payment</a>
+<a href="{% url 'payment_baby' %}" class="btn mb-3" style="margin-left: 40px; background-color: #5679C0; color: white; margin-left: 70%;">Add
+    Payment</a>
 
 
 <div class="container">
-    <h2>Baby Payments</h2>
-
-
     <!-- Payment Table -->
     <table class="table table-striped">
         <thead>
@@ -99,88 +92,88 @@
                 <td>{{ payment.name }}</td>
                 <td>{{ payment.payment_date }}</td>
                 <td>
-                  {% if payment.full_day %}
-                      Full day
-                  {% elif payment.half_day %}
-                      Half day
-                  {% elif payment.monthly %}
-                      Monthly
-                  {% else %}
-                      <!-- If none of the stay types are selected -->
-                      Not specified
-                  {% endif %}
-              </td>
+                    {% if payment.full_day %}
+                    Full day
+                    {% elif payment.half_day %}
+                    Half day
+                    {% elif payment.monthly %}
+                    Monthly
+                    {% else %}
+                    <!-- If none of the stay types are selected -->
+                    Not specified
+                    {% endif %}
+                </td>
                 <td>{{ payment.total_amount_due }}</td>
                 <td>{{ payment.amount_paid }}</td>
                 <td>
-                  <div class="btn-group" role="group">
-                    <a href="#" class="btn btn-success mr-1" style="background-color: #5679C0;" data-bs-toggle="modal"
-                        data-bs-target="#myModal{{ baby.id }}">
-                        <i class="fa-solid fa-circle-info fa-lg"></i>
-                    </a>
+                    <div class="btn-group" role="group">
+                        <a href="#" class="btn btn-success mr-1" style="background-color: #5679C0;"
+                            data-bs-toggle="modal" data-bs-target="#myModal{{ baby.id }}">
+                            <i class="fa-solid fa-circle-info fa-lg"></i>
+                        </a>
 
-                    <!-- Information Modal -->
-                    <div class="modal fade" id="myModal{{ baby.id }}" tabindex="-1" aria-labelledby="myModallabel1"
-                        aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Baby Payment Information</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
+                        <!-- Information Modal -->
+                        <div class="modal fade" id="myModal{{ baby.id }}" tabindex="-1" aria-labelledby="myModallabel1"
+                            aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Baby Payment Information</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <ul class="list-unstyled">
+                                            <li>Baby Name: <strong>{{ payment.baby_name }}</strong></li>
+                                            <li>Date: <strong>{{ payment.date }}</strong></li>
+                                            <li>Duration: <strong>{{ payment.payment_rate}}</strong></li>
+                                            <li>Amount Paid: <strong>{{ payment.amount_paid }}</strong></li>
+                                            <li>Paid by: <strong>{{ payment.paid_by }}</strong></li>
+                                            <li>Payment Status: <strong>{{ payment.payment_status }}</strong></li>
+                                        </ul>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                    </div>
                                 </div>
-                                <div class="modal-body">
-                                    <ul class="list-unstyled">
-                                        <li>Baby Name: <strong>{{ payment.baby_name }}</strong></li>
-                                        <li>Date: <strong>{{ payment.date }}</strong></li>
-                                        <li>Duration: <strong>{{ payment.payment_rate}}</strong></li>
-                                        <li>Amount Paid: <strong>{{ payment.amount_paid }}</strong></li>
-                                        <li>Paid by: <strong>{{ payment.paid_by }}</strong></li>
-                                        <li>Payment Status: <strong>{{ payment.payment_status }}</strong></li>
-                                    </ul>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+
+                        <a href="#" class="btn btn-warning mr-1" style="background-color: #5679C0;">
+                            <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                        </a>
+
+                        <button type="button" class="btn btn-danger" style="background-color: #5679C0;"
+                            data-bs-toggle="modal" data-bs-target="#deleteModal{{ baby.id }}">
+                            <i class="fa-solid fa-trash fa-lg"></i>
+                        </button>
+
+                        <!-- Delete Modal -->
+                        <div class="modal fade" id="deleteModal{{ baby.id }}" tabindex="-1"
+                            aria-labelledby="deleteModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Are you sure you want to delete the payment "{{ payment.name }}"?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Cancel</button>
+                                        <form method="post" action="#">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <a href="#" class="btn btn-warning mr-1" style="background-color: #5679C0;">
-                        <i class="fa-solid fa-pen-to-square fa-lg"></i>
-                    </a>
-
-                    <button type="button" class="btn btn-danger" style="background-color: #5679C0;" data-bs-toggle="modal"
-                        data-bs-target="#deleteModal{{ baby.id }}">
-                        <i class="fa-solid fa-trash fa-lg"></i>
-                    </button>
-
-                    <!-- Delete Modal -->
-                    <div class="modal fade" id="deleteModal{{ baby.id }}" tabindex="-1"
-                        aria-labelledby="deleteModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>Are you sure you want to delete the payment "{{ payment.name }}"?</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Cancel</button>
-                                    <form method="post" action="#">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-danger">Delete</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 </td>
             </tr>
             {% endfor %}

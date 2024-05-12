@@ -8,6 +8,7 @@ class LogoutForm(forms.Form):
 
     
 class AddBabie(ModelForm):
+    
     class Meta:
         model = Babie_registration
         fields = '__all__'
@@ -111,5 +112,5 @@ class DollForm(forms.ModelForm):
 class SellDoll(forms.ModelForm):
     class Meta:
         model = Sellingdoll
-        fields = ['sold_quantity','amount_received', 'issued_to', ]
+        fields = ['sold_quantity','unit_price', 'issued_to', ]
 

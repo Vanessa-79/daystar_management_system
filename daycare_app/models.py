@@ -52,20 +52,21 @@ class Babie_registration(models.Model):
     Brought_by = models.CharField(max_length=200, validators=[validate_letters])
     Arrival_Date = models.DateField(default=timezone.now)
     created_at = models.DateTimeField(auto_now_add=True)
-       
-    
-
     def __str__(self):
         return self.Baby_Name
 
 
 class Sitter_registration(models.Model):
+    GENDER_CHOICES = (
+        ('Male', 'Male'),
+        ('Female', 'Female'),
+    )
     Name = models.CharField(max_length=200, validators=[validate_letters])
     Sitter_No = models.CharField(max_length=500, unique=True, null=True, blank=False)
     Sitter_Contact = models.CharField(max_length=10, validators=[validate_contacts])
     Location = models.CharField(max_length=10, default= 'Kabalagala')
-    Date_of_birth = models.DateField(default=timezone.now)
-    Gender = models.CharField(max_length=10)
+    Date_of_birth = models.DateField()
+    Gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
     Next_of_kin = models.CharField(max_length=100, validators=[validate_letters])
     NIN = models.CharField(max_length=14, validators=[validate_NIN])
     Recommenders_name = models.CharField(max_length=200, validators=[validate_letters])
@@ -85,10 +86,10 @@ class Sitter_registration(models.Model):
 
 
 class Arrivalsitter(models.Model):
-    babie_names = Babie_registration.objects.values_list('Baby_Name')
     Sitter_name = models.ForeignKey(Sitter_registration, on_delete=models.CASCADE, null=True, blank=True)
     Sitter_Number = models.CharField(max_length=200, default=0)
-    Arrival_Date = models.DateField(default=timezone.now)
+    Arrival_Date = models.DateTimeField(default=timezone.now)
+    Arrival_Time = models.TimeField(null=True, blank=True)
     Assigned_Babies = models.ManyToManyField(Babie_registration, blank=True)  # Changed to ManyToManyField
     Status = models.CharField(max_length=10)
 
@@ -188,7 +189,7 @@ class Sellingdoll(models.Model):
     item = models.ForeignKey(Stock, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0, null=True, blank=True)
     date = models.DateField(default=timezone.now())
-    amount_received = models.IntegerField(default=0, null=True, blank=True)
+    unit_price = models.IntegerField(default=0, null=True, blank=True)
     issued_to = models.ForeignKey(Babie_registration, on_delete=models.CASCADE, null=True, blank=True)
     sold_quantity = models.IntegerField(default=0, null=True, blank=True)
     # unit_price = models.IntegerField(default=0, null=True, blank=True)

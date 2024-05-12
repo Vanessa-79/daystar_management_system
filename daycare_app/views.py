@@ -90,7 +90,7 @@ def Babie(request):
             return redirect('/baby_list')
     else:
         getbabieform = AddBabie()
-    return render(request, 'babie.html', {'getbabieform': getbabieform})
+    return render(request, 'baby.html', {'getbabieform': getbabieform})
 
 
 @login_required
@@ -452,25 +452,23 @@ def doll_stock(request):
     return render(request, 'doll_stock.html', {'products': products})
 
 
-def add_doll(request, pk):
-    try:
-        issued_item = Stock.objects.get(pk=pk)
-    except Stock.DoesNotExist:
-        # Handle the case where the Stock object with the given primary key does not exist
-        messages.error(request, 'Stock not found.')
-        return redirect('doll_stock')
-    
-    form = AddDoll(request.POST or None)
+def add_doll(request):
     if request.method == 'POST':
+        form = AddDoll(request.POST)
         if form.is_valid():
             added_quantity = form.cleaned_data['recieved_quantity']
-            issued_item.total_quantity += added_quantity
-            issued_item.save()
-            form.save()
+            product = Stock.objects.first()  # Retrieve the first (or appropriate) instance
+            if product:
+                product.total_quantity += added_quantity
+                product.save()  # Save to update the existing instance
+            else:
+                # Handle the case where there's no existing instance
+                messages.error(request, 'No existing product found.')
             messages.success(request, 'Stock added successfully')
             return redirect('doll_stock')
+    else:
+        form = AddDoll()
     return render(request, 'dolladd.html', {'form': form})
-
 def dollsale(request, pk):
     product = get_object_or_404(Stock, pk=pk)
     if request.method == 'POST':
@@ -489,7 +487,7 @@ def dollsale(request, pk):
                 product.save()
                 
                 # Create a Sellingdoll instance to record the sale
-                Sellingdoll.objects.create(item=product, quantity=sold_quantity, amount_received=form.cleaned_data['amount_received'], issued_to=form.cleaned_data['issued_to'], sold_quantity=sold_quantity)
+                Sellingdoll.objects.create(item=product, quantity=sold_quantity, unit_price=form.cleaned_data['unit_price'], issued_to=form.cleaned_data['issued_to'], sold_quantity=sold_quantity)
                 
                 # Logic for selling dolls goes here
                 messages.success(request, 'Stock sold successfully')
@@ -541,9 +539,12 @@ def update_doll(request, pk):
     return render(request, 'doll_update.html', {'form': form})
 
 
-
 def doll_sell_list(request):
     doll_sales = Sellingdoll.objects.all()
+    for sale in doll_sales:
+        # Calculate the total amount for each sale
+        sale.total_amount = sale.quantity * sale.item.unit_price  # Assuming amount_received is the amount per doll
+        
     return render(request, 'doll_sell_list.html', {'doll_sales': doll_sales})
 
 def receipt(request, pk):

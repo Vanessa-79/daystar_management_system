@@ -5,7 +5,9 @@
  {% static 'css/styles.css'%}
  {% block content %}
  <style>
-
+body {
+  overflow-x: hidden;
+}
   
   /* Add your custom styles here */
 
@@ -66,15 +68,15 @@
   
   .alert {
   position: fixed;
-  top: 70px; /* Adjust this value to increase margin-top */
+  top: 70px; 
   right: 20px;
   z-index: 1000;
-  opacity: 0; /* Initially hide the alert */
-  transition: opacity 0.5s ease; /* Add transition effect */
+  opacity: 0; 
+  transition: opacity 0.5s ease; 
 }
 
 .alert.show {
-  opacity: 1; /* Show the alert when it has the 'show' class */
+  opacity: 1; 
 }
 
 .alert-warning {

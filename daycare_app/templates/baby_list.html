@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load static %}
 
 {% block content %}
 
@@ -11,15 +10,15 @@
 .container {
     padding-top: 20px;
     margin-top: 20px;
-    width: calc(100% - 250px); /* Adjusted width considering the sidebar width */
+    width: calc(100% - 250px);
     padding: 20px;
-    margin-left: 2px; /* Ensure content doesn't overlap with the sidebar */
-    margin-right: 20px; /* Add margin to the right */
-    background-color: #f8f9fa; /* Match background color with the body */
+    margin-left: 2px; 
+    margin-right: 20px; 
+    background-color: #f8f9fa; 
 }
 
 table {
-    width: 100%; /* Make the table occupy the full width of its container */
+    width: 100%; 
     border-collapse: collapse;
     margin-left: auto;
     margin-right: auto;
@@ -49,13 +48,18 @@ table {
     tr:nth-child(even) {
         background-color: #f2f2f2;
     }
+
+    
+    .frame th{
+    background-color: #cddef0;
+  }
 </style>
 
 
 <h2>Overall Babies</h2>
 <!-- Sitter Button -->
 <a href="{% url 'babie' %}" class="btn  mb-3" style="margin-left: 40px; background-color: #658ecc; color: white;">Add Babie</a>
-<!-- <a href="{% url 'sitters_list' %}" class="btn  mb-3" style="margin-left: 100px; background-color: #658ecc; color: white;">Go Back</a> -->
+
 <a href="{% url 'baby_list' %}" class="btn btn-secondary mb-3" style="float: right; margin-right: 40px; background-color: #658ecc; color: white;">Go Back</a>
 
 
@@ -71,20 +75,16 @@ table {
 
 
 <div class="container">
-
-
     <table class="table table-striped" style="width: 90%;">
         <!-- Inside the table -->
-        <thead>
+        <thead class="frame">
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Baby No</th>
                 <th scope="col">Name</th>
                 <th scope="col">Gender</th>
                 <th scope="col">Age</th>
-                <!-- <th scope="col">Location</th> -->
                 <th scope="col">Period of Stay</th>
-                <!-- <th scope="col">Parent Name</th> -->
                 <th scope="col">Brought By</th>
                 <th scope="col">Arrival Time</th>
                 <th scope="col">Actions</th>
@@ -98,16 +98,14 @@ table {
                 <td>{{ baby.Baby_Name }}</td>
                 <td>{{ baby.Gender }}</td>
                 <td>{{ baby.Age }}</td>
-                <!-- <td>{{ baby.Location }}</td> -->
                 <td>{{ baby.Period_of_stay }}</td>
-                <!-- <td>{{ baby.Parent_name }}</td> -->
                 <td>{{ baby.Brought_by }}</td>
                 <td>{{ baby.Arrival_Date }}</td>
                 <td>
                     <div class="btn-group" role="group">
                         <a href="#" class="btn btn-success mr-1" style="background-color: #5679C0;"
                             data-bs-toggle="modal" data-bs-target="#myModal{{ baby.id }}">
-                            <i class="fa-solid fa-circle-info fa-lg"></i>
+                            <i class="fa-solid fa-circle-info "></i>
                         </a>
 
                         <!-- Information Modal -->
@@ -142,12 +140,12 @@ table {
 
                         <a href="{% url 'edit_baby' baby.id %}" class="btn btn-warning mr-1"
                             style="background-color: #5679C0;">
-                            <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                            <i class="fa-solid fa-pen-to-square"></i>
                         </a>
 
                         <button type="button" class="btn btn-danger" style="background-color: #5679C0;"
                             data-bs-toggle="modal" data-bs-target="#deleteModal{{ baby.id }}">
-                            <i class="fa-solid fa-trash fa-lg"></i>
+                            <i class="fa-solid fa-trash "></i>
                         </button>
 
                         <!-- Delete Modal -->

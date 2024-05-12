@@ -3,6 +3,10 @@
 {% load static %}
 {% block content %}
 <style>
+
+  body{
+    overflow-x: hidden;
+  }
     /* Add your custom styles here */
     .container {
         width: 95%;
@@ -12,7 +16,8 @@
         border-radius: 5px;
         background-color: #cddef0;
         margin-top: 0;
-        margin-right: 50%;
+        margin-right: 70%;
+        margin: auto;
         color: black;
     }
 
@@ -21,7 +26,8 @@
         width: 70%;
         border-radius: 20px;
         padding: 20px;
-        margin: 50px auto;
+        margin-right: 50%;
+        margin-top: 50px;
         
     }
 
@@ -44,9 +50,13 @@
         font-weight: bold;
     }
 
+    .babe-form .arrival_date {
+        grid-column: span 2;  /* Span both columns */
+    }
+
     .babe-form button {
-        grid-column: span 2; 
-        width: 50%;
+        width: 60%;
+        height: 60%;
         padding: 10px;
         border: none;
         border-radius: 5px;
@@ -54,54 +64,53 @@
         color: #fff;
         font-size: 16px;
         cursor: pointer;
-        margin-left: 100px;
+        margin-left: 8px;
+        margin-top: 20px;
     }
 
-    
+    .submit-container {
+        grid-column: span 2; /* Span both columns */
+        text-align: center;
+    }
 
     .alert {
-  position: fixed;
-  top: 70px; /* Adjust this value to increase margin-top */
-  right: 20px;
-  z-index: 1000;
-  opacity: 0; /* Initially hide the alert */
-  transition: opacity 0.5s ease; /* Add transition effect */
-}
+        position: fixed;
+        top: 70px; /* Adjust this value to increase margin-top */
+        right: 20px;
+        z-index: 1000;
+        opacity: 0; /* Initially hide the alert */
+        transition: opacity 0.5s ease; /* Add transition effect */
+    }
 
-.alert.show {
-  opacity: 1; /* Show the alert when it has the 'show' class */
-}
+    .alert.show {
+        opacity: 1; /* Show the alert when it has the 'show' class */
+    }
 
-.alert-warning {
-  background-color: #658ecc;
-  color: white;
-  border-color: #658ecc;
-}
+    .alert-warning {
+        background-color: #658ecc;
+        color: white;
+        border-color: #658ecc;
+    }
 
-.alert-dismissible {
-  padding-right: 2.5rem;
-}
+    .alert-dismissible {
+        padding-right: 2.5rem;
+    }
 
-.alert button.close {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 0.75rem 1.25rem;
-  background-color: transparent;
-  border: 0;
-  color: inherit;
-  transition: transform 0.3s ease;
-}
+    .alert button.close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 0.75rem 1.25rem;
+        background-color: transparent;
+        border: 0;
+        color: inherit;
+        transition: transform 0.3s ease;
+    }
 
-.alert button.close:hover {
-  transform: scale(1.2);
-}
-
-
-    
+    .alert button.close:hover {
+        transform: scale(1.2);
+    }
 </style>
-
-
 
 {% for message in messages %}
 <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: #0E98E7;">
@@ -117,12 +126,14 @@
         <div class="container">
             <form action="" method="POST" class="babe-form">
                 {% csrf_token %}
+            
                 {{ getbabieform | crispy }}
-                <button type="submit" >Submit</button>
+                
+                    <button type="submit">Submit</button>
+                
             </form>
         </div>
     </div>
 </div>
-
 
 {% endblock %}

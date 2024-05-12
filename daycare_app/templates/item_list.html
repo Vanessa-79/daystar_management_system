@@ -4,18 +4,19 @@
 {% block content %}
 
 <style>
-  .container {
-    padding-top: 20px;
-    margin-top: 20px;
-    max-width: 950px;
-    background-color: #abc7e5;
-    padding: 20px;
-    margin-left: 90px;
+  body {
+
+    overflow-x: hidden;
   }
 
-  h2 {
-    text-align: center;
-    color: black; 
+  .container {
+    padding-top: 20px;
+    margin-top: 10px;
+    width: calc(100% - 250px);
+    padding: 20px;
+    margin-left: 2px;
+    margin-right: 20px;
+    background-color: #f8f9fa;
   }
 
   table {
@@ -23,7 +24,13 @@
     border-collapse: collapse;
     margin-left: auto;
     margin-right: auto;
-    background-color: #cddef0; 
+    background-color: #cddef0;
+  }
+
+  h2 {
+    text-align: center;
+    color: black;
+    margin-top: 50px;
   }
 
   th,
@@ -32,55 +39,44 @@
     text-align: left;
     padding: 8px;
     white-space: nowrap;
+    width: auto;
   }
 
   th {
-    background-color: #4CAF50; 
-    color: white; 
+    background-color: #4CAF50;
+    color: white;
   }
 
   tr:nth-child(even) {
-    background-color: #f2f2f2; 
+    background-color: #f2f2f2;
   }
 
-  /* Button Styles */
   .btn-issue {
     background-color: #5679C0;
     color: white;
     border: none;
-    padding: 6px 12px;
+    padding: 8px 16px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 14px;
-    margin: 2px 0px;
-    cursor: pointer;
-    border-radius: 4px;
+    margin-right: 5px;
   }
 
   .btn-issue:hover {
-    background-color: #4568b7;
+    background-color: #3e6aae;
   }
 
   .btn-issue a {
-    color: white; /* Change link color to white */
-    text-decoration: none; /* Remove underline */
+    color: white;
+    text-decoration: none;
   }
 
   .btn-issue a:hover {
-    color: white; /* Change link color to white on hover */
-    text-decoration: none; /* Remove underline on hover */
+    text-decoration: underline;
   }
-
 </style>
-
-<!-- Search Form -->
-<form method="GET" action="#" class="mb-3">
-  <div class="input-group" style="margin-left: 40px; width: 80%; margin-bottom: 10px;">
-      <input type="text" class="form-control" placeholder="Search Babies" name="search_query">
-      <button class="btn btn-outline-secondary" type="submit">Search</button>
-  </div>
-</form>
+<h2>Items in Stock</h2>
 
 <!-- Filter Form -->
 <form method="GET" action="#" class="mb-3">
@@ -95,10 +91,10 @@
 </form>
 
 <!-- Sitter Button -->
-<a href="{% url 'procurement' %}" class="btn  mb-3" style="margin-left: 40px; background-color: #658ecc; color: white;">Add Item</a>
+<a href="{% url 'procurement' %}" class="btn  mb-3"
+  style="margin-left: 40px; background-color: #658ecc; color: white;">Add Item</a>
 
 <div class="container">
-  <h2>Items in Stock</h2>
   <table class="table table-striped">
     <thead>
       <tr>
@@ -120,12 +116,12 @@
         <td>{{ item.Date_of_purchase }}</td>
         <td>
           <div class="btn-group" role="group">
-            <button type="button" class="btn-issue mr-1">
+            <button type="button" class="btn-issue mr-1" style="background-color: #5679C0;">
               <a href="{% url 'issue_out' pk=item.id %}">Issue Out</a>
             </button>
 
-            <button type="button" class="btn-issue mr-1">
-              <a href="{% url 'issue_in' pk=item.id %}">Issue In</a>
+            <button type="button" class="btn-issue mr-1" style="background-color: #5679C0; color: white">
+              <a href="{% url 'issue_in' pk=item.id %}" style="color: white;">Issue In</a>
             </button>
           </div>
         </td>

@@ -14,7 +14,7 @@ path('logout', views.logout_view, name='logout'),
  
  #babies
 path('babie/', views.Babie, name='babie'),
-path('baby_list/', views.baby_list, name='baby_list'),
+path('baby_list/', views.baby_list, name='baby_list'), 
 path('baby_departure/', views.baby_departure, name='baby_departure'),
 path('add/', views.add_baby, name='add_baby'),
 path('edit_baby/<int:baby_id>/', views.edit_baby, name='edit_baby'),
@@ -22,7 +22,6 @@ path('viewbaby/', views.view_baby, name='view_baby'),
 path('babyupdate/', views.babyupdate, name='babyupdate'),
 path('<int:id>', views.view_baby, name='view_baby'),
 path('baby_signedoutlist/', views.baby_signedoutlist, name='baby_signedoutlist'),
-# path('search/', views.search_babies, name='search_babies'), 
 path('delete_baby/<int:baby_id>/', views.delete_baby, name='delete_baby'), 
 path("signinbaby/",views.signinbaby,name="signinbaby"),
 
@@ -34,7 +33,7 @@ path('sitters_list/', views.sitters_list, name='sitters_list'),
 path('add_sitter/', views.Sitter, name='add_sitter'),
 path('<int:id>', views.sitter_view, name='sitter_view'),
 path('sitter_edit/<int:id>', views.sitter_edit, name='sitter_edit'),
-path('sitter_delete/<int:id>', views.sitter_delete, name='sitter_delete'),
+path('sitter_delete/<int:sitter_id>/', views.sitter_delete, name='sitter_delete'),
 path('sitteronduty/', views.sitter_arrival_list, name='sitter_arrival_list'),
 path('sitterarrival/', views.sitter_arrival, name='sitter_arrival'),
 
@@ -49,7 +48,7 @@ path('paymentsitter_list/', views.paymentsitter_list, name='paymentsitter_list')
 
 #dolls
 path('doll_stock/', views.doll_stock, name='doll_stock'),
-path('dolladd/<int:pk>/', views.add_doll, name='add_doll'),
+path('dolladd/', views.add_doll, name='add_doll'),
 path('dollsale/<int:pk>/', views.dollsale, name='dollsale'),
 path('delete_doll/<int:pk>/', views.doll_delete, name='delete_doll'),
 path('add_newdoll/<int:pk>/',views.add_newdoll, name='add_newdoll'),

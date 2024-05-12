@@ -6,68 +6,75 @@
   body {
     overflow-x: hidden;
   }
-    .container {
-      padding-top: 20px;
-      margin-top: 10px;
-      width: calc(100% - 50px); /* Adjust the width of the container */
-      /* background-color: #abc7e5; */
-      padding: 20px;
-      margin-left: 30px; /* Align the container to the right */
-      margin-right: 50px; /* Add margin to the right */
-    }
-  
-    h2 {
-      text-align: center;
-      color: black; 
-      margin-top: 50px;
-    }
-  
-    table {
-      width: 100%; /* Extend the table to fill the container */
-      border-collapse: collapse;
-      margin-left: -60px; /* Adjust margin-left to overlap with the sidebar */
-      background-color: #cddef0; 
-    }
-  
-    th,
-    td {
-      border: 1px solid #dddddd;
-      text-align: left;
-      padding: 8px;
-      white-space: nowrap;
-    }
-  
-    tr:nth-child(even) {
-      background-color: #f2f2f2; 
-    }
-  
-    /* Adjustments for the sidebar */
-    .sidebar {
-      margin-left: 0; /* Reduce the space between the sidebar and the table */
-    }
 
-    /* Adjustments for search and filter forms */
-    .search-form {
-      margin-left: 40px;
-      width: 80%;
-      margin-bottom: 10px;
-    }
+  .container {
+    padding-top: 20px;
+    margin-top: 20px;
+    width: calc(100% - 50px);
+    /* Adjust the width of the container */
+    /* background-color: #abc7e5; */
+    padding: 20px;
+    margin-left: 60px;
+    /* Align the container to the right */
+    margin-right: 50px;
+    /* Add margin to the right */
+  }
 
-    .table-container {
-      margin-top: 10px;
-    }
-  </style>
+  h2 {
+    text-align: center;
+    color: black;
+    margin-top: 50px;
+  }
+
+  table {
+    width: 100%;
+    /* Extend the table to fill the container */
+    border-collapse: collapse;
+    margin-left: -60px;
+    /* Adjust margin-left to overlap with the sidebar */
+    background-color: #cddef0;
+  }
+
+  th,
+  td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    white-space: nowrap;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  /* Adjustments for the sidebar */
+  .sidebar {
+    margin-left: 0;
+    /* Reduce the space between the sidebar and the table */
+  }
+
+  .modal-header {
+    background-color: #83aad7;
+    color: white;
+  }
+
+  .frame th {
+    background-color: #cddef0;
+  }
+</style>
 
 <h2>List of On Duty sitters</h2>
-
 <!-- Add Sitter Button -->
-<a href="{% url 'sitter_arrival' %}" class="btn mb-3" style="margin-left: 40px; background-color: #658ecc; color: white;">Add Sitter</a>
-<a href="{% url 'sitter_arrival_list' %}" class="btn btn-secondary mb-3" style="float: right; margin-right: 40px; background-color: #658ecc; color: white;">Go Back</a>
+<a href="{% url 'sitter_arrival' %}" class="btn mb-3"
+  style="margin-left: 40px; background-color: #658ecc; color: white;">Add Sitter</a>
+<a href="{% url 'sitter_arrival_list' %}" class="btn btn-secondary mb-3"
+  style="float: right; margin-right: 40px; background-color: #658ecc; color: white;">Go Back</a>
 
 <!-- Filter Form -->
 <form method="GET" action="{% url 'sitter_arrival_list' %}" class="mb-3 search-form">
   <div class="input-group" style="width: 100%;">
-    <input type="text" class="form-control" placeholder="Filter" name="search_query" value="{{ request.GET.search_query }}">
+    <input type="text" class="form-control" placeholder="Filter" name="search_query"
+      value="{{ request.GET.search_query }}">
     <button class="btn btn-outline-secondary" type="submit">Filter</button>
   </div>
 </form>
@@ -76,7 +83,7 @@
 <div class="container table-container">
   <table class="table table-striped">
     <!-- Table Headers -->
-    <thead>
+    <thead class="frame">
       <tr>
         <th scope="col">#</th>
         <th scope="col">Name</th>
@@ -95,67 +102,97 @@
         <td>{{ sitter.Sitter_name }}</td>
         <td>{{ sitter.Arrival_Date }}</td>
         <td>
+          {% if sitter.Assigned_Babies.count %}
+          <ul>
+            {% for baby in sitter.Assigned_Babies.all|dictsort:"Baby_Name" %}
+            <li>{{ baby.Baby_Name }}</li>
+            {% endfor %}
+          </ul>
+          {% else %}
           {% for baby in sitter.Assigned_Babies.all %}
           {{ baby.Baby_Name }}{% if not forloop.last %}, {% endif %}
-          {% empty %}
-          No babies assigned
           {% endfor %}
+          {% endif %}
         </td>
         <td>{{ sitter.calculate_total_babies }}</td>
         <td>{{ sitter.Status }}</td>
         <td style="white-space: nowrap;">
-          <!-- Action Buttons -->
+
           <div class="btn-group" role="group">
-            <!-- View Details Button -->
-            <a href="#" class="btn mr-1 btn-info" style="background-color: #5679C0;" data-bs-toggle="modal" data-bs-target="#myModal{{ sitter.id }}">
+            <button type="button" class="btn  mr-1" style="background-color: #5679C0;" data-bs-toggle="modal"
+              data-bs-target="#myModal{{ sitter.id }}">
               <i class="fa-solid fa-circle-info fa-lg" style="color: white;"></i>
-            </a>
-            <!-- Edit Button -->
-            <a class="btn mr-1 btn-warning" style="background-color: #5679C0;" href="{% url 'sitter_edit' sitter.id %}">
+            </button>
+
+            <!-- Modal -->
+            <div class="modal" id="myModal{{ sitter.id }}" tabindex="-1" aria-labelledby="myModallabel1"
+              aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Sitter: {{ sitter.Name }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true"></span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <ul class="list-unstyled">
+                      <li>Name: <strong>{{ sitter.Sitter_name }}</strong></li>
+                      <li>Sitter Number: <strong>{{ sitter.Sitter_Number }}</strong></li>
+                      <li>Arrival Date: <strong>{{ sitter.Arrival_Date }}</strong></li>
+                      <li>AssignedBabies: <strong>{{ sitter.Assigned_Babies }}</strong></li>
+                      <li>Status: <strong>{{ sitter.Status }}</strong></li>
+                    </ul>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <a class="btn  mr-1" style="background-color: #5679C0;" href="{% url 'sitter_edit' sitter.id %}">
               <i class="fa-solid fa-pen-to-square fa-lg" style="color: white;"></i>
             </a>
-            <!-- Delete Form -->
-            <form action="{% url 'sitter_delete' sitter.id %}" method="post" style="display: inline;">
-              {% csrf_token %}
-              <button type="submit" class="btn mr-1 btn-danger" style="background-color: #5679C0;">
-                <i class="fa-solid fa-trash fa-lg" style="color: white;"></i>
-              </button>
-            </form>
+
+            <button type="button" class="btn " style="background-color: #5679C0;" data-bs-toggle="modal"
+              data-bs-target="#delete{{ sitter.id }}">
+              <i class="fa-solid fa-trash fa-lg" style="color: white;"></i>
+            </button>
+
+            <!-- Delete Modal -->
+            <div class="modal" id="delete{{ sitter.id }}" tabindex="-1" aria-labelledby="deleteModalLabel"
+              aria-hidden="true">
+
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <p>Are you sure you want to delete the sitter "{{ sitter.Sitter_name }}"?</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form method="post" action="{% url 'sitter_delete' sitter.id %}">
+
+                      {% csrf_token %}
+                      <button type="submit" class="btn " style="background-color: #83aad7;">Delete</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </td>
       </tr>
       {% endfor %}
     </tbody>
+
   </table>
 </div>
 
-<!-- Modal for Sitter Details -->
-{% for sitter in sitter_arrival_list %}
-<div class="modal fade" id="myModal{{ sitter.id }}" tabindex="-1" role="dialog" aria-labelledby="myModallabel1" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Sitter: {{ sitter.Sitter_name }}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <ul class="list-unstyled">
-          <li>Sitter No: <strong>{{ sitter.Sitter_Number }}</strong></li>
-          <li>Sitter Name: <strong>{{ sitter.Sitter_name }}</strong></li>
-          <li>Arrival Date: <strong>{{ sitter.Arrival_Date }}</strong></li>
-          <li>Total Babies Attended: <strong>{{ sitter.calculate_total_babies }}</strong></li>
-          <li>Status: <strong>{{ sitter.Status }}</strong></li>
-        </ul>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
 
-{% endfor %}
 
 {% endblock %}
