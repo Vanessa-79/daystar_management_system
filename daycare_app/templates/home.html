@@ -5,10 +5,11 @@
 <script src="http://code.highcharts.com/highcharts.js"></script>
 <script src="/static/chartkick.js"></script>
 
+
 <style>
+
   body{
     overflow-x: hidden;
-  
   }
   .main-cards {
     display: grid;
@@ -29,10 +30,11 @@
     border-radius: 5px;
     border: none;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    width: 280px;
-    margin-left: 00px;
-    height: 150px;
-    margin-top: 60px;
+    width: 220px;
+    /* margin-left: 00px; */
+    height: 100px;
+    margin-top: 20px;
+    margin-right: 5px;
   }
 
   .card-img-top {
@@ -55,18 +57,30 @@
   h1 {
     font-size: 30px;
     margin-top: 50px;
+    text-align: center;
+    margin-top: 50px;
   }
 
   h2 {
-    font-weight: 300;
+    font-weight: 500;
     text-align: left;
-    font-size: 20px;
+    font-size: 15px;
   }
 
   h3 {
     text-align: center;
   }
-
+  h4{
+    font-weight: 400;
+    text-align: center;
+    font-size: 20px;
+  }
+  h5{
+    font-size: 20px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-weight: 300;
+    margin-top: 20px;
+  }
   .card-inner .material-icons-outlined {
     font-size: 20px;
   }
@@ -81,6 +95,9 @@
   }
 
   .card:nth-child(3) {
+    background-color: #83aad7;
+  }
+  .card:nth-child(4) {
     background-color: #83aad7;
   }
 
@@ -106,14 +123,14 @@
     /* Adjust width as needed */
   }
 </style>
-<h1 style="font-weight: bolder;">Overviews</h1>
+<h1>Overviews</h1>
 <div class="main-cards">
   <div class="card">
     <div class="card-inner">
       <h2>BABIES</h2>
       <span class="material-icons-outlined">group</span>
     </div>
-    <h3>{{ count_babies }}</h3>
+    <h4>{{ count_babies }}</h4>
   </div>
 
   <div class="card">
@@ -121,29 +138,40 @@
       <h2>SITTERS</h2>
       <span class="material-icons-outlined">group</span>
     </div>
-    <h3>{{ count_sitters }} </h3>
+    <h4>{{ count_sitters }}</h4>
   </div>
 
+  <div class="card">
+    <div class="card-inner">
+      <h2>SITTERS SIGNED IN</h2>
+      <span class="material-icons-outlined">group</span>
+    </div>
+    <h4>{{ count_sitters_signed_in|default_if_none:"0" }}</h4>
+  </div>
   <div class="card">
     <div class="card-inner">
       <h2>BABIES SIGNED OUT</h2>
       <span class="material-icons-outlined">group</span>
     </div>
-    <h3>{{ count_departure }}</h3>
+    <h4>{{ count_babies_signed_out|default_if_none:"0" }}</h4>
   </div>
 
 </div>
 
-<h2 style="margin-top: 10px; font-weight: 700; font-style: italic;">Attendance Overview</h2>
+<h5 style="margin-top: 10px; font-weight: 700; font-style: italic;">Attendance Overview</h5>
+
+
 <div class="pie-chart-container">
   <div class="pie-chart" style="width: 40%; margin-right: 20px;">
-    {% pie_chart data %}
+    {% pie_chart data with library=data_colors %}
   </div>
   <div class="pie-chart" style="width: 45%;">
-    {% pie_chart baby %}
+    {% pie_chart baby with library=baby_colors %}
   </div>
 </div>
 
-<h2 style="margin-top: 10px; font-weight: 700; font-style: italic;">Payments Overview</h2>
+
+
+<h5>Payments Overview</h5>
 
 {% endblock %}

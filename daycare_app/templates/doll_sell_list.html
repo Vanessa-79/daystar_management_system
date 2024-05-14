@@ -25,7 +25,7 @@
     table {
         width: 20%; 
         max-width: 800px; 
-        margin-left: auto; 
+        margin-left: 1%; 
         margin-right: auto;
     }
 
@@ -63,7 +63,7 @@
                     {% if sale.item.total_quantity <= 0 %}
                         Out of Stock
                     {% elif sale.item.total_quantity <= 20 %}
-                        Stock Soon Getting Done
+                        Soon Getting Done
                     {% else %}
                         Still Having Stock
                     {% endif %}

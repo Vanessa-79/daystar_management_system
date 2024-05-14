@@ -1,4 +1,5 @@
 {% load static %}
+{% load custom_tags %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -153,35 +154,35 @@
 
 <body>
   <div class="wrapper">
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg">
       <div class="container-fluid">
-        <!-- Logo -->
-        <a class="navbar-brand" href="#">
-          <img src="{% static 'images/DAYSTAR DAYCAREt.png' %}" alt="Daystar Daycare Logo">
-        </a>
-
-        <!-- Collapsible content -->
-        <button class="navbar-toggler" type="button" id="sidebarToggleBtn">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-              <div class="search-container">
-                <input type="text" id="sidebarSearchInput" placeholder="Search">
-                <i class="fas fa-search search-icon"></i>
-              </div>
-            </li>
-            <li class="nav-item">
-              <a href="{% url 'logout' %}" class="nav-link btn " style="color: white;">Logout</a>
-            </li>
-          </ul>
-        </div>
-        <!-- End of collapsible content -->
+          <!-- Logo -->
+          <a class="navbar-brand" href="#">
+              <img src="{% static 'images/DAYSTAR DAYCAREt.png' %}" alt="Daystar Daycare Logo">
+          </a>
+  
+          <!-- Collapsible content -->
+          <button class="navbar-toggler" type="button" id="sidebarToggleBtn">
+              <span class="navbar-toggler-icon"></span>
+          </button>
+  
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav ms-auto">
+                  <li class="nav-item">
+                      <div class="nav-link text-white">
+                          {% current_time_eat %}
+                      </div>
+                  </li>
+                  <li class="nav-item">
+                      <a href="{% url 'logout' %}" class="nav-link btn" style="color: white;">Logout</a>
+                  </li>
+              </ul>
+          </div>
+          <!-- End of collapsible content -->
       </div>
-    </nav>
-
+  </nav>
+  
     <div class="sidebar">
       <ul class="nav flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="sidebarList">
         <!-- Sidebar content -->
@@ -267,6 +268,8 @@
         </li>
 
 
+        <!-- Existing code... -->
+
         <li class="nav-item">
           <a href="#submenu4" data-bs-toggle="collapse" class="nav-link">
             <i class="fa-solid fa-money-bill"></i>
@@ -274,33 +277,46 @@
             <i class="fa-solid fas fa-angle-double-down" style="margin-left: 93px;"></i>
           </a>
           <ul class="collapse nav flex-column ms-1" id="submenu4" data-bs-parent="#menu">
+            <!-- Submenu for "Babies Payments" -->
             <li class="w-100">
-              <a href="{% url 'payment_baby' %}" class="nav-link">
-
-                <span class="ms-3 d-none d-sm-inline">Babie Payments</span>
+              <a href="#submenu4-1" data-bs-toggle="collapse" class="nav-link">
+                <span class="ms-3 d-none d-sm-inline">Babies Payments</span>
+                <i class="fa-solid fas fa-angle-double-down" style="margin-left: 70px;"></i>
               </a>
+              <ul class="collapse nav flex-column ms-1" id="submenu4-1" data-bs-parent="#submenu4">
+                <li class="w-100">
+                  <a href="{% url 'payment_baby' %}" class="nav-link">
+                    <span class="ms-3 d-none d-sm-inline">Add Payment</span>
+                  </a>
+                </li>
+                <li class="w-100">
+                  <a href="{% url 'payment_list' %}" class="nav-link">
+                    <span class="ms-3 d-none d-sm-inline">Babies Payments List</span>
+                  </a>
+                </li>
+              </ul>
             </li>
+            <!-- Submenu for "Sitter Payments" -->
             <li class="w-100">
-              <a href="{% url 'paymentsitter' %}" class="nav-link">
-
+              <a href="#submenu4-2" data-bs-toggle="collapse" class="nav-link">
                 <span class="ms-3 d-none d-sm-inline">Sitter Payments</span>
+                <i class="fa-solid fas fa-angle-double-down" style="margin-left: 70px;"></i>
               </a>
-            </li>
-            <li class="w-100">
-              <a href="{% url 'payment_list' %}" class="nav-link">
-
-                <span class="ms-3 d-none d-sm-inline">Babie Payments List</span>
-              </a>
-            </li>
-            <li class="w-100">
-              <a href="#" class="nav-link">
-                <span class="ms-3 d-none d-sm-inline">View Payments</span>
-              </a>
+              <ul class="collapse nav flex-column ms-1" id="submenu4-2" data-bs-parent="#submenu4">
+                <li class="w-100">
+                  <a href="{% url 'paymentsitter' %}" class="nav-link">
+                    <span class="ms-3 d-none d-sm-inline">Add Payment</span>
+                  </a>
+                </li>
+                <li class="w-100">
+                  <a href="{% url 'paymentsitter_list' %}" class="nav-link">
+                    <span class="ms-3 d-none d-sm-inline">Sitter Payments List</span>
+                  </a>
+                </li>
+              </ul>
             </li>
           </ul>
         </li>
-
-
         <li class="nav-item">
           <a href="#submenu5" data-bs-toggle="collapse" class="nav-link">
             <i class="fa-solid fa-cart-shopping"></i>
@@ -342,10 +358,10 @@
                 </li>
                 <li class="w-100">
                   <a href="{% url 'add_doll' %}" class="nav-link">
-                      <span class="ms-3 d-none d-sm-inline">Add to Stock</span>
+                    <span class="ms-3 d-none d-sm-inline">Add to Stock</span>
                   </a>
-              </li>
-              
+                </li>
+
                 <li class="w-100">
                   <a href="{% url 'add_newdoll' pk=1 %}" class="nav-link">
                     <span class="ms-3 d-none d-sm-inline">Add new Stock</span>
@@ -353,8 +369,8 @@
                 </li>
                 <a href="{% url 'doll_sell_list' %}" class="nav-link">
                   <span class="ms-3 d-none d-sm-inline">Doll Sales List</span>
-              </a>
-              
+                </a>
+
               </ul>
             </li>
             <li class="w-100">

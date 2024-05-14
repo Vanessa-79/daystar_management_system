@@ -4,9 +4,24 @@
 {% block content %}
 
 <style>
-    body{
-        overflow-x: hidden;
-    }
+    body {
+  overflow-x: hidden;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/static/images/formbg.jpg');
+  opacity: 0.1; /* Adjust the opacity as needed */
+  z-index: -3; /* Ensure the pseudo-element is behind other content */
+  background-size: cover;
+}
+
     /* Modal Styles */
     .modal-dialog {
         max-width: 800px;
@@ -75,6 +90,11 @@
     h2{
         text-align: center;
     }
+
+    .frame th {
+    background-color: #cddef0;
+    font-weight: bold;
+  }
 </style>
 
 
@@ -97,7 +117,7 @@
 <h2>Signed Out Babies</h2>
 <div class="container">
     <table class="table table-striped" style="width: 90%; margin-left: 20px;">
-        <thead>
+        <thead class="frame">
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Name</th>

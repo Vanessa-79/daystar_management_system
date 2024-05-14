@@ -33,16 +33,17 @@ path('sitters_list/', views.sitters_list, name='sitters_list'),
 path('add_sitter/', views.Sitter, name='add_sitter'),
 path('<int:id>', views.sitter_view, name='sitter_view'),
 path('sitter_edit/<int:id>', views.sitter_edit, name='sitter_edit'),
-path('sitter_delete/<int:sitter_id>/', views.sitter_delete, name='sitter_delete'),
+path('sitter_delete/<int:id>/', views.sitter_delete, name='sitter_delete'),
 path('sitteronduty/', views.sitter_arrival_list, name='sitter_arrival_list'),
 path('sitterarrival/', views.sitter_arrival, name='sitter_arrival'),
-
+path('sitter_arrival_delete/<int:sitter_id>/', views.sitter_arrival_delete, name='sitter_arrival_delete'),
 
 #payments
 path('payment_baby/', views.payment_baby, name='payment_baby'), 
 path('payment_list/', views.payment_list, name='payment_list'),
 path('paymentsitter/', views.paymentsitter, name='paymentsitter'),
 path('paymentsitter_list/', views.paymentsitter_list, name='paymentsitter_list'),
+path('delete_payment/<int:payment_id>/', views.delete_payment, name='delete_payment'),
 
 
 

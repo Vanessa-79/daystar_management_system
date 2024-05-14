@@ -75,10 +75,14 @@
   .btn-issue a:hover {
     text-decoration: underline;
   }
+  .frame th{
+    background-color: #cddef0;
+    font-weight: bold;
+  }
 </style>
 <h2>Items in Stock</h2>
 
-<!-- Filter Form -->
+<!-- Filter Form
 <form method="GET" action="#" class="mb-3">
   <div class="input-group" style="margin-left: 40px; width: 80%; margin-bottom: 10px;">
     <select class="form-select" name="filter_option">
@@ -88,7 +92,7 @@
     </select>
     <button class="btn btn-outline-secondary" type="submit">Apply Filter</button>
   </div>
-</form>
+</form> -->
 
 <!-- Sitter Button -->
 <a href="{% url 'procurement' %}" class="btn  mb-3"
@@ -96,7 +100,7 @@
 
 <div class="container">
   <table class="table table-striped">
-    <thead>
+    <thead class="frame">
       <tr>
         <th scope="col">#</th>
         <th scope="col">Item name</th>

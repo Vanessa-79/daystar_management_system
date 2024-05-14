@@ -60,6 +60,7 @@
 
   .frame th {
     background-color: #cddef0;
+    font-weight: bold;
   }
 </style>
 
@@ -175,11 +176,10 @@
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <form method="post" action="{% url 'sitter_delete' sitter.id %}">
-
+                    <form method="post" action="{% url 'sitter_arrival_delete' sitter.id %}">
                       {% csrf_token %}
-                      <button type="submit" class="btn " style="background-color: #83aad7;">Delete</button>
-                    </form>
+                      <button type="submit" class="btn" style="background-color: #83aad7;">Delete</button>
+                  </form>
                   </div>
                 </div>
               </div>

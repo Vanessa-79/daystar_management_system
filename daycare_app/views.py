@@ -11,15 +11,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from datetime import *
+from django.utils import timezone
 from django.db.models import Q
-
-
 
 
 # Create your views here.
 
 
-#forms
+# forms
 
 def login(request):
     if request.method == 'POST':
@@ -28,7 +27,8 @@ def login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect(request.GET.get('next', 'dashboard'))  # Redirect to the next parameter if available, else to dashboard
+            # Redirect to the next parameter if available, else to dashboard
+            return redirect(request.GET.get('next', 'dashboard'))
         else:
             return render(request, 'login.html', {'error_message': 'Invalid username or password'})
     else:
@@ -43,15 +43,21 @@ def logout_view(request):
             return redirect('index')
     else:
         form = LogoutForm()
-    
+
     return render(request, 'logout.html', {'form': form})
 
+
 def Index(request):
+
+
     return render(request, 'index.html')
+    
+
 
 @login_required
 def dashboard(request):
     return render(request, 'dashboard.html')
+
 
 def base(request):
     return render(request, 'base.html')
@@ -60,34 +66,60 @@ def base(request):
 @login_required
 def home(request):
     count_sitters = Sitter_registration.objects.count()
-    count_babies = Babie_registration.objects.count()
-    count_departure = Baby_departure.objects.count()
-    count_arrival = Arrivalsitter.objects.filter(Arrival_Date=date.today()).count()
-    count_arrivalbaby = Babie_registration.objects.filter(Arrival_Date=date.today()).count()
-    data_colors = ["#ff0000", "#00ff00", "#0000ff"]
-    baby_colors = ["#ff0000", "#00ff00", "#0000ff"]
-    
+    count_babies = Babie_registration.objects.filter(
+        Arrival_Date=date.today()).count()
+    count_babies_signed_out = Baby_departure.objects.filter(
+        departure_time__date=date.today()).count()
+    count_sitters_signed_in = Arrivalsitter.objects.filter(
+        Arrival_Date__date=date.today()).count()
+    print(Arrivalsitter.objects.values())
+
+    # Update the existing count of sitters signed in
+    existing_sitter_data = {'Sitters': count_sitters,
+                            'Signed In': count_sitters_signed_in}
+
+    # Update the count of babies
+    updated_count_babies = count_babies - count_babies_signed_out
+
+    # Define colors for the pie chart slices
+    data_colors = {"plotOptions": {
+        "pie": {"colors": ["red", "blue"]}}}
+    # Red for attended babies, Dark blue for signed out babies
+    baby_colors = {"tooltip":{
+        "pointFormat": "{series.name}: <br>{point.percentage:.1f} %<br>total: {point.total}"
+    },"plotOptions": {
+        "pie": {"colors":  ["red", "blue"],
+                "dataLabels": {
+                    "enabled": True,
+                    "format": "<b>{point.name}</b>:<br>{point.percentage:.1f} %<br>total: {point.total}"
+                }}}}
+
+    babies_percentage = updated_count_babies / count_babies
+    signoutbabies_percentage = count_babies_signed_out / count_babies
+
+    print(f"{babies_percentage:.2%}")
     context = {
         "count_sitters": count_sitters,
-        "count_babies": count_babies,
-        "count_departure": count_departure,
-        "count_arrival": count_arrival,
-        "data" : {'attended sitters': count_arrival , 'not attended sitters': count_sitters - count_arrival},
-        "baby" : {'attended babies': count_arrivalbaby},
+        "count_babies": updated_count_babies,
+        "count_babies_signed_out": count_babies_signed_out,
+        "count_sitters_signed_in": count_sitters_signed_in,
+        "data": {'registered sitters': count_sitters, 'signed in': count_sitters_signed_in},
+        "baby": {'attended babies': babies_percentage, 'signed out babies': signoutbabies_percentage},
+        "data_colors": data_colors,
+        "baby_colors": baby_colors
     }
-    template = loader.get_template("home.html")
-    return HttpResponse(template.render(context))
+    return render(request, "home.html", context)
 
 
-#Babie views(forms)
+# Babie views(forms)
 @login_required
 def Babie(request):
     if request.method == 'POST':
-        getbabieform  = AddBabie(request.POST)
+        getbabieform = AddBabie(request.POST)
         if getbabieform.is_valid():
             getbabieform.save()
             messages.success(request, 'Baby added successfully')
-            return redirect('/baby_list')
+            return redirect('/baby_list/')
     else:
         getbabieform = AddBabie()
     return render(request, 'baby.html', {'getbabieform': getbabieform})
@@ -100,35 +132,37 @@ def baby_departure(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Baby signed out successfully')
-            return redirect('baby_departure') 
+            return redirect('/baby_departure/')
         else:
-            messages.error(request, 'Form submission failed. Please correct the errors.')
+            messages.error(
+                request, 'Form submission failed. Please correct the errors.')
     else:
         form = BabyDepartureForm()
     return render(request, 'baby_departure.html', {'form': form})
+
+
 @login_required
 def signinbaby(request):
     signinbaby = Arrivalbaby.objects.all()
     return render(request, 'baby_signedin.html', {'signinbaby': signinbaby})
 
- #sitter views (forms)  
+ # sitter views (forms)
+
+
 @login_required
 def Sitter(request):
     if request.method == 'POST':
-        getsitterform  = AddSitter(request.POST)
+        getsitterform = AddSitter(request.POST)
         if getsitterform.is_valid():
             getsitterform.save()
             messages.success(request, 'Baby added successfully')
-            return redirect('/sitter')
+            return redirect('/sitters_list/')
     else:
         getsitterform = AddSitter()
     return render(request, 'sitter.html', {'getsitterform': getsitterform})
-    
 
 
-
-
-#tables(sitters)
+# tables(sitters)
 @login_required
 def sitters_list(request):
     search_query = request.GET.get('search_query')
@@ -138,15 +172,16 @@ def sitters_list(request):
 
     if search_query:
         sitters_list = sitters_list.filter(
-            Q(Name__icontains=search_query) |  
-            Q(Sitter_No__icontains=search_query) |  
-            Q(Sitter_Contact__icontains=search_query) |  
-            Q(Religion__icontains=search_query) |  
-            Q(Location__icontains=search_query)  
+            Q(Name__icontains=search_query) |
+            Q(Sitter_No__icontains=search_query) |
+            Q(Sitter_Contact__icontains=search_query) |
+            Q(Religion__icontains=search_query) |
+            Q(Location__icontains=search_query)
         )
 
     if gender_filter:
-        sitters_list = sitters_list.filter(Gender__iexact=gender_filter)  # Use iexact for case-insensitive exact match
+        # Use iexact for case-insensitive exact match
+        sitters_list = sitters_list.filter(Gender__iexact=gender_filter)
 
     return render(request, 'sitters_list.html', {'sitters_list': sitters_list})
 
@@ -155,6 +190,7 @@ def sitters_list(request):
 def sitter_view(request, id):
     sitter_view = Sitter_registration.objects.get(pk=id)
     return render(request, 'sitter_view.html', {'sitter_view': sitter_view})
+
 
 @login_required
 def sitter_edit(request, id):
@@ -170,14 +206,32 @@ def sitter_edit(request, id):
         form = AddSitter(instance=sitter_edit)
     return render(request, 'sitter_edit.html', {'form': form})
 
+
 @login_required
-def sitter_delete(request, id):
+def sitter_delete(request, id):  # Change parameter name to 'id'
     sitter = get_object_or_404(Sitter_registration, pk=id)
     if request.method == 'POST':
         sitter.delete()
         messages.success(request, 'Sitter deleted successfully.')
         return redirect('sitters_list')
     return render(request, 'sitter_delete.html', {'sitter': sitter})
+
+
+@login_required
+def sitter_arrival_delete(request, sitter_id):
+    # Get the sitter object from the arrival list
+    sitter_arrival = get_object_or_404(Arrivalsitter, pk=sitter_id)
+
+    if request.method == 'POST':
+        # Delete the sitter object
+        sitter_arrival.delete()
+        messages.success(
+            request, 'Sitter deleted successfully from arrival list.')
+        return redirect('sitter_arrival_list')
+
+    # Render the template for the confirmation modal
+    return render(request, 'sitter_arrival_delete.html', {'sitter': sitter_arrival})
+
 
 @login_required
 def sitter_arrival(request):
@@ -195,27 +249,26 @@ def sitter_arrival(request):
         form = SitterArrivalForm()
     return render(request, 'sitterarrival.html', {'form': form})
 
+
 @login_required
 def sitter_arrival_list(request):
     search_query = request.GET.get('search_query')
- 
 
     sitter_arrival_list = Arrivalsitter.objects.all()
 
     if search_query:
         sitter_arrival_list = sitter_arrival_list.filter(
-            Q(Sitter_name__Name__icontains=search_query) |  
-            Q(Sitter_Number__icontains=search_query) |  
-            Q(Arrival_Date__icontains=search_query) |  
+            Q(Sitter_name__Name__icontains=search_query) |
+            Q(Sitter_Number__icontains=search_query) |
+            Q(Arrival_Date__icontains=search_query) |
             Q(Assigned_Babies__Baby_Name__icontains=search_query)
 
         )
 
-
     return render(request, 'sitter_arrival_list.html', {'sitter_arrival_list': sitter_arrival_list})
 
 
-#tables(babies)
+# tables(babies)
 @login_required
 def baby_list(request):
     search_query = request.GET.get('search_query')
@@ -225,15 +278,16 @@ def baby_list(request):
 
     if search_query:
         baby_list = baby_list.filter(
-            Q(Baby_Name__icontains=search_query) |  
-            Q(Baby_No__icontains=search_query) |  
-            Q(Age__icontains=search_query) |  
-            Q(Gender__icontains=search_query) |  
-            Q(Period_of_stay__name__icontains=search_query)  
+            Q(Baby_Name__icontains=search_query) |
+            Q(Baby_No__icontains=search_query) |
+            Q(Age__icontains=search_query) |
+            Q(Gender__icontains=search_query) |
+            Q(Period_of_stay__name__icontains=search_query)
         )
 
     if gender_filter:
-        baby_list = baby_list.filter(Gender__iexact=gender_filter)  # Use iexact for case-insensitive exact match
+        # Use iexact for case-insensitive exact match
+        baby_list = baby_list.filter(Gender__iexact=gender_filter)
 
     return render(request, 'baby_list.html', {'baby_list': baby_list})
 
@@ -249,6 +303,7 @@ def add_baby(request):
         form = AddBabie()
     return render(request, 'add_baby.html', {'form': form})
 
+
 @login_required
 def edit_baby(request, baby_id):
     if request.method == 'POST':
@@ -261,22 +316,26 @@ def edit_baby(request, baby_id):
     else:
         edit_baby = Babie_registration.objects.get(pk=baby_id)
         form = AddBabie(instance=edit_baby)
-    return render(request, 'edit_baby.html', {'form': form })
+    return render(request, 'edit_baby.html', {'form': form})
+
 
 @login_required
 def view_baby(request):
     view_baby = Babie_registration.objects.all()
     return render(request, 'view_baby.html', {'view_baby': view_baby})
 
+
 @login_required
 def babyupdate(request):
     babyupdate = Babie_registration.objects.all()
     return render(request, 'babyupdate.html', {'babyupdate': babyupdate})
 
+
 @login_required
 def baby_signedoutlist(request):
     baby_signedoutlist = Baby_departure.objects.all()
     return render(request, 'baby_signedoutlist.html', {'baby_signedoutlist': baby_signedoutlist})
+
 
 @login_required
 def delete_baby(request, baby_id):
@@ -285,51 +344,40 @@ def delete_baby(request, baby_id):
         baby.delete()
         return redirect('baby_list')
     return render(request, 'confirmation_delete.html', {'baby': baby})
+
+
 @login_required
 def payment_baby(request):
     if request.method == 'POST':
-        form = AddPayment(request.POST)
-        if form.is_valid():
-            # Extract form data
-            name = form.cleaned_data.get('name')
-            payment_date = form.cleaned_data.get('date')
-            full_day = form.cleaned_data.get('full_day')
-            half_day = form.cleaned_data.get('half_day')
-            monthly = form.cleaned_data.get('monthly')
+        name = request.POST.get('name')
+        payment_date = request.POST.get('date')
+        full_day = request.POST.get('full_day')
+        half_day = request.POST.get('half_day')
+        monthly = request.POST.get('monthly')
+        total_amount_due = request.POST.get('total_amount')
+        amount_paid = request.POST.get('amount_paid')
+        remaining_balance = request.POST.get('remaining_balance')
 
-            # Determine the stay type
-            if full_day:
-                stay_type = 'Full day'
-            elif half_day:
-                stay_type = 'Half day'
-            elif monthly:
-                stay_type = 'Monthly'
-            else:
-                stay_type = 'Not specified'
+        # Convert checkboxes to boolean values
+        full_day = True if full_day else False
+        half_day = True if half_day else False
+        monthly = True if monthly else False
 
-            total_amount_due = form.cleaned_data.get('total_amount')
-            amount_paid = form.cleaned_data.get('amount_paid')
-            remaining_balance = form.cleaned_data.get('remaining_balance')
-
-            # Create and save the payment instance
-            payment = BabyPayment(
-                name=name,
-                payment_date=payment_date,
-                full_day=full_day,
-                half_day=half_day,
-                monthly=monthly,
-                total_amount_due=total_amount_due,
-                amount_paid=amount_paid,
-                remaining_balance=remaining_balance
-            )
-            payment.save()
-
-            # Redirect to the payment list view
-            return redirect('payment_list')
+        pay = BabyPayment(
+            name=name,
+            payment_date=payment_date,
+            full_day=full_day,
+            half_day=half_day,
+            monthly=monthly,
+            total_amount_due=total_amount_due,
+            amount_paid=amount_paid,
+            remaining_balance=remaining_balance
+        )
+        pay.save()
+        return redirect('/paymentbaby_list')
     else:
-        form = AddPayment()
-    
-    return render(request, 'payment_baby.html', {'form': form})
+        return render(request, 'payment_baby.html')
+
 
 @login_required
 def payment_list(request):
@@ -349,35 +397,47 @@ def payment_edit(request, id):
     else:
         payment = get_object_or_404(BabyPayment, pk=id)
         form = AddPayment(instance=payment)
-    return render(request, 'payment_edit.html', {'form': form })
+    return render(request, 'payment_edit.html', {'form': form})
 
 
-#sitterpayement
+def delete_payment(request, payment_id):
+    if request.method == 'POST':
+        payment_id = request.POST.get('payment_id')
+        try:
+            payment = BabyPayment.objects.get(pk=payment_id)
+            payment.delete()
+            messages.success(request, 'Payment deleted successfully.')
+        except BabyPayment.DoesNotExist:
+            messages.error(request, 'Payment not found.')
+    return redirect('paymentbaby_list')
+
+# sitterpayement
+
 
 def paymentsitter(request):
     if request.method == 'POST':
         form = SitterPaymentForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('paymentsitter_list')  # Redirect to the payment list view
+            # Redirect to the payment list view
+            return redirect('paymentsitter_list')
         else:
             print(form.errors)
     else:
         form = SitterPaymentForm()
     return render(request, 'paymentsitter.html', {'form': form})
 
+
 def paymentsitter_list(request):
     payment_list = SitterPayment.objects.all()
     return render(request, 'paymentsitterlist.html', {'payment_list': payment_list})
 
 
-
-    
-#procurement
+# procurement
 @login_required
 def issue_item(request):
     if request.method == 'POST':
-        form  = SellDoll(request.POST)
+        form = SellDoll(request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, 'Stock added successfully')
@@ -405,47 +465,49 @@ def item_list(request):
     item_list = Procurement.objects.all()
     return render(request, 'item_list.html', {'item_list': item_list})
 
+
 @login_required
 def issued_out(request, pk):
     issued_item = get_object_or_404(Procurement, pk=pk)
     form = OutStock(request.POST)
-        
+
     if request.method == 'POST':
-        
+
         if form.is_valid():
             new_issue = form.save(commit=False)
             new_issue.item_name = issued_item
             new_issue.save()
-            issued_quantity = int(request.POST.get('quantity_issued_out'))  # Corrected access of POST data
+            issued_quantity = int(request.POST.get('quantity_issued_out'))
             issued_item.quantity -= issued_quantity
             issued_item.save()
-            print(request.POST.get('quantity_issued_out'))  # Corrected access of POST data
+            print(request.POST.get('quantity_issued_out'))
             print(issued_item.quantity)
             messages.success(request, 'Stock issued out successfully')
-            return redirect('item_list') 
+            return redirect('item_list')
     else:
         form = OutStock()
     return render(request, 'issue_out.html', {'form': form, 'issued_item': issued_item})
 
+
 @login_required
 def issued_in(request, pk):
     issued_procurement = Procurement.objects.get(id=pk)
-    
+
     if request.method == 'POST':
         form = InStock(request.POST)
         if form.is_valid():
             received_quantity = form.cleaned_data.get('quantity_received')
-            added_quantity = int(received_quantity) 
+            added_quantity = int(received_quantity)
             issued_procurement.quantity += added_quantity
 
             issued_procurement.save()
-            return redirect('item_list')  
+            return redirect('item_list')
     else:
         form = InStock()
     return render(request, 'issue_item.html', {'form': form})
 
 
-#dolls
+# dolls
 @login_required
 def doll_stock(request):
     products = Stock.objects.all().order_by('-id')
@@ -457,18 +519,19 @@ def add_doll(request):
         form = AddDoll(request.POST)
         if form.is_valid():
             added_quantity = form.cleaned_data['recieved_quantity']
-            product = Stock.objects.first()  # Retrieve the first (or appropriate) instance
+            product = Stock.objects.first()
             if product:
                 product.total_quantity += added_quantity
-                product.save()  # Save to update the existing instance
+                product.save()
             else:
-                # Handle the case where there's no existing instance
                 messages.error(request, 'No existing product found.')
             messages.success(request, 'Stock added successfully')
             return redirect('doll_stock')
     else:
         form = AddDoll()
     return render(request, 'dolladd.html', {'form': form})
+
+
 def dollsale(request, pk):
     product = get_object_or_404(Stock, pk=pk)
     if request.method == 'POST':
@@ -485,16 +548,18 @@ def dollsale(request, pk):
                 sold_quantity = int(sold_quantity)
                 product.total_quantity -= sold_quantity
                 product.save()
-                
+
                 # Create a Sellingdoll instance to record the sale
-                Sellingdoll.objects.create(item=product, quantity=sold_quantity, unit_price=form.cleaned_data['unit_price'], issued_to=form.cleaned_data['issued_to'], sold_quantity=sold_quantity)
-                
+                Sellingdoll.objects.create(item=product, quantity=sold_quantity, unit_price=form.cleaned_data[
+                                           'unit_price'], issued_to=form.cleaned_data['issued_to'], sold_quantity=sold_quantity)
+
                 # Logic for selling dolls goes here
                 messages.success(request, 'Stock sold successfully')
                 return redirect('doll_sell_list')
     else:
         form = SellDoll()
     return render(request, 'dollsale.html', {'form': form, 'product': product})
+
 
 def doll_delete(request, pk):
     stock_item = get_object_or_404(Stock, pk=pk)
@@ -515,39 +580,28 @@ def add_newdoll(request, pk):
     return render(request, 'dollnew.html', {'form': form})
 
 
-# View for updating a doll
 @login_required
 def update_doll(request, pk):
     # Retrieve the doll object
     item = get_object_or_404(Stock, pk=pk)
-    
-    # Check if the request method is POST
     if request.method == 'POST':
-        # Create a form instance and populate it with data from the request
-        form = DollForm(request.POST, instance=item)
-        # Check if the form is valid
+        form = DollForm(request.POST, request.FILES, instance=item)
         if form.is_valid():
-            # Save the form data to the database
             form.save()
-            # Redirect to a success page
             return redirect('doll_stock')
     else:
-        # Create a form instance and populate it with data from the doll object
         form = DollForm(instance=item)
-    
-    # Render the template with the form
     return render(request, 'doll_update.html', {'form': form})
 
 
 def doll_sell_list(request):
     doll_sales = Sellingdoll.objects.all()
     for sale in doll_sales:
-        # Calculate the total amount for each sale
-        sale.total_amount = sale.quantity * sale.item.unit_price  # Assuming amount_received is the amount per doll
-        
+        sale.total_amount = sale.quantity * sale.item.unit_price
+
     return render(request, 'doll_sell_list.html', {'doll_sales': doll_sales})
+
 
 def receipt(request, pk):
     sale = get_object_or_404(Sellingdoll, pk=pk)
     return render(request, 'dollreciept.html', {'sale': sale})
-    

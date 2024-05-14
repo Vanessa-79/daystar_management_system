@@ -52,6 +52,9 @@ class Babie_registration(models.Model):
     Brought_by = models.CharField(max_length=200, validators=[validate_letters])
     Arrival_Date = models.DateField(default=timezone.now)
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    def has_sitter_assigned(self):
+        return self.arrivalsitter_set.exists()
     def __str__(self):
         return self.Baby_Name
 
@@ -136,6 +139,9 @@ class BabyPayment(models.Model):
     total_amount_due = models.DecimalField(max_digits=10, decimal_places=2,blank=True)
     amount_paid = models.DecimalField(max_digits=10, decimal_places=2)
     remaining_balance = models.DecimalField(max_digits=10, decimal_places=2,default=False,blank=True)
+    is_complete = models.BooleanField(default=False) 
+    def is_complete(self):
+        return self.amount_paid == self.total_amount_due
 
     def __str__(self):
         return self.name

@@ -10,10 +10,10 @@
 
     .container {
         padding-top: 20px;
-        margin-top: 20px;
+        margin-top: 5px;
         width: calc(100% - 250px);
         padding: 20px;
-        margin-left: 60px;
+        margin-left: 5px;
         margin-right: 20px;
         background-color: #f8f9fa;
     }
@@ -49,39 +49,51 @@
     tr:nth-child(even) {
         background-color: #f2f2f2;
     }
+
+    .complete {
+        color: red; /* Change color for complete status */
+    }
+
+    .pending {
+        color: green; /* Change color for pending status */
+    }
+
+    .frame th{
+    background-color: #cddef0;
+    font-weight: bold;
+  }
 </style>
 
 <h2>Baby Payments</h2>
-<!-- Filter Form -->
-<form method="GET" action="#" class="mb-3">
+<!-- Filter Form
+<form method="GET" action="{% url 'payment_list' %}" class="mb-3">
     <div class="input-group" style="margin-left: 40px; width: 80%; margin-bottom: 10px;">
         <select class="form-select" name="filter_option">
-            <option value="">Select..</option>
-            <option value="specific_person">All</option>
-            <option value="males_only">Completed</option>
-            <option value="males_only">Pending</option>
-
+            <option value="" {% if not filter_option %} selected {% endif %}>All</option>
+            <option value="completed" {% if filter_option == 'completed' %} selected {% endif %}>Completed</option>
+            <option value="pending" {% if filter_option == 'pending' %} selected {% endif %}>Pending</option>
         </select>
         <button class="btn btn-outline-secondary" type="submit">Apply Filter</button>
     </div>
-</form>
+</form> -->
 
 <!-- Sitter Button -->
-<a href="{% url 'payment_baby' %}" class="btn mb-3" style="margin-left: 40px; background-color: #5679C0; color: white; margin-left: 70%;">Add
+<a href="{% url 'payment_baby' %}" class="btn mb-3" style=" background-color: #5679C0; color: white; margin-left: 10%;">Add
     Payment</a>
 
 
 <div class="container">
     <!-- Payment Table -->
     <table class="table table-striped">
-        <thead>
+        <thead class="frame">
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
                 <th scope="col">Date</th>
-                <th scope="col">Stay Type</th>
+                <th scope="col">Stay</th>
                 <th scope="col">Amount due</th>
                 <th scope="col">Amount Paid</th>
+                <th scope="col">Status</th>
                 <th scope="col">Actions</th>
             </tr>
         </thead>
@@ -105,6 +117,13 @@
                 </td>
                 <td>{{ payment.total_amount_due }}</td>
                 <td>{{ payment.amount_paid }}</td>
+                <td class="{% if payment.is_complete %}complete{% else %}pending{% endif %}">
+                    {% if payment.is_complete %}
+                        <span class="complete">Complete</span>
+                    {% else %}
+                        <span class="pending">Pending</span>
+                    {% endif %}
+                </td>
                 <td>
                     <div class="btn-group" role="group">
                         <a href="#" class="btn btn-success mr-1" style="background-color: #5679C0;"
@@ -150,29 +169,30 @@
                         </button>
 
                         <!-- Delete Modal -->
-                        <div class="modal fade" id="deleteModal{{ baby.id }}" tabindex="-1"
-                            aria-labelledby="deleteModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>Are you sure you want to delete the payment "{{ payment.name }}"?</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Cancel</button>
-                                        <form method="post" action="#">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-danger">Delete</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- Delete Modal -->
+<div class="modal fade" id="deleteModal{{ payment.id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the payment "{{ payment.name }}"?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form method="post" action="{% url 'delete_payment' payment.id %}">
+
+                    {% csrf_token %}
+                    <input type="hidden" name="payment_id" value="{{ payment.id }}">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
                     </div>
                 </td>
             </tr>
