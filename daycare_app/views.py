@@ -82,13 +82,19 @@ def home(request):
     updated_count_babies = count_babies - count_babies_signed_out
 
     # Define colors for the pie chart slices
-    data_colors = {"plotOptions": {
-        "pie": {"colors": ["red", "blue"]}}}
+    data_colors = {"tooltip":{
+        "pointFormat": "{series.name}: <br>{point.percentage:.1f} %<br>total: {point.total}"
+    },"plotOptions": {
+        "pie": {"colors":  ["#4764ae", "#3f528e"],
+                "dataLabels": {
+                    "enabled": True,
+                    "format": "<b>{point.name}</b>:<br>{point.percentage:.1f} %<br>total: {point.total}"
+                }}}}
     # Red for attended babies, Dark blue for signed out babies
     baby_colors = {"tooltip":{
         "pointFormat": "{series.name}: <br>{point.percentage:.1f} %<br>total: {point.total}"
     },"plotOptions": {
-        "pie": {"colors":  ["red", "blue"],
+        "pie": {"colors":  ["#4764ae", "#3f528e"],
                 "dataLabels": {
                     "enabled": True,
                     "format": "<b>{point.name}</b>:<br>{point.percentage:.1f} %<br>total: {point.total}"
@@ -96,6 +102,9 @@ def home(request):
 
     babies_percentage = updated_count_babies / count_babies
     signoutbabies_percentage = count_babies_signed_out / count_babies
+
+    sitters_signed_in_percentage = count_sitters_signed_in / count_sitters
+    sitters_registered_percentage = count_sitters / (count_sitters + count_sitters_signed_in)  # Percentage of registered sitters
 
     print(f"{babies_percentage:.2%}")
     context = {
@@ -227,13 +236,14 @@ def sitter_arrival_delete(request, sitter_id):
         sitter_arrival.delete()
         messages.success(
             request, 'Sitter deleted successfully from arrival list.')
-        return redirect('sitter_arrival_list')
+        return redirect('/sitter_arrival_list/')
 
     # Render the template for the confirmation modal
     return render(request, 'sitter_arrival_delete.html', {'sitter': sitter_arrival})
 
 
 @login_required
+
 def sitter_arrival(request):
     if request.method == 'POST':
         form = SitterArrivalForm(request.POST)
@@ -241,14 +251,18 @@ def sitter_arrival(request):
             sitter_arrival = form.save(commit=False)
             sitter_arrival.save()
             form.save_m2m()
-            sitter_arrival.calculate_total_babies()
+
+            # Set the is_assigned attribute for each baby instance
+            assigned_babies = form.cleaned_data['babies']
+            for baby in assigned_babies:
+                baby.is_assigned = True
+                baby.save()
 
             messages.success(request, 'Attendance successful')
-            return redirect('/sitterarrival')
+            return redirect('/sitter_arrival_list/')
     else:
         form = SitterArrivalForm()
     return render(request, 'sitterarrival.html', {'form': form})
-
 
 @login_required
 def sitter_arrival_list(request):

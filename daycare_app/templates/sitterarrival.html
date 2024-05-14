@@ -114,6 +114,7 @@ body::before {
   }
 
 </style>
+
 {% for message in messages %}
 <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: #0E98E7;">
   {{ message }}
@@ -130,13 +131,25 @@ body::before {
         {% csrf_token %}
         {{ form | crispy }}
 
+        <!-- Display indicators for assigned babies -->
+        {% for baby in form.babies %}
+        <div>
+          <label>{{ baby }}</label>
+          {% if baby.instance.is_assigned %}
+            <span class="assigned">✔</span>
+          {% else %}
+            <span class="unassigned">✘</span>
+          {% endif %}
+          <!-- Debug information -->
+          <span>{{ baby.instance.is_assigned }}</span>
+        </div>
+      {% endfor %}
+      
         <button type="submit" class="btn ">Submit</button>
       </form>
 
     </div>
   </div>
 </div>
-
-
 
 {% endblock %}

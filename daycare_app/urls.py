@@ -37,7 +37,7 @@ path('sitter_delete/<int:id>/', views.sitter_delete, name='sitter_delete'),
 path('sitteronduty/', views.sitter_arrival_list, name='sitter_arrival_list'),
 path('sitterarrival/', views.sitter_arrival, name='sitter_arrival'),
 path('sitter_arrival_delete/<int:sitter_id>/', views.sitter_arrival_delete, name='sitter_arrival_delete'),
-
+path('sitter_arrival_list/', views.sitter_arrival_list, name='sitter_arrival_lists'),
 #payments
 path('payment_baby/', views.payment_baby, name='payment_baby'), 
 path('payment_list/', views.payment_list, name='payment_list'),

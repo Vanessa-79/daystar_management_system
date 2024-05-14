@@ -51,6 +51,8 @@ class Babie_registration(models.Model):
     Parent_name = models.CharField(max_length=100, validators=[validate_letters])   
     Brought_by = models.CharField(max_length=200, validators=[validate_letters])
     Arrival_Date = models.DateField(default=timezone.now)
+    is_assigned = models.BooleanField(default=False)
+
     created_at = models.DateTimeField(auto_now_add=True)
     
     def has_sitter_assigned(self):

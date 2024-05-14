@@ -1,9 +1,20 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
-
 {% block content %}
 
+
+<style>
+    body{
+        overflow-x: hidden;
+    }
+
+    h3{
+        font-size: 20px;
+        font-weight: 800;
+        font-family: 'Times New Roman', Times, serif;
+    }
+</style>
 {% for message in messages %}
 <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: #0E98E7;">
     {{ message }}
@@ -13,7 +24,7 @@
 
 <div class="row justify-content-center">
     <div class="col-6">
-        <div class="card  mb-5 text-black" style="background-color: #83aad7; color: black; margin-top: 20px;">
+        <div class="card  mb-5 text-black" style="background-color: #83aad7; color: black; margin-top: 80px;">
             <div class="card-header">
                 <i class="fa-solid fa-pen-to-square fa-lg"></i>
                 <h3>UPDATE SITTER</h3>
