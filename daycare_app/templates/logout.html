@@ -4,7 +4,7 @@
 
 <style>
     body {
-        background-color: #f5f5f5;
+        background-color: #cddef0;
     }
 
     .container {
@@ -27,22 +27,18 @@
         color: #666;
     }
 
-
-    .footer {
-        background-color: #f5f5f5;
-        text-align: center;
-        padding: 20px;
-        margin-top: 20px;
-    }
+.logout button{
+color: aqua;
+}
 </style>
 
 <div class="container">
-    <form method="post">
+    <form method="post" class="logoutform">
         {% csrf_token %}
         <h2>Logout</h2>
         <div class="text-center">
             {{ form|crispy }}
-            <button type="submit" class="btn " style="background-color: #0056b3; border-radius: 5px; border-color: #0056b3; height: 30px; color: white; margin-top: 20px;">Logout</button>
+            <button type="submit" class="btn " style="background-color: #cddef0; border-radius: 5px; border: none; height: 30px; color: white; margin-top: 20px;">Logout</button>
         </div>
     </form>
 </div>

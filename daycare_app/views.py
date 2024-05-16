@@ -66,59 +66,58 @@ def base(request):
 @login_required
 def home(request):
     count_sitters = Sitter_registration.objects.count()
-    count_babies = Babie_registration.objects.filter(
-        Arrival_Date=date.today()).count()
-    count_babies_signed_out = Baby_departure.objects.filter(
-        departure_time__date=date.today()).count()
-    count_sitters_signed_in = Arrivalsitter.objects.filter(
-        Arrival_Date__date=date.today()).count()
-    print(Arrivalsitter.objects.values())
+    count_babies_signed_out = Baby_departure.objects.filter(departure_time__date=date.today()).count()
+    count_sitters_signed_in = Arrivalsitter.objects.filter(Arrival_Date__date=date.today()).count()
 
-    # Update the existing count of sitters signed in
-    existing_sitter_data = {'Sitters': count_sitters,
-                            'Signed In': count_sitters_signed_in}
+    # Count registered babies
+    count_babies_registered = Babie_registration.objects.filter(Arrival_Date=date.today()).count()
 
-    # Update the count of babies
-    updated_count_babies = count_babies - count_babies_signed_out
+    # Calculate total count of babies (registered minus signed-out)
+    count_babies_total = count_babies_registered - count_babies_signed_out
 
     # Define colors for the pie chart slices
-    data_colors = {"tooltip":{
-        "pointFormat": "{series.name}: <br>{point.percentage:.1f} %<br>total: {point.total}"
-    },"plotOptions": {
-        "pie": {"colors":  ["#4764ae", "#3f528e"],
+    data_colors = {
+        "tooltip": {
+            "pointFormat": "{series.name}: <br>{point.percentage:.1f} %<br>total: {point.total}"
+        },
+        "plotOptions": {
+            "pie": {
+                "colors": ["#4764ae", "#3f528e"],
                 "dataLabels": {
                     "enabled": True,
                     "format": "<b>{point.name}</b>:<br>{point.percentage:.1f} %<br>total: {point.total}"
-                }}}}
-    # Red for attended babies, Dark blue for signed out babies
-    baby_colors = {"tooltip":{
-        "pointFormat": "{series.name}: <br>{point.percentage:.1f} %<br>total: {point.total}"
-    },"plotOptions": {
-        "pie": {"colors":  ["#4764ae", "#3f528e"],
+                }
+            }
+        }
+    }
+    
+    baby_colors = {
+        "tooltip": {
+            "pointFormat": "{series.name}: <br>{point.percentage:.1f} %<br>total: {point.total}"
+        },
+        "plotOptions": {
+            "pie": {
+                "colors": ["#4764ae", "#3f528e"],
                 "dataLabels": {
                     "enabled": True,
                     "format": "<b>{point.name}</b>:<br>{point.percentage:.1f} %<br>total: {point.total}"
-                }}}}
+                }
+            }
+        }
+    }
 
-    babies_percentage = updated_count_babies / count_babies
-    signoutbabies_percentage = count_babies_signed_out / count_babies
-
-    sitters_signed_in_percentage = count_sitters_signed_in / count_sitters
-    sitters_registered_percentage = count_sitters / (count_sitters + count_sitters_signed_in)  # Percentage of registered sitters
-
-    print(f"{babies_percentage:.2%}")
     context = {
-        "count_sitters": count_sitters,
-        "count_babies": updated_count_babies,
-        "count_babies_signed_out": count_babies_signed_out,
-        "count_sitters_signed_in": count_sitters_signed_in,
-        "data": {'registered sitters': count_sitters, 'signed in': count_sitters_signed_in},
-        "baby": {'attended babies': babies_percentage, 'signed out babies': signoutbabies_percentage},
+        "count_sitters": count_sitters + count_sitters_signed_in,  # Total sitters
+        "count_babies": count_babies_total,  # Total babies (registered minus signed-out)
+        "count_babies_signed_out": count_babies_signed_out,  # Signed out babies
+        "count_sitters_signed_in": count_sitters_signed_in,  # Signed in sitters
+        "data": {'Registered Sitters': count_sitters, 'Signed In Sitters': count_sitters_signed_in},
+        "baby": {'Attended Babies': count_babies_total, 'Signed Out Babies': count_babies_signed_out},
         "data_colors": data_colors,
         "baby_colors": baby_colors
     }
-    return render(request, "home.html", context)
 
+    return render(request, "home.html", context)
 
 # Babie views(forms)
 @login_required
@@ -132,7 +131,6 @@ def Babie(request):
     else:
         getbabieform = AddBabie()
     return render(request, 'baby.html', {'getbabieform': getbabieform})
-
 
 @login_required
 def baby_departure(request):
@@ -253,7 +251,7 @@ def sitter_arrival(request):
             form.save_m2m()
 
             # Set the is_assigned attribute for each baby instance
-            assigned_babies = form.cleaned_data['babies']
+            assigned_babies = form.cleaned_data['Assigned_Babies']
             for baby in assigned_babies:
                 baby.is_assigned = True
                 baby.save()

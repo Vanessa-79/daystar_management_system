@@ -72,9 +72,12 @@
       margin-top: 20px;
   }
 
-  h2{
-      text-align: center;
-      margin-top: 60px;
+  h2 {
+    text-align: center;
+    color: black; 
+    margin-top: 50px;
+    font-weight: 800;
+    font-family: "Helvetica Neue";
   }
 
   .frame th {
@@ -85,7 +88,7 @@
 <h2>Sitter Payments</h2>
 
 <!-- Filter Form -->
-<form method="GET" action="#" class="mb-3">
+<!-- <form method="GET" action="#" class="mb-3">
   <div class="input-group" style="margin-left: 40px; width: 80%; margin-bottom: 10px;">
     <select class="form-select" name="filter_option">
       <option value="">Select..</option>
@@ -96,7 +99,7 @@
     </select>
     <button class="btn btn-outline-secondary" type="submit">Apply Filter</button>
   </div>
-</form>
+</form> -->
 
 <!-- Sitter Button -->
 <a href="{% url 'paymentsitter' %}" class="btn mb-3" style="margin-left: 40px; background-color: #5679C0; color: white;">Add Payment</a>
