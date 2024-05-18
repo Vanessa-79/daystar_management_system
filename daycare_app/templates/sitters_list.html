@@ -4,32 +4,32 @@
 {% block content %}
 
 <style>
-body {
-  overflow-x: hidden;
-}
+  body {
+    overflow-x: hidden;
+  }
+
   .container {
     padding-top: 20px;
     margin-top: 20px;
-    width: calc(100% - 50px); /* Adjust the width of the container */
-    /* background-color: #abc7e5; */
+    width: calc(100% - 50px);
     padding: 20px;
-    margin-left: 60px; /* Align the container to the right */
-    margin-right: 50px; /* Add margin to the right */
+    margin-left: 60px;
+    margin-right: 50px;
   }
 
   h2 {
     text-align: center;
-    color: black; 
+    color: black;
     margin-top: 50px;
     font-weight: 800;
     font-family: "Helvetica Neue";
   }
 
   table {
-    width: 100%; /* Extend the table to fill the container */
+    width: 100%;
     border-collapse: collapse;
-    margin-left: -60px; /* Adjust margin-left to overlap with the sidebar */
-    background-color: #cddef0; 
+    margin-left: -60px;
+    background-color: #cddef0;
   }
 
   th,
@@ -41,12 +41,12 @@ body {
   }
 
   tr:nth-child(even) {
-    background-color: #f2f2f2; 
+    background-color: #f2f2f2;
   }
 
-  /* Adjustments for the sidebar */
+
   .sidebar {
-    margin-left: 0; /* Reduce the space between the sidebar and the table */
+    margin-left: 0;
   }
 
   .modal-header {
@@ -54,7 +54,7 @@ body {
     color: white;
   }
 
-  .frame th{
+  .frame th {
     background-color: #cddef0;
     font-weight: bold;
   }
@@ -62,16 +62,16 @@ body {
 
 
 <h2>List of registered sitters</h2>
-<!-- Sitter Button -->
-<a href="{% url 'sitter' %}" class="btn  mb-3" style="margin-left: 40px; background-color: #658ecc; color: white;">Add Sitter</a>
-<!-- <a href="{% url 'sitters_list' %}" class="btn  mb-3" style="margin-left: 100px; background-color: #658ecc; color: white;">Go Back</a> -->
-<a href="{% url 'sitters_list' %}" class="btn btn-secondary mb-3" style="float: right; margin-right: 40px; background-color: #658ecc; color: white;">Go Back</a>
-
+<a href="{% url 'sitter' %}" class="btn btn-primary  mb-3 btn-add-sitter"
+  style="margin-left: 40px; background-color: #5679C0; color: white;">Add Sitter</a>
+<a href="{% url 'sitters_list' %}" class="btn btn-secondary mb-3 btn-go-back"
+  style="float: right; margin-right: 40px;background-color: #5679C0; color: white;">Go Back</a>
 
 <!-- Filter Form -->
 <form method="GET" action="{% url 'sitters_list' %}" class="mb-3">
   <div class="input-group" style="margin-left: 40px; width: 80%; margin-bottom: 10px;">
-    <input type="text" class="form-control" placeholder="Filter" name="search_query" value="{{ request.GET.search_query }}">
+    <input type="text" class="form-control" placeholder="Filter" name="search_query"
+      value="{{ request.GET.search_query }}">
     <input type="text" class="form-control" placeholder="Filter Gender" name="gender" value="{{ request.GET.gender }}">
     <button class="btn btn-outline-secondary" type="submit">Filter</button>
   </div>
@@ -79,7 +79,7 @@ body {
 
 
 <div class="container">
-  
+
   <table class="table table-striped">
     <thead class="frame">
       <tr>
@@ -105,12 +105,14 @@ body {
         <td>{{ sitter.Location }}</td>
         <td>
           <div class="btn-group" role="group">
-            <button type="button" class="btn  mr-1" style="background-color: #5679C0;" data-bs-toggle="modal" data-bs-target="#myModal{{ sitter.id }}">
-              <i class="fa-solid fa-circle-info fa-lg" style="color: white;"></i>
+            <button type="button" class="btn  mr-1" style="background-color: #5679C0;" data-bs-toggle="modal"
+              data-bs-target="#myModal{{ sitter.id }}">
+              <i class="fa-brands fa-readme fa-lg" style="color: white;"></i>
             </button>
 
             <!-- Modal -->
-            <div class="modal" id="myModal{{ sitter.id }}" tabindex="-1" aria-labelledby="myModallabel1" aria-hidden="true">
+            <div class="modal" id="myModal{{ sitter.id }}" tabindex="-1" aria-labelledby="myModallabel1"
+              aria-hidden="true">
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -132,7 +134,7 @@ body {
                       <li>NIN: <strong>{{ sitter.NIN }}</strong></li>
                       <li>Recommenders name: <strong>{{ sitter.Recommenders_name }}</strong></li>
                       <li>Recommenders contact: <strong>{{ sitter.Recommenders_contact }}</strong></li>
-                      <li>Level of education : <strong>{{ sitter.Level_of_education  }}</strong></li>
+                      <li>Level of education : <strong>{{ sitter.Level_of_education }}</strong></li>
                     </ul>
                   </div>
                   <div class="modal-footer">
@@ -143,36 +145,38 @@ body {
             </div>
 
             <a class="btn  mr-1" style="background-color: #5679C0;" href="{% url 'sitter_edit' sitter.id %}">
-              <i class="fa-solid fa-pen-to-square fa-lg" style="color: white;"></i>
+              <i class="fa-solid fa-pen-nib fa-lg" style="color: white;"></i>
             </a>
 
-            <button type="button" class="btn " style="background-color: #5679C0;" data-bs-toggle="modal" data-bs-target="#delete{{ sitter.id }}">
+            <button type="button" class="btn " style="background-color: #5679C0;" data-bs-toggle="modal"
+              data-bs-target="#delete{{ sitter.id }}">
               <i class="fa-solid fa-trash fa-lg" style="color: white;"></i>
             </button>
 
             <!-- Delete Modal -->
-            <div class="modal" id="delete{{ sitter.id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-            
+            <div class="modal" id="delete{{ sitter.id }}" tabindex="-1" aria-labelledby="deleteModalLabel"
+              aria-hidden="true">
+
               <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Are you sure you want to delete the sitter "{{ sitter.Name }}"?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary"
-                            data-bs-dismiss="modal">Cancel</button>
-                        <form method="post" action="{% url 'sitter_delete' sitter.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn " style="background-color: #83aad7;">Delete</button>
-                        </form>
-                    </div>
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <p>Are you sure you want to delete the sitter "{{ sitter.Name }}"?</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn" data-bs-dismiss="modal"
+                      style="background-color: #83aad7; color: white;">Cancel</button>
+                    <form method="post" action="{% url 'sitter_delete' sitter.id %}">
+                      {% csrf_token %}
+                      <button type="submit" class="btn "
+                        style="background-color: #83aad7; color: white;">Delete</button>
+                    </form>
+                  </div>
                 </div>
-            </div>
+              </div>
             </div>
           </div>
         </td>

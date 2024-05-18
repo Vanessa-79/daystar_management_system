@@ -11,18 +11,14 @@
     padding-top: 20px;
     margin-top: 20px;
     width: calc(100% - 50px);
-    /* Adjust the width of the container */
-    /* background-color: #abc7e5; */
     padding: 20px;
     margin-left: 60px;
-    /* Align the container to the right */
     margin-right: 50px;
-    /* Add margin to the right */
   }
 
   h2 {
     text-align: center;
-    color: black; 
+    color: black;
     margin-top: 50px;
     font-weight: 800;
     font-family: "Helvetica Neue";
@@ -30,10 +26,8 @@
 
   table {
     width: 100%;
-    /* Extend the table to fill the container */
     border-collapse: collapse;
     margin-left: -60px;
-    /* Adjust margin-left to overlap with the sidebar */
     background-color: #cddef0;
   }
 
@@ -49,10 +43,8 @@
     background-color: #f2f2f2;
   }
 
-  /* Adjustments for the sidebar */
   .sidebar {
     margin-left: 0;
-    /* Reduce the space between the sidebar and the table */
   }
 
   .modal-header {
@@ -64,20 +56,17 @@
     background-color: #cddef0;
     font-weight: bold;
   }
-
-  
 </style>
 
 <h2>List of On Duty sitters</h2>
-<!-- Add Sitter Button -->
 <a href="{% url 'sitter_arrival' %}" class="btn mb-3"
-  style="margin-left: 40px; background-color: #658ecc; color: white;">Add Sitter</a>
+  style="margin-left: 40px; background-color: #5679C0; color: white;">Add Sitter</a>
 <a href="{% url 'sitter_arrival_list' %}" class="btn btn-secondary mb-3"
-  style="float: right; margin-right: 40px; background-color: #658ecc; color: white;">Go Back</a>
+  style="float: right; margin-right: 40px; background-color: #5679C0; color: white;">Go Back</a>
 
 <!-- Filter Form -->
-<form method="GET" action="{% url 'sitter_arrival_list' %}" class="mb-3 search-form">
-  <div class="input-group" style="width: 100%;">
+<form method="GET" action="{% url 'sitter_arrival_list' %}" class="mb-3">
+  <div class="input-group" style="margin-left: 40px; width: 80%; margin-bottom: 10px;">
     <input type="text" class="form-control" placeholder="Filter" name="search_query"
       value="{{ request.GET.search_query }}">
     <button class="btn btn-outline-secondary" type="submit">Filter</button>
@@ -87,7 +76,6 @@
 <!-- Sitter Table -->
 <div class="container table-container">
   <table class="table table-striped">
-    <!-- Table Headers -->
     <thead class="frame">
       <tr>
         <th scope="col">#</th>
@@ -126,7 +114,7 @@
           <div class="btn-group" role="group">
             <button type="button" class="btn  mr-1" style="background-color: #5679C0;" data-bs-toggle="modal"
               data-bs-target="#myModal{{ sitter.id }}">
-              <i class="fa-solid fa-circle-info fa-lg" style="color: white;"></i>
+              <i class="fa-brands fa-readme fa-lg" style="color: white;"></i>
             </button>
 
             <!-- Modal -->
@@ -143,9 +131,14 @@
                   <div class="modal-body">
                     <ul class="list-unstyled">
                       <li>Name: <strong>{{ sitter.Sitter_name }}</strong></li>
-                      <li>Sitter Number: <strong>{{ sitter.Sitter_Number }}</strong></li>
                       <li>Arrival Date: <strong>{{ sitter.Arrival_Date }}</strong></li>
-                      <li>AssignedBabies: <strong>{{ sitter.Assigned_Babies }}</strong></li>
+                      <li>Assigned Babies:
+                        <ul>
+                          {% for baby in sitter.Assigned_Babies.all %}
+                          <li>{{ baby.Baby_Name }}</li>
+                          {% endfor %}
+                        </ul>
+                      </li>
                       <li>Status: <strong>{{ sitter.Status }}</strong></li>
                     </ul>
                   </div>
@@ -157,7 +150,7 @@
             </div>
 
             <a class="btn  mr-1" style="background-color: #5679C0;" href="{% url 'sitter_edit' sitter.id %}">
-              <i class="fa-solid fa-pen-to-square fa-lg" style="color: white;"></i>
+              <i class="fa-solid fa-pen-nib fa-lg" style="color: white;"></i>
             </a>
 
             <button type="button" class="btn " style="background-color: #5679C0;" data-bs-toggle="modal"
@@ -179,11 +172,12 @@
                     <p>Are you sure you want to delete the sitter "{{ sitter.Sitter_name }}"?</p>
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                      style="background-color: #83aad7; color: white;">Cancel</button>
                     <form method="post" action="{% url 'sitter_arrival_delete' sitter.id %}">
                       {% csrf_token %}
-                      <button type="submit" class="btn" style="background-color: #83aad7;">Delete</button>
-                  </form>
+                      <button type="submit" class="btn" style="background-color: #83aad7; color: white;">Delete</button>
+                    </form>
                   </div>
                 </div>
               </div>

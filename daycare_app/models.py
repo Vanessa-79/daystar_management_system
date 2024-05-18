@@ -37,6 +37,7 @@ class PaymentRate(models.Model):
 
 class Babie_registration(models.Model):
     GENDER_CHOICES = (
+        ('', '--select--'),
         ('Male', 'Male'),
         ('Female', 'Female'),
     )
@@ -62,6 +63,7 @@ class Babie_registration(models.Model):
 
 class Sitter_registration(models.Model):
     GENDER_CHOICES = (
+        ('', '--select--'),
         ('Male', 'Male'),
         ('Female', 'Female'),
     )
@@ -77,6 +79,7 @@ class Sitter_registration(models.Model):
     Recommenders_contact = models.CharField(max_length=10, validators=[validate_contacts])
     Religion = models.CharField(max_length=20, null=True, blank=True,  verbose_name="Religion (Optional)")
     Level_of_education = models.CharField(max_length=100, choices=( 
+        ('', '--select--'),
         ('Certificate', 'Certificate'),
         ('Diploma', 'Diploma'),
         ('Degree', 'Degree'),
@@ -106,7 +109,7 @@ class Arrivalsitter(models.Model):
 class SitterPayment(models.Model):
     sitter = models.ForeignKey(Arrivalsitter, on_delete=models.CASCADE)
     payment_date = models.DateField(default=timezone.now)
-    babies_attended = models.PositiveIntegerField(default=0)  # Field to store the total number of babies attended
+    babies_attended = models.PositiveIntegerField(default=0) 
     amount_paid = models.IntegerField(default=3000)
 
 
@@ -140,6 +143,7 @@ class BabyPayment(models.Model):
     total_amount_due = models.DecimalField(max_digits=10, decimal_places=2,blank=True)
     amount_paid = models.DecimalField(max_digits=10, decimal_places=2)
     remaining_balance = models.DecimalField(max_digits=10, decimal_places=2,default=False,blank=True)
+    status = models.CharField(max_length=10, choices=[('complete', 'Complete'), ('pending', 'Pending')], default='pending')
     is_complete = models.BooleanField(default=False) 
     def is_complete(self):
         return self.amount_paid == self.total_amount_due
@@ -150,6 +154,7 @@ class BabyPayment(models.Model):
 
 class Procurement(models.Model):
     item_name = models.CharField(max_length=100, choices=( 
+        ('', '--select--'),
         ('Fruits', 'Fruits'),
         ('Diapers', 'Diapers'),
         ('Milk', 'Milk'),

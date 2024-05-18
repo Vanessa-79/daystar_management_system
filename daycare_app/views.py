@@ -27,7 +27,6 @@ def login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            # Redirect to the next parameter if available, else to dashboard
             return redirect(request.GET.get('next', 'dashboard'))
         else:
             return render(request, 'login.html', {'error_message': 'Invalid username or password'})
@@ -48,8 +47,6 @@ def logout_view(request):
 
 
 def Index(request):
-
-
     return render(request, 'index.html')
     
 
@@ -58,7 +55,7 @@ def Index(request):
 def dashboard(request):
     return render(request, 'dashboard.html')
 
-
+@login_required
 def base(request):
     return render(request, 'base.html')
 
@@ -69,23 +66,21 @@ def home(request):
     count_babies_signed_out = Baby_departure.objects.filter(departure_time__date=date.today()).count()
     count_sitters_signed_in = Arrivalsitter.objects.filter(Arrival_Date__date=date.today()).count()
 
-    # Count registered babies
     count_babies_registered = Babie_registration.objects.filter(Arrival_Date=date.today()).count()
 
-    # Calculate total count of babies (registered minus signed-out)
     count_babies_total = count_babies_registered - count_babies_signed_out
 
     # Define colors for the pie chart slices
     data_colors = {
         "tooltip": {
-            "pointFormat": "{series.name}: <br>{point.percentage:.1f} %<br>total: {point.total}"
+            "pointFormat": "{series.name}: <br>{point.percentage:.1f} %"
         },
         "plotOptions": {
             "pie": {
                 "colors": ["#4764ae", "#3f528e"],
                 "dataLabels": {
                     "enabled": True,
-                    "format": "<b>{point.name}</b>:<br>{point.percentage:.1f} %<br>total: {point.total}"
+                    "format": "<b>{point.name}</b>:<br>{point.percentage:.1f} %"
                 }
             }
         }
@@ -93,24 +88,24 @@ def home(request):
     
     baby_colors = {
         "tooltip": {
-            "pointFormat": "{series.name}: <br>{point.percentage:.1f} %<br>total: {point.total}"
+            "pointFormat": "{series.name}: <br>{point.percentage:.1f} %"
         },
         "plotOptions": {
             "pie": {
                 "colors": ["#4764ae", "#3f528e"],
                 "dataLabels": {
                     "enabled": True,
-                    "format": "<b>{point.name}</b>:<br>{point.percentage:.1f} %<br>total: {point.total}"
+                    "format": "<b>{point.name}</b>:<br>{point.percentage:.1f} %"
                 }
             }
         }
     }
 
     context = {
-        "count_sitters": count_sitters + count_sitters_signed_in,  # Total sitters
-        "count_babies": count_babies_total,  # Total babies (registered minus signed-out)
-        "count_babies_signed_out": count_babies_signed_out,  # Signed out babies
-        "count_sitters_signed_in": count_sitters_signed_in,  # Signed in sitters
+        "count_sitters": count_sitters + count_sitters_signed_in,  
+        "count_babies": count_babies_total,  
+        "count_babies_signed_out": count_babies_signed_out, 
+        "count_sitters_signed_in": count_sitters_signed_in, 
         "data": {'Registered Sitters': count_sitters, 'Signed In Sitters': count_sitters_signed_in},
         "baby": {'Attended Babies': count_babies_total, 'Signed Out Babies': count_babies_signed_out},
         "data_colors": data_colors,
@@ -127,7 +122,7 @@ def Babie(request):
         if getbabieform.is_valid():
             getbabieform.save()
             messages.success(request, 'Baby added successfully')
-            return redirect('/baby_list/')
+            return redirect('/babie/')
     else:
         getbabieform = AddBabie()
     return render(request, 'baby.html', {'getbabieform': getbabieform})
@@ -154,16 +149,17 @@ def signinbaby(request):
     return render(request, 'baby_signedin.html', {'signinbaby': signinbaby})
 
  # sitter views (forms)
-
-
 @login_required
 def Sitter(request):
     if request.method == 'POST':
         getsitterform = AddSitter(request.POST)
         if getsitterform.is_valid():
             getsitterform.save()
-            messages.success(request, 'Baby added successfully')
-            return redirect('/sitters_list/')
+            messages.success(request, 'Sitter added successfully')
+            return redirect('/sitter/')
+        else:
+            messages.error(
+                request, 'Form submission failed. Please correct the errors.')
     else:
         getsitterform = AddSitter()
     return render(request, 'sitter.html', {'getsitterform': getsitterform})
@@ -215,7 +211,7 @@ def sitter_edit(request, id):
 
 
 @login_required
-def sitter_delete(request, id):  # Change parameter name to 'id'
+def sitter_delete(request, id): 
     sitter = get_object_or_404(Sitter_registration, pk=id)
     if request.method == 'POST':
         sitter.delete()
@@ -226,17 +222,12 @@ def sitter_delete(request, id):  # Change parameter name to 'id'
 
 @login_required
 def sitter_arrival_delete(request, sitter_id):
-    # Get the sitter object from the arrival list
     sitter_arrival = get_object_or_404(Arrivalsitter, pk=sitter_id)
-
     if request.method == 'POST':
-        # Delete the sitter object
         sitter_arrival.delete()
         messages.success(
             request, 'Sitter deleted successfully from arrival list.')
         return redirect('/sitter_arrival_list/')
-
-    # Render the template for the confirmation modal
     return render(request, 'sitter_arrival_delete.html', {'sitter': sitter_arrival})
 
 
@@ -386,17 +377,38 @@ def payment_baby(request):
             remaining_balance=remaining_balance
         )
         pay.save()
-        return redirect('/paymentbaby_list')
+        return redirect('/payment_list/')
     else:
         return render(request, 'payment_baby.html')
 
-
 @login_required
 def payment_list(request):
+    search_query = request.GET.get('search_query')
+
     payment_list = BabyPayment.objects.all()
+
+    if search_query:
+        if search_query.lower() in ['full day', 'half day', 'monthly', 'complete', 'pending']:
+            if search_query.lower() == 'full day':
+                payment_list = payment_list.filter(full_day=True)
+            elif search_query.lower() == 'half day':
+                payment_list = payment_list.filter(half_day=True)
+            elif search_query.lower() == 'monthly':
+                payment_list = payment_list.filter(monthly=True)
+            elif search_query.lower() == 'complete':
+                payment_list = payment_list.filter(status='complete')
+            elif search_query.lower() == 'pending':
+                payment_list = payment_list.filter(status='pending')
+        else:
+            payment_list = payment_list.filter(
+                Q(name__icontains=search_query) |
+                Q(payment_date__icontains=search_query) |
+                Q(total_amount_due__icontains=search_query) |
+                Q(amount_paid__icontains=search_query) |
+                Q(remaining_balance__icontains=search_query)
+            )
+
     return render(request, 'paymentbaby_list.html', {'payment_list': payment_list})
-
-
 @login_required
 def payment_edit(request, id):
     if request.method == 'POST':

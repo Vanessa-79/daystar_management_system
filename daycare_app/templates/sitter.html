@@ -1,8 +1,7 @@
-<!-- borrowing/inheriting the content of another file -->
-{% extends 'base.html'%}
+{% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
-{% static 'css/styles.css'%}
+{% static 'css/styles.css' %}
 {% block content %}
 <style>
   body {
@@ -30,7 +29,6 @@
     margin-top: 20px;
     border-radius: 5px;
     background-color: #cddef0;
-    
   }
 
   .container .inner-container {
@@ -46,7 +44,6 @@
     margin: 50px auto;
     margin-right: 50%;
     color: black;
-    
   }
 
   .form-container h1 {
@@ -87,9 +84,6 @@
     cursor: pointer;
   }
 
-  
-
-
   .container select[name="gender"] {
     border: 2px solid rgba(0, 128, 255, 0.2);
     box-shadow: 0 0 0.1rem rgba(0, 0, 0, 0.1);
@@ -110,11 +104,17 @@
     right: 20px;
     z-index: 1000;
     opacity: 0;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.5s ease, transform 0.5s ease;
   }
 
   .alert.show {
     opacity: 1;
+    transform: translateY(0);
+  }
+
+  .alert.hide {
+    opacity: 0;
+    transform: translateY(-20px);
   }
 
   .alert-warning {
@@ -143,13 +143,9 @@
   }
 
   @media screen and (max-width: 768px) {
-
-    /* Adjust form container width for smaller screens */
     .form-container {
       width: 90%;
     }
-
-    /* Adjust margin for form */
     .form {
       margin-left: 0;
       margin-top: 5px;
@@ -166,18 +162,15 @@
 
 <div class="form" style="margin-left: 200px; margin-top: 5px">
   <div class="form-container">
-    <h1>
-      SITTERS REGISTRATION
-    </h1>
+    <h1>SITTERS REGISTRATION</h1>
     <hr />
     <div class="container">
       <form action="" method="POST" class="sitter-form">
-        {% csrf_token %} {{ getsitterform | crispy }}
-
+        {% csrf_token %}
+        {{ getsitterform|crispy }}
         <button type="submit">Submit</button>
       </form>
     </div>
   </div>
 </div>
-
 {% endblock %}

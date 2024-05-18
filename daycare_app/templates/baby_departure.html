@@ -17,13 +17,11 @@
     height: 100%;
     background-image: url('/static/images/formbg.jpg');
     opacity: 0.1;
-    /* Adjust the opacity as needed */
     z-index: -3;
-    /* Ensure the pseudo-element is behind other content */
     background-size: cover;
   }
 
-  /* Add your custom styles here */
+
   .container {
     width: 95%;
     padding: 10px;
@@ -114,12 +112,12 @@
   }
 
   .babe-form textarea.form-control {
-    height: 100px; /* Adjust the height as needed */
+    height: 100px; 
   }
 </style>
 
 {% for message in messages %}
-<div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: #0E98E7;">
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
   {{ message }}
   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
