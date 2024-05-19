@@ -537,24 +537,25 @@ def doll_stock(request):
     products = Stock.objects.all().order_by('-id')
     return render(request, 'doll_stock.html', {'products': products})
 
-
 def add_doll(request):
+    product_id = request.GET.get('product_id')
     if request.method == 'POST':
         form = AddDoll(request.POST)
         if form.is_valid():
             added_quantity = form.cleaned_data['recieved_quantity']
-            product = Stock.objects.first()
-            if product:
+            if product_id:
+                product = get_object_or_404(Stock, id=product_id)
                 product.total_quantity += added_quantity
                 product.save()
+                messages.success(request, 'Stock added successfully')
+                return redirect('doll_stock')
             else:
-                messages.error(request, 'No existing product found.')
-            messages.success(request, 'Stock added successfully')
-            return redirect('doll_stock')
+                messages.error(request, 'No product ID provided.')
+        else:
+            messages.error(request, 'Form is not valid')
     else:
         form = AddDoll()
-    return render(request, 'dolladd.html', {'form': form})
-
+    return render(request, 'dolladd.html', {'form': form, 'product_id': product_id})
 
 def dollsale(request, pk):
     product = get_object_or_404(Stock, pk=pk)
@@ -577,7 +578,7 @@ def dollsale(request, pk):
                 Sellingdoll.objects.create(item=product, quantity=sold_quantity, unit_price=form.cleaned_data[
                                            'unit_price'], issued_to=form.cleaned_data['issued_to'], sold_quantity=sold_quantity)
 
-                # Logic for selling dolls goes here
+                # Logic for selling dolls
                 messages.success(request, 'Stock sold successfully')
                 return redirect('doll_sell_list')
     else:

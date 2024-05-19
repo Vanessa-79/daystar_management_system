@@ -28,7 +28,7 @@
   table {
     width: 100%;
     border-collapse: collapse;
-    margin-left: -60px;
+    margin-left: -40px;
     background-color: #cddef0;
   }
 
@@ -83,7 +83,6 @@
   <table class="table table-striped">
     <thead class="frame">
       <tr>
-        <th scope="col">#</th>
         <th scope="col">Sitter No</th>
         <th scope="col">Name</th>
         <th scope="col">Gender</th>
@@ -96,7 +95,7 @@
     <tbody>
       {% for sitter in sitters_list %}
       <tr>
-        <th scope="row">{{ sitter.id }}</th>
+
         <td>S{{ sitter.Sitter_No }}</td>
         <td>{{ sitter.Name }}</td>
         <td>{{ sitter.Gender }}</td>
@@ -148,36 +147,8 @@
               <i class="fa-solid fa-pen-nib fa-lg" style="color: white;"></i>
             </a>
 
-            <button type="button" class="btn " style="background-color: #5679C0;" data-bs-toggle="modal"
-              data-bs-target="#delete{{ sitter.id }}">
-              <i class="fa-solid fa-trash fa-lg" style="color: white;"></i>
-            </button>
 
-            <!-- Delete Modal -->
-            <div class="modal" id="delete{{ sitter.id }}" tabindex="-1" aria-labelledby="deleteModalLabel"
-              aria-hidden="true">
 
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    <p>Are you sure you want to delete the sitter "{{ sitter.Name }}"?</p>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn" data-bs-dismiss="modal"
-                      style="background-color: #83aad7; color: white;">Cancel</button>
-                    <form method="post" action="{% url 'sitter_delete' sitter.id %}">
-                      {% csrf_token %}
-                      <button type="submit" class="btn "
-                        style="background-color: #83aad7; color: white;">Delete</button>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </td>
       </tr>

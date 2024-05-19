@@ -4,9 +4,24 @@
 {% block content %}
 
 <style>
-  body{
-      overflow-x: hidden;
-  }
+    body {
+        overflow-x: hidden;
+        position: relative;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('/static/images/formbg.jpg');
+        opacity: 0.1;
+        z-index: -3;
+        background-size: cover;
+    }
+
   /* Modal Styles */
   .modal-dialog {
       max-width: 800px;
@@ -87,20 +102,6 @@
 </style>
 <h2>Sitter Payments</h2>
 
-<!-- Filter Form -->
-<!-- <form method="GET" action="#" class="mb-3">
-  <div class="input-group" style="margin-left: 40px; width: 80%; margin-bottom: 10px;">
-    <select class="form-select" name="filter_option">
-      <option value="">Select..</option>
-      <option value="specific_person">All</option>
-      <option value="males_only">Completed</option>
-      <option value="males_only">Pending</option>
-      
-    </select>
-    <button class="btn btn-outline-secondary" type="submit">Apply Filter</button>
-  </div>
-</form> -->
-
 <!-- Sitter Button -->
 <a href="{% url 'paymentsitter' %}" class="btn mb-3" style="margin-left: 40px; background-color: #5679C0; color: white;">Add Payment</a>
 
@@ -132,9 +133,9 @@
                 <td>{{ payment.total_amount}}</td>
                 <td>
                   <div class="btn-group" role="group">
-                    <a href="#" class="btn btn-success mr-1" style="background-color: #5679C0;" data-bs-toggle="modal"
+                    <a href="#" class="btn  mr-1" style="background-color: #5679C0;" data-bs-toggle="modal"
                         data-bs-target="#myModal{{ sitter.id }}">
-                        <i class="fa-solid fa-circle-info fa-lg"></i>
+                        <i class="fa-brands fa-readme fa-lg" style="color: white;"></i>
                     </a>
 
                     <!-- Information Modal -->
@@ -164,14 +165,10 @@
                         </div>
                     </div>
 
-                    <a href="#" class="btn btn-warning mr-1" style="background-color: #5679C0;">
-                        <i class="fa-solid fa-pen-to-square fa-lg"></i>
+                    <a href="#" class="btn  mr-1" style="background-color: #5679C0;">
+                        <i class="fa-solid fa-pen-nib fa-lg" style="color: white;"></i>
                     </a>
 
-                    <button type="button" class="btn btn-danger" style="background-color: #5679C0;" data-bs-toggle="modal"
-                        data-bs-target="#deleteModal{{ baby.id }}">
-                        <i class="fa-solid fa-trash fa-lg"></i>
-                    </button>
 
                     <!-- Delete Modal -->
                     <div class="modal fade" id="deleteModal{{ sitter.id }}" tabindex="-1"

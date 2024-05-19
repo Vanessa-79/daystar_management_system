@@ -4,10 +4,23 @@
 {% block content %}
 
 <style>
-  body {
+    body {
+        overflow-x: hidden;
+        position: relative;
+    }
 
-    overflow-x: hidden;
-  }
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('/static/images/formbg.jpg');
+        opacity: 0.1;
+        z-index: -3;
+        background-size: cover;
+    }
 
   .container {
     padding-top: 20px;

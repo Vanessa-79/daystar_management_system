@@ -41,7 +41,6 @@
 
 <div class="container">
     <h2>DOLL SALES</h2>
-    <hr>
     <table class="table">
         <thead class="frame">
             <tr>
@@ -61,7 +60,7 @@
                 <td>{{ sale.item.item_name }}</td> 
                 <td>{{ sale.sold_quantity }}</td>
                 <td>{{ sale.unit_price }}</td>
-                <td>{{ sale.issued_to }}</td>
+                <td>{{ sale.issued_to.Baby_Name }}</td> <!-- Adjusted to match the correct field -->
                 <td>{{ sale.total_amount }}</td>
                 <td>
                     {% if sale.item.total_quantity <= 0 %}

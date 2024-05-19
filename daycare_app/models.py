@@ -148,6 +148,11 @@ class BabyPayment(models.Model):
     def is_complete(self):
         return self.amount_paid == self.total_amount_due
 
+    def save(self, *args, **kwargs):
+        self.remaining_balance = self.total_amount_due - self.amount_paid
+        self.status = 'complete' if self.is_complete else 'pending'
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.name
 
@@ -204,15 +209,13 @@ class Sellingdoll(models.Model):
     unit_price = models.IntegerField(default=0, null=True, blank=True)
     issued_to = models.ForeignKey(Babie_registration, on_delete=models.CASCADE, null=True, blank=True)
     sold_quantity = models.IntegerField(default=0, null=True, blank=True)
-    # unit_price = models.IntegerField(default=0, null=True, blank=True)
+    total_amount = models.IntegerField(max_length=10,null=True, blank=True)
+    def get_total_amount(self):
+        return self.sold_quantity * self.unit_price
 
-    def gettotal_amount(self):
-        total= self.quantity * self.item.unit_price
-        return int(total)
-
-    def balance(self):
-        balance = self.gettotal_amount() - self.amount_received
-        return abs(int(balance))
+    def save(self, *args, **kwargs):
+        self.total_amount = self.get_total_amount()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.item.item_name
