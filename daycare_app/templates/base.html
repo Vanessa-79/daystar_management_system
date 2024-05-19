@@ -19,7 +19,7 @@
   <script src="{% static 'js/index.js' %}"></script>
 
   <style>
-    /* General styles */
+
     body {
       margin: 0;
       background-color: #f8f9fa;
@@ -38,16 +38,33 @@
       left: 0;
       right: 0;
       z-index: 1000;
+      display: flex;
+      align-items: center;
     }
 
     .navbar-nav .nav-item:last-child .nav-link:hover {
       background-color: #7ab0ea;
     }
 
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+    }
+
     .navbar-brand img {
       width: 40px;
       height: 40px;
       border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .navbar h1 {
+      font-size: 24px;
+      font-style: italic;
+      font-weight: 900;
+      font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+      margin: 0;
+      color: rgb(250, 247, 247);
     }
 
     .navbar-toggler {
@@ -59,6 +76,10 @@
       display: inline-block;
       z-index: 1030;
 
+    }
+
+    .navbar .navbar-collapse {
+      margin-left: auto;
     }
 
     /* Sidebar */
@@ -94,6 +115,7 @@
 
     .sidebar a:hover {
       background-color: #7ab0ea;
+      color: black;
     }
 
     .sidebar a .material-icons-outlined {
@@ -101,7 +123,7 @@
     }
 
     .sidebar .nav-item {
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
 
     .nav-item.active a {
@@ -162,8 +184,9 @@
         <!-- Logo -->
         <a class="navbar-brand" href="#">
           <img src="{% static 'images/DAYSTAR DAYCAREt.png' %}" alt="Daystar Daycare Logo">
+          <h1>Daystar Daycare</h1>
         </a>
-
+        
         <!-- Collapsible content -->
         <button class="navbar-toggler" type="button" id="sidebarToggleBtn">
           <span class="navbar-toggler-icon"></span>
@@ -375,34 +398,10 @@
 
               </ul>
             </li>
-            <li class="w-100">
-              <a href="#" class="nav-link">
-                <span class="ms-3 d-none d-sm-inline">View History</span>
-              </a>
-            </li>
           </ul>
         </li>
 
 
-        <li class="nav-item">
-          <a href="#submenu6" data-bs-toggle="collapse" class="nav-link">
-            <i class="fa-solid fa-file"></i>
-            <span class="ms-2 d-none d-sm-inline">Reports</span>
-            <i class="fa-solid fas fa-angle-double-down" style="margin-left: 111px;"></i>
-          </a>
-          <ul class="collapse nav flex-column ms-1" id="submenu6" data-bs-parent="#menu">
-            <li class="w-100">
-              <a href="#" class="nav-link">
-                <span class="ms-3 d-none d-sm-inline">Attendance Reports</span>
-              </a>
-            </li>
-            <li class="w-100">
-              <a href="#" class="nav-link">
-                <span class="ms-3 d-none d-sm-inline">Payment Reports</span>
-              </a>
-            </li>
-          </ul>
-        </li>
 
         <li class="nav-item">
           <a href="{% url 'logout' %}" class="nav-link">

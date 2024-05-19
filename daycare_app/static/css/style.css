@@ -1,5 +1,6 @@
-body{
+body {
   font-family: 'Inter', sans-serif;
+  overflow: hidden;
 }
 
 .logo {
@@ -12,7 +13,8 @@ body{
 }
 
 .logo img {
-  width: 100%;
+  width: 100px;
+  height: 100px;
 }
 
 .login-button {
@@ -23,38 +25,39 @@ body{
   background-color: #409DD3;
   border-radius: 5px;
   color: #fff;
-  font-weight: 700;
+  font-weight: 800;
   padding: 10px 20px;
   text-decoration: none;
 }
 
 .container {
   position: relative;
+  width: 100%;
+  height: 100vh;
 }
 
 .image-container {
-  position: relative;
-  width: 100%;
-  max-height: calc(99vh - 40px);
-  margin-right: 5px;
+  position: absolute;
+  top: 0;
+  /* left: 0; */
+  width: 130%;
+  height: 100%;
   overflow: hidden;
 }
 
 .image-container img {
-  width: 100%;
-  height: 90%;
+  width: 150%;
+  height: 100%;
   object-fit: cover;
-  /* display: block; */
-  margin-right: 5px;
 }
 
 .overlay {
   position: absolute;
   top: 0;
-  left: 0;
-  width: 100%;
+  /* left: 0; */
+  width: 160%;
   height: 100%;
-  background: linear-gradient(to right, rgb(255, 255, 255, 1), rgba(255, 255, 255, 0));
+  background: linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
 }
 
 .message {
@@ -71,18 +74,14 @@ body{
   color: #CE35C9;
   font-size: 80px;
   margin-top: 10px;
+  animation: slideFromTop 2s ease forwards;
 }
 
 .message h2 {
   color: #58C92C;
   font-size: 80px;
+  animation: slideFromLeft 2s ease forwards;
 }
-
-/* .message p {
-  color: #0E98E7;
-  font-size: 15px;
-  font-style: sans-serif;
-} */
 
 .message p span {
   font-weight: bold;
@@ -110,20 +109,8 @@ body{
   }
 }
 
-.message h1 {
-  animation: slideFromTop 2s ease forwards;
-}
-
-.message h2 {
-  animation: slideFromLeft 2s ease forwards;
-}
-
-
 .footer {
   position: fixed;
   bottom: 0;
   width: 100%;
 }
-
-
-
