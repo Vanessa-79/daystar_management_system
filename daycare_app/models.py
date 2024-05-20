@@ -149,7 +149,7 @@ class BabyPayment(models.Model):
         return self.amount_paid == self.total_amount_due
 
     def save(self, *args, **kwargs):
-        self.remaining_balance = self.total_amount_due - self.amount_paid
+        # self.remaining_balance = self.total_amount_due - self.amount_paid
         self.status = 'complete' if self.is_complete else 'pending'
         super().save(*args, **kwargs)
 
