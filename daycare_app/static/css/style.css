@@ -1,4 +1,4 @@
-body {
+/* body {
   font-family: 'Inter', sans-serif;
   overflow: hidden;
 }
@@ -39,8 +39,8 @@ body {
 .image-container {
   position: absolute;
   top: 0;
-  /* left: 0; */
-  width: 130%;
+  left: 0;
+  width: 100%;
   height: 100%;
   overflow: hidden;
 }
@@ -54,10 +54,10 @@ body {
 .overlay {
   position: absolute;
   top: 0;
-  /* left: 0; */
+  left: 0;
   width: 160%;
   height: 100%;
-  background: linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+  background: linear-gradient(to right, rgba(255, 255, 255, 2), rgba(255, 255, 255, 0));
 }
 
 .message {
@@ -113,4 +113,4 @@ body {
   position: fixed;
   bottom: 0;
   width: 100%;
-}
+} */
