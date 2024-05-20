@@ -65,9 +65,7 @@ def home(request):
     count_sitters = Sitter_registration.objects.count()
     count_babies_signed_out = Baby_departure.objects.filter(departure_time__date=date.today()).count()
     count_sitters_signed_in = Arrivalsitter.objects.filter(Arrival_Date__date=date.today()).count()
-
     count_babies_registered = Babie_registration.objects.filter(Arrival_Date=date.today()).count()
-
     count_babies_total = count_babies_registered - count_babies_signed_out
 
     # Define colors for the pie chart slices
@@ -102,10 +100,10 @@ def home(request):
     }
 
     context = {
-        "count_sitters": count_sitters + count_sitters_signed_in,  
-        "count_babies": count_babies_total,  
-        "count_babies_signed_out": count_babies_signed_out, 
-        "count_sitters_signed_in": count_sitters_signed_in, 
+        "count_sitters": count_sitters,  # Total sitters registered
+        "count_babies": count_babies_total,  # Total babies currently signed in
+        "count_babies_signed_out": count_babies_signed_out,  # Babies signed out today
+        "count_sitters_signed_in": count_sitters_signed_in,  # Sitters signed in today
         "data": {'Registered Sitters': count_sitters, 'Signed In Sitters': count_sitters_signed_in},
         "baby": {'Attended Babies': count_babies_total, 'Signed Out Babies': count_babies_signed_out},
         "data_colors": data_colors,
