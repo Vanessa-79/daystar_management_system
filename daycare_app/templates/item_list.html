@@ -97,17 +97,6 @@
 </style>
 <h2>Items in Stock</h2>
 
-<!-- Filter Form
-<form method="GET" action="#" class="mb-3">
-  <div class="input-group" style="margin-left: 40px; width: 80%; margin-bottom: 10px;">
-    <select class="form-select" name="filter_option">
-      <option value="">Select..</option>
-      <option value="specific_person">Females</option>
-      <option value="males_only">Males Males</option>
-    </select>
-    <button class="btn btn-outline-secondary" type="submit">Apply Filter</button>
-  </div>
-</form> -->
 
 <!-- Sitter Button -->
 <a href="{% url 'procurement' %}" class="btn  mb-3"
@@ -117,7 +106,7 @@
   <table class="table table-striped">
     <thead class="frame">
       <tr>
-        <th scope="col">#</th>
+
         <th scope="col">Item name</th>
         <th scope="col">Quantity in stock</th>
         <th scope="col">Total amount</th>
@@ -128,7 +117,6 @@
     <tbody>
       {% for item in item_list %}
       <tr>
-        <th scope="row">{{ item.id }}</th>
         <td>{{ item.item_name }}</td>
         <td>{{ item.quantity }}</td>
         <td>{{ item.Total_amount }}</td>
