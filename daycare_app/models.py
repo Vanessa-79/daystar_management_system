@@ -98,7 +98,10 @@ class Arrivalsitter(models.Model):
     Arrival_Date = models.DateTimeField(default=timezone.now)
     Arrival_Time = models.TimeField(null=True, blank=True)
     Assigned_Babies = models.ManyToManyField(Babie_registration, blank=True)  # Changed to ManyToManyField
-    Status = models.CharField(max_length=10)
+    Status = models.CharField(max_length=10, choices= (
+    ('', 'select status'),
+    ('On Duty', 'On Duty'),
+    ('Off Duty', 'Off Duty')))
 
     def calculate_total_babies(self):
         return self.Assigned_Babies.count() 
