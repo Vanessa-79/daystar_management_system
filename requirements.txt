@@ -1,7 +1,4 @@
 pillow
 pytz
 django
-crispy_forms
-crispy_bootstrap4
-bootstrap5
-chartkick
+django-crispy-forms
