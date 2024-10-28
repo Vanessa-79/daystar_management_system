@@ -108,11 +108,11 @@ def home(request):
     for item in items:
         dates = (
             Sellingdoll.objects.filter(item=item)
-            .annotate(date=TruncDate("sale_date"))
-            .values("date")
+            .annotate(sale_date_truncated=TruncDate("date"))
+            .values("sale_date_truncated")
             .annotate(quantity=Sum("sold_quantity"))
-            .order_by("date")
-            .values_list("date", "quantity")
+            .order_by("sale_date_truncated")
+            .values_list("sale_date_truncated", "quantity")
         )
 
         # Transform data to fit the chart format
