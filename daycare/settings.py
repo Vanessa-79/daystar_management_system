@@ -91,9 +91,9 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "daystar_database",
         "USER": "postgres",
-        "PASSWORD": "password",
+        "PASSWORD": "@Vanie779",
         "HOST": "localhost",  # Set to empty string for localhost.
-        "PORT": "",  # Set to empty string for default.
+        "PORT": "5432",  # Set to empty string for default.
     }
 }
 # }

@@ -13,6 +13,8 @@ from django.shortcuts import get_object_or_404
 from datetime import *
 from django.utils import timezone
 from django.db.models import Q
+from django.db.models import Sum
+from django.db.models.functions import TruncDate
 
 
 # Create your views here.
@@ -48,7 +50,6 @@ def logout_view(request):
 
 def Index(request):
     return render(request, 'index.html')
-    
 
 
 @login_required
@@ -63,40 +64,71 @@ def base(request):
 @login_required
 def home(request):
     count_sitters = Sitter_registration.objects.count()
-    count_babies_signed_out = Baby_departure.objects.filter(departure_time__date=date.today()).count()
-    count_sitters_signed_in = Arrivalsitter.objects.filter(Arrival_Date__date=date.today()).count()
-    count_babies_registered = Babie_registration.objects.filter(Arrival_Date=date.today()).count()
+    count_babies_signed_out = Baby_departure.objects.filter(
+        departure_time__date=date.today()
+    ).count()
+    count_sitters_signed_in = Arrivalsitter.objects.filter(
+        Arrival_Date__date=date.today()
+    ).count()
+    count_babies_registered = Babie_registration.objects.filter(
+        Arrival_Date=date.today()
+    ).count()
     count_babies_total = count_babies_registered - count_babies_signed_out
 
     # Define colors for the pie chart slices
     data_colors = {
-        "tooltip": {
-            "pointFormat": "{series.name}: <br>{point.percentage:.1f} %"
-        },
+        "tooltip": {"pointFormat": "{series.name}: <br>{point.percentage:.1f} %"},
         "plotOptions": {
             "pie": {
                 "colors": ["#4764ae", "#3f528e"],
                 "dataLabels": {
                     "enabled": True,
-                    "format": "<b>{point.name}</b>:<br>{point.percentage:.1f} %"
-                }
+                    "format": "<b>{point.name}</b>:<br>{point.percentage:.1f} %",
+                },
             }
-        }
+        },
     }
-    
+
     baby_colors = {
-        "tooltip": {
-            "pointFormat": "{series.name}: <br>{point.percentage:.1f} %"
-        },
+        "tooltip": {"pointFormat": "{series.name}: <br>{point.percentage:.1f} %"},
         "plotOptions": {
             "pie": {
                 "colors": ["#4764ae", "#3f528e"],
                 "dataLabels": {
                     "enabled": True,
-                    "format": "<b>{point.name}</b>:<br>{point.percentage:.1f} %"
-                }
+                    "format": "<b>{point.name}</b>:<br>{point.percentage:.1f} %",
+                },
             }
-        }
+        },
+    }
+
+    # Prepare data for the line graph
+    stock_data = {}
+    items = Stock.objects.all()
+    for item in items:
+        dates = (
+            Sellingdoll.objects.filter(item=item)
+            .annotate(date=TruncDate("sale_date"))
+            .values("date")
+            .annotate(quantity=Sum("sold_quantity"))
+            .order_by("date")
+            .values_list("date", "quantity")
+        )
+
+        # Transform data to fit the chart format
+        formatted_dates = [date for date, quantity in dates]
+        quantities = [quantity for date, quantity in dates]
+        stock_data[item.item_name] = quantities
+
+    # Options for the line chart
+    line_chart_options = {
+        "title": "Stock Management Overview",
+        "yAxis": {"title": {"text": "Total Stock"}},
+        "xAxis": {"title": {"text": "Items"}},
+        "series": [
+            {"name": item_name, "data": quantities}
+            for item_name, quantities in stock_data.items()
+        ],
     }
 
     context = {
@@ -104,13 +136,22 @@ def home(request):
         "count_babies": count_babies_total,  # Total babies currently signed in
         "count_babies_signed_out": count_babies_signed_out,  # Babies signed out today
         "count_sitters_signed_in": count_sitters_signed_in,  # Sitters signed in today
-        "data": {'Registered Sitters': count_sitters, 'Signed In Sitters': count_sitters_signed_in},
-        "baby": {'Attended Babies': count_babies_total, 'Signed Out Babies': count_babies_signed_out},
+        "data": {
+            "Registered Sitters": count_sitters,
+            "Signed In Sitters": count_sitters_signed_in,
+        },
+        "baby": {
+            "Attended Babies": count_babies_total,
+            "Signed Out Babies": count_babies_signed_out,
+        },
         "data_colors": data_colors,
-        "baby_colors": baby_colors
+        "baby_colors": baby_colors,
+        "stock_data": stock_data,
+        "line_chart_options": line_chart_options,
     }
 
     return render(request, "home.html", context)
+
 
 # Babie views(forms)
 @login_required
@@ -146,7 +187,7 @@ def signinbaby(request):
     signinbaby = Arrivalbaby.objects.all()
     return render(request, 'baby_signedin.html', {'signinbaby': signinbaby})
 
- # sitter views (forms)
+# sitter views (forms)
 @login_required
 def Sitter(request):
     if request.method == 'POST':
