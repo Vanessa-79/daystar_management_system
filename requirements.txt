@@ -2,3 +2,4 @@ pillow
 pytz
 django
 django-crispy-forms
+gunicorn
