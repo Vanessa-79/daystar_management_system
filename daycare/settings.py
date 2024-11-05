@@ -13,13 +13,13 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import os
 from pathlib import Path
-import dj_database_url
+# import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv(
-    SECRET_KEY="django-insecure-v%#exbn98p%a-iy2cwb0h9q$ean3oh@(oew9h9hs=101x3x=u+"
-)  # Set this in environment variables for security
+# SECRET_KEY = os.getenv(
+#     SECRET_KEY="django-insecure-v%#exbn98p%a-iy2cwb0h9q$ean3oh@(oew9h9hs=101x3x=u+"
+# )  # Set this in environment variables for security
 
 DEBUG = True
 
@@ -69,23 +69,23 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "daycare.wsgi.application"
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "daystar_database",
-#         "USER": "postgres",
-#         "PASSWORD": "@Vanie779",
-#         "HOST": "localhost",  # Set to empty string for localhost.
-#         "PORT": "5432",  # Set to empty string for default.
-#     }
-# }
-
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "daystar_database",
+        "USER": "postgres",
+        "PASSWORD": "@Vanie779",
+        "HOST": "localhost",  # Set to empty string for localhost.
+        "PORT": "5432",  # Set to empty string for default.
     }
 }
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
