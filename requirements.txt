@@ -3,3 +3,5 @@ pytz
 django
 django-crispy-forms
 gunicorn
+dj-database-url
+psycopg2-binary

@@ -1,15 +1,20 @@
 {
-  "builds": [
-    {
-      "src": "daycare/wsgi.py",
-      "use": "@vercel/python",
-      "config": { "maxLambdaSize": "15mb", "runtime": "python3.12.2" }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "daycare/wsgi.py"
-    }
-  ]
+    "builds": [{
+        "src": "daycare/wsgi.py",
+        "use": "@vercel/python",
+        "config": { 
+            "maxLambdaSize": "15mb",
+            "runtime": "python3.9"
+        }
+    }],
+    "routes": [
+        {
+            "src": "/static/(.*)",
+            "dest": "/static/$1"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "daycare/wsgi.py"
+        }
+    ]
 }

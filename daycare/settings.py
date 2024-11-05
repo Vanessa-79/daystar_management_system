@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -9,7 +10,7 @@ SECRET_KEY = os.getenv(
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["daycare_app.vercel.app", "localhost"]
+ALLOWED_HOSTS = [".vercel.app", "localhost", "127.0.0.1"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -55,15 +56,22 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "daycare.wsgi.application"
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "daystar_database",
+#         "USER": "postgres",
+#         "PASSWORD": "@Vanie779",
+#         "HOST": "localhost",  # Set to empty string for localhost.
+#         "PORT": "5432",  # Set to empty string for default.
+#     }
+# }
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "daystar_database",
-        "USER": "postgres",
-        "PASSWORD": "@Vanie779",
-        "HOST": "localhost",  # Set to empty string for localhost.
-        "PORT": "5432",  # Set to empty string for default.
-    }
+    "default": dj_database_url.config(
+        default=os.getenv("DATABASE_URL"),
+        conn_max_age=600,
+    )
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -80,7 +88,8 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = "/static/"
+# STATIC_URL = "/static/"
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
