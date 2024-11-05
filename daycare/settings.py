@@ -9,7 +9,7 @@ SECRET_KEY = os.getenv(
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["daycare-management-system.vercel.app", "localhost"]
+ALLOWED_HOSTS = ["daycare_app.vercel.app", "localhost"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
