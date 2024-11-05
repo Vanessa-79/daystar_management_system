@@ -3,4 +3,5 @@ pytz
 django
 django-crispy-forms
 crispy-bootstrap4
+django-bootstrap5
 gunicorn
