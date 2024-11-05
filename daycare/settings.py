@@ -23,7 +23,7 @@ SECRET_KEY = os.getenv(
 
 DEBUG = True
 
-ALLOWED_HOSTS = [".vercel.app", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = [".vercel.app", ".now.sh", "127.0.0.1","localhost"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -103,7 +103,7 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR, "static"]
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles_build", "static")
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
