@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    body {
+        overflow-x: hidden;
+        position: relative;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('/static/images/formbg.jpg');
+        opacity: 0.1;
+        z-index: -3;
+        background-size: cover;
+    }
+
+    .container {
+        padding-top: 20px;
+        margin-top: 5px;
+        width: calc(100% - 250px);
+        padding: 20px;
+        margin-left: 5px;
+        margin-right: 20px;
+        background-color: #f8f9fa;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: #cddef0;
+    }
+
+    h2 {
+        text-align: center;
+        color: black;
+        margin-top: 50px;
+        font-weight: 800;
+        font-family: "Helvetica Neue";
+    }
+
+    th,
+    td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+        white-space: nowrap;
+        width: auto;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .complete {
+        color: red;
+
+    }
+
+    .pending {
+        color: green;
+
+    }
+
+    .frame th {
+        background-color: #cddef0;
+        font-weight: bold;
+    }
+</style>
+
+<h2>Baby Payments</h2>
+
+<!-- Sitter Button -->
+<a href="{% url 'payment_baby' %}" class="btn mb-3"
+    style=" background-color: #5679C0; color: white; margin-left: 10%;">Add
+    Payment</a>
+
+
+<div class="container">
+    <!-- Payment Table -->
+    <table class="table table-striped">
+        <thead class="frame">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Date</th>
+                <th scope="col">Stay</th>
+                <th scope="col">Amount due</th>
+                <th scope="col">Amount Paid</th>
+                <th scope="col">Status</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for payment in payment_list %}
+            <tr>
+                <th scope="row">{{ payment.id }}</th>
+                <td>{{ payment.name }}</td>
+                <td>{{ payment.payment_date }}</td>
+                <td>
+                    {% if payment.full_day %}
+                    Full day
+                    {% elif payment.half_day %}
+                    Half day
+                    {% elif payment.monthly %}
+                    Monthly
+                    {% else %}
+                    <!-- If none of the stay types are selected -->
+                    Not specified
+                    {% endif %}
+                </td>
+                <td>{{ payment.total_amount_due }}</td>
+                <td>{{ payment.amount_paid }}</td>
+                <td class="{% if payment.is_complete %}complete{% else %}pending{% endif %}">
+                    {% if payment.is_complete %}
+                    <span class="complete">Complete</span>
+                    {% else %}
+                    <span class="pending">Pending</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <a href="#" class="btn mr-1" style="background-color: #5679C0;"
+                            data-bs-toggle="modal" data-bs-target="#myModal{{ baby.id }}">
+                            <i class="fa-brands fa-readme fa-lg" style="color: white;"></i>
+                        </a>
+
+                        <!-- Information Modal -->
+                        <div class="modal fade" id="myModal{{ baby.id }}" tabindex="-1" aria-labelledby="myModallabel1"
+                            aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Baby Payment Information</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <ul class="list-unstyled">
+                                            <li>Baby Name: <strong>{{ payment.baby_name }}</strong></li>
+                                            <li>Date: <strong>{{ payment.date }}</strong></li>
+                                            <li>Duration: <strong>{{ payment.payment_rate}}</strong></li>
+                                            <li>Amount Paid: <strong>{{ payment.amount_paid }}</strong></li>
+                                            <li>Paid by: <strong>{{ payment.paid_by }}</strong></li>
+                                            <li>Payment Status: <strong>{{ payment.payment_status }}</strong></li>
+                                        </ul>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a href="#" class="btn mr-1" style="background-color: #5679C0;">
+                            <i class="fa-solid fa-pen-nib fa-lg" style="color: white;"></i>
+                        </a>
+
+
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

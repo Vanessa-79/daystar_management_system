@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    body {
+        overflow-x: hidden;
+    }
+    .container {
+        margin-top: 60px;
+        width: 90%;
+        margin-left: 0;
+    }
+    h2 {
+    text-align: center;
+    color: black; 
+    margin-top: 50px;
+    font-weight: 800;
+    font-family: "Helvetica Neue";
+  }
+
+    th {
+        white-space: nowrap; 
+        font-weight: bold;
+    }
+    td{
+        white-space: nowrap;
+    }
+
+    table {
+        width: 20%; 
+        max-width: 800px; 
+        margin-left: 1%; 
+        margin-right: auto;
+    }
+
+    .frame th{
+    background-color: #cddef0;
+  }
+</style>
+
+
+<div class="container">
+    <h2>DOLL SALES</h2>
+    <table class="table">
+        <thead class="frame">
+            <tr>
+                <th>Doll Name</th>
+                <th>Quantity</th>
+                <th>Amount</th>
+                <th>Issued To</th>
+                <th>Total Amount</th>
+                <th>Stock Status</th>
+                <th>Date</th> 
+                <th>Actions</th> 
+            </tr>
+        </thead>
+        <tbody>
+            {% for sale in doll_sales %}
+            <tr>
+                <td>{{ sale.item.item_name }}</td> 
+                <td>{{ sale.sold_quantity }}</td>
+                <td>{{ sale.unit_price }}</td>
+                <td>{{ sale.issued_to.Baby_Name }}</td> <!-- Adjusted to match the correct field -->
+                <td>{{ sale.total_amount }}</td>
+                <td>
+                    {% if sale.item.total_quantity <= 0 %}
+                        Out of Stock
+                    {% elif sale.item.total_quantity <= 10 %}
+                        Soon Getting Done
+                    {% else %}
+                        Still Having Stock
+                    {% endif %}
+                </td>
+                <td>{{ sale.date }}</td> 
+                <td>
+                    <a href="{% url 'receipt' pk=sale.pk %}" class="btn btn-primary btn-sm" style="background-color: #658ecc;">
+                        <i class="fas fa-receipt" style="color: white;"></i> 
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

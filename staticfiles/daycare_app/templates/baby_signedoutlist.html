@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    body {
+
+        overflow-x: hidden;
+    }
+
+    .container {
+        padding-top: 20px;
+        margin-top: 10px;
+        width: calc(100% - 250px);
+        padding: 20px;
+        margin-left: 90px;
+        margin-right: 20px;
+        background-color: #f8f9fa;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: #cddef0;
+    }
+
+    h2 {
+        text-align: center;
+        color: black;
+        margin-top: 20px;
+        font-weight: 800;
+        font-family: "Helvetica Neue";
+    }
+
+    th,
+    td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+        white-space: nowrap;
+        width: auto;
+    }
+
+    .modal-header {
+        background-color: #83aad7;
+        color: white;
+    }
+
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+
+    .frame th {
+        background-color: #cddef0;
+        font-weight: bold;
+    }
+</style>
+
+
+<!-- Add Baby Button -->
+<a href="{% url 'baby_departure' %}" class="btn btn-primary mb-3"
+    style="margin-top: 60px; margin-left: 40px; background-color: #5679C0; color: white;">Back</a>
+
+<h2>Signed Out Babies</h2>
+<div class="container">
+    <table class="table table-striped" style="width: 90%; margin-left: 20px;">
+        <thead class="frame">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Departure Time</th>
+                <th scope="col">Picked By</th>
+                <th scope="col">Comment</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for baby in baby_signedoutlist %}
+            <tr>
+
+                <td>{{ baby.baby_name }}</td>
+                <td>{{ baby.departure_time }}</td>
+                <td>{{ baby.person_taking_baby }}</td>
+                <td>{{ baby.comment }}</td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <a href="#" class="btn btn-success mr-1" style="background-color: #5679C0;"
+                            data-bs-toggle="modal" data-bs-target="#myModal{{ baby.id }}">
+                            <i class="fa-brands fa-readme fa-lg" style="color: white;"></i> </a>
+
+                        <a class="btn mr-1" style="background-color: #5679C0;"
+                            href="#">
+                            <i class="fa-solid fa-pen-nib fa-lg" style="color: white; background-color: #5679C0;" ></i>
+
+                        </a>
+
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% for baby in baby_signedoutlist %}
+<!-- Modal -->
+<div class="modal fade" id="myModal{{ baby.id }}" tabindex="-1" aria-labelledby="myModallabel{{ baby.id }}"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Baby: {{ baby.baby_name }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-unstyled">
+                    <li>Name: <strong>{{ baby.baby_name }}</strong></li>
+                    <li>Departure Time: <strong>{{ baby.departure_time }}</strong></li>
+                    <li>Picked By: <strong>{{ baby.person_taking_baby }}</strong></li>
+                    <li>Comment: <strong>{{ baby.comment }}</strong></li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endfor %}
+
+{% endblock %}

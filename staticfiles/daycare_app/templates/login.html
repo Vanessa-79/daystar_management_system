@@ -1,0 +1,82 @@
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+<style>
+    /* Add your custom styles here */
+    .container {
+        width: 90%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        margin-top: 10px;
+        border-radius: 5px;
+        background-color: #cddef0;
+        color: black;
+    }
+
+    .form-container {
+        background-color: #abc7e5;
+        width: 500px;
+        border-radius: 20px;
+        padding: 20px;
+        margin-left: 180px;
+        font-size: 20px;
+        margin-top: 100px;
+        box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5); /* Add a subtle shadow */
+    }
+
+    .form-container h2 {
+        font-size: 24px;
+        text-align: center;
+        font-weight: bold;
+        margin-top: 10px;
+        color: black;
+    }
+
+    .babe-form label {
+        font-weight: bold;
+        color: black; /* Adjust label color */
+    }
+
+    .babe-form button {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: #658ecc; /* Change button background color */
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+    
+    /* Add spacing between form fields */
+    .babe-form .form-group {
+        margin-bottom: 20px;
+    }
+    
+    /* Style form input fields */
+    .babe-form input[type="text"],
+    .babe-form input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+</style>
+
+<div class="form" style="margin-left: 200px; margin-top: 5px;">
+    <div class="form-container">
+        <h2>Sign In</h2>
+       
+        <div class="container">
+            <form action="" method="POST" class="babe-form">
+                {% csrf_token %}
+                {{ form | crispy }}
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

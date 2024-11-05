@@ -1,0 +1,50 @@
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<style>
+    body {
+        background-color: #cddef0;
+    }
+
+    .container {
+        max-width: 400px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-top: 10%;
+    }
+
+    h2 {
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    p {
+        margin-bottom: 30px;
+        color: #666;
+    }
+
+
+</style>
+
+<div class="container">
+    <form method="post" class="logoutform">
+        {% csrf_token %}
+        <h2>Logout</h2>
+        <div class="text-center">
+            {{ form|crispy }}
+            <button type="submit" class="btn " style="background-color: #cddef0; border-radius: 5px; border: none; height: 30px; color: rgb(7, 7, 7); margin-top: 20px;">Logout</button>
+        </div>
+    </form>
+</div>
+
+
+{% endblock %}
+
+
+
+
+

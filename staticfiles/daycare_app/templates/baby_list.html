@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    body {
+
+        overflow-x: hidden;
+    }
+
+    .container {
+        padding-top: 20px;
+        margin-top: 20px;
+        width: calc(100% - 250px);
+        padding: 20px;
+        margin-left: 2px;
+        margin-right: 20px;
+        background-color: #f8f9fa;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: #cddef0;
+    }
+
+    h2 {
+        text-align: center;
+        color: black;
+        margin-top: 50px;
+        font-weight: 800;
+        font-family: "Helvetica Neue";
+    }
+
+    th,
+    td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+        white-space: nowrap;
+        width: auto;
+    }
+
+    .modal-header {
+        background-color: #83aad7;
+        color: white;
+    }
+
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+
+    .frame th {
+        background-color: #cddef0;
+        font-weight: bold;
+    }
+</style>
+
+
+<h2>Overall Babies</h2>
+<a href="{% url 'babie' %}" class="btn  mb-3" style="margin-left: 40px; background-color: #5679C0; color: white;">Add
+    Babie</a>
+
+<a href="{% url 'baby_list' %}" class="btn btn-secondary mb-3"
+    style="float: right; margin-right: 40px; background-color: #5679C0; color: white;">Go Back</a>
+
+
+<!-- Filter Form -->
+<form method="GET" action="{% url 'baby_list' %}" class="mb-3">
+    <div class="input-group" style="margin-left: 40px; width: 80%; margin-bottom: 10px;">
+        <input type="text" class="form-control" placeholder="Filter" name="search_query"
+            value="{{ request.GET.search_query }}">
+        <input type="text" class="form-control" placeholder="Filter Gender" name="gender"
+            value="{{ request.GET.gender }}">
+        <button class="btn btn-outline-secondary" type="submit">Filter</button>
+    </div>
+</form>
+
+
+
+<div class="container">
+    <table class="table table-striped" style="width: 90%;">
+        <!-- Inside the table -->
+        <thead class="frame">
+            <tr>
+
+                <th scope="col">Baby No</th>
+                <th scope="col">Name</th>
+                <th scope="col">Gender</th>
+                <th scope="col">Age</th>
+                <th scope="col">Stay</th>
+                <th scope="col">Brought By</th>
+                <th scope="col">Arrival Time</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for baby in baby_list %}
+            <tr>
+                <td>B{{ baby.Baby_No }}</td>
+                <td>{{ baby.Baby_Name }}</td>
+                <td>{{ baby.Gender }}</td>
+                <td>{{ baby.Age }}</td>
+                <td>{{ baby.Period_of_stay }}</td>
+                <td>{{ baby.Brought_by }}</td>
+                <td>{{ baby.Arrival_Date }}</td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <a href="#" class="btn btn-success mr-1" style="background-color: #5679C0;"
+                            data-bs-toggle="modal" data-bs-target="#myModal{{ baby.id }}">
+                            <i class="fa-brands fa-readme fa-lg" style="color: white;"></i> </a>
+
+                        <!-- Information Modal -->
+                        <div class="modal fade" id="myModal{{ baby.id }}" tabindex="-1" aria-labelledby="myModallabel1"
+                            aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Baby Information</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <ul class="list-unstyled">
+                                            <li>Baby No: <strong>{{ baby.Baby_No }}</strong></li>
+                                            <li>Name: <strong>{{ baby.Baby_Name }}</strong></li>
+                                            <li>Gender: <strong>{{ baby.Gender }}</strong></li>
+                                            <li>Period of Stay: <strong>{{ baby.Period_of_stay }}</strong></li>
+                                            <li>Age: <strong>{{ baby.Age }}</strong></li>
+                                            <li>Parent_name: <strong>{{ baby.Parent_name }}</strong></li>
+                                            <li>Arrival_Date: <strong>{{ baby.Arrival_Date }}</strong></li>
+                                            <li>Brought_by: <strong>{{ baby.Brought_by }}</strong></li>
+                                        </ul>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a href="{% url 'edit_baby' baby.id %}" class="btn mr-1"
+                            style="background-color: #5679C0;">
+                            <i class="fa-solid fa-pen-nib fa-lg" style="color: white;"></i>
+                        </a>
+
+                        <button type="button" class="btn " style="background-color: #5679C0;"
+                            data-bs-toggle="modal" data-bs-target="#deleteModal{{ baby.id }}">
+                            <i class="fa-solid fa-trash " style="color: white;"></i>
+                        </button>
+
+                        <!-- Delete Modal -->
+                        <div class="modal fade" id="deleteModal{{ baby.id }}" tabindex="-1"
+                            aria-labelledby="deleteModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Are you sure you want to delete the baby "{{ baby.Baby_Name }}"?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn"
+                                            data-bs-dismiss="modal" style="background-color: #83aad7; color: white;">Cancel</button>
+                                        <form method="post" action="{% url 'delete_baby' baby.id %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn" style="background-color: #83aad7; color: white;">Delete</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

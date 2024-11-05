@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    body {
+        overflow-x: hidden;
+        position: relative;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('/static/images/formbg.jpg');
+        opacity: 0.1;
+        z-index: -3;
+        background-size: cover;
+    }
+
+  .container {
+    padding-top: 20px;
+    margin-top: 10px;
+    width: calc(100% - 250px);
+    padding: 20px;
+    margin-left: 2px;
+    margin-right: 20px;
+    background-color: #f8f9fa;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #cddef0;
+  }
+
+  h2 {
+    text-align: center;
+    color: black; 
+    margin-top: 50px;
+    font-weight: 800;
+    font-family: "Helvetica Neue";
+  }
+
+  th,
+  td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    white-space: nowrap;
+    width: auto;
+  }
+
+  th {
+    background-color: #4CAF50;
+    color: white;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  .btn-issue {
+    background-color: #5679C0;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin-right: 5px;
+  }
+
+  .btn-issue:hover {
+    background-color: #3e6aae;
+  }
+
+  .btn-issue a {
+    color: white;
+    text-decoration: none;
+  }
+
+  .btn-issue a:hover {
+    text-decoration: underline;
+  }
+  .frame th{
+    background-color: #cddef0;
+    font-weight: bold;
+  }
+</style>
+<h2>Items in Stock</h2>
+
+
+<!-- Sitter Button -->
+<a href="{% url 'procurement' %}" class="btn  mb-3"
+  style="margin-left: 40px; background-color: #658ecc; color: white;">Add Item</a>
+
+<div class="container">
+  <table class="table table-striped">
+    <thead class="frame">
+      <tr>
+
+        <th scope="col">Item name</th>
+        <th scope="col">Quantity in stock</th>
+        <th scope="col">Total amount</th>
+        <th scope="col">Date of purchase</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in item_list %}
+      <tr>
+        <td>{{ item.item_name }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.Total_amount }}</td>
+        <td>{{ item.Date_of_purchase }}</td>
+        <td>
+          <div class="btn-group" role="group">
+            <button type="button" class="btn-issue mr-1" style="background-color: #5679C0;">
+              <a href="{% url 'issue_out' pk=item.id %}">Issue Out</a>
+            </button>
+
+            <button type="button" class="btn-issue mr-1" style="background-color: #5679C0; color: white">
+              <a href="{% url 'issue_in' pk=item.id %}" style="color: white;">Issue In</a>
+            </button>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

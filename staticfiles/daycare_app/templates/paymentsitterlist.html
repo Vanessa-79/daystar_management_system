@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    body {
+        overflow-x: hidden;
+        position: relative;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('/static/images/formbg.jpg');
+        opacity: 0.1;
+        z-index: -3;
+        background-size: cover;
+    }
+
+  /* Modal Styles */
+  .modal-dialog {
+      max-width: 800px;
+  }
+  
+  .modal-content {
+      border-radius: 10px;
+  }
+  
+  .modal-header {
+      background-color: #594caf;
+      color: white;
+      border-radius: 10px 10px 0 0;
+  }
+  
+  .modal-body {
+      padding: 20px;
+  }
+  
+  .modal-footer {
+      border-top: none;
+      border-radius: 0 0 10px 10px;
+  }
+  
+  .btn-close {
+      color: white;
+  }
+  
+  /* Adjust modal size for small screens */
+  @media (max-width: 576px) {
+      .modal-dialog {
+          max-width: calc(100% - 20px);
+          margin: 10px;
+      }
+  }
+  
+  /* Table Styles */
+  table {
+      width: 100%;
+      border-collapse: collapse;
+  }
+  
+  th,
+  td {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+      white-space: nowrap;
+  }
+  
+  th {
+      background-color: #4CAF50;
+      color: white;
+      font-size: 10px;
+  }
+  
+  tr:nth-child(even) {
+      background-color: #f2f2f2;
+  }
+  
+  
+  table {
+      margin-top: 20px;
+  }
+
+  h2 {
+    text-align: center;
+    color: black; 
+    margin-top: 50px;
+    font-weight: 800;
+    font-family: "Helvetica Neue";
+  }
+
+  .frame th {
+  background-color: #cddef0;
+  font-weight: bold;
+}
+</style>
+<h2>Sitter Payments</h2>
+
+<!-- Sitter Button -->
+<a href="{% url 'paymentsitter' %}" class="btn mb-3" style="margin-left: 40px; background-color: #5679C0; color: white;">Add Payment</a>
+
+
+<div class="container">
+
+
+    <!-- Payment Table -->
+    <table class="table table-striped">
+        <thead class="frame">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Date</th>
+                <th scope="col">Total Babies</th>
+                <th scope="col">Amount Paid</th>
+                <th scope="col">Total amount_paid</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for payment in payment_list %}
+            <tr>
+                <th scope="row">{{ payment.id }}</th>
+                <td>{{ payment.sitter }}</td>
+                <td>{{ payment.payment_date }}</td>
+                <td>{{ payment.babies_attended }}</td>
+                <td>{{ payment.amount_paid }}</td>
+                <td>{{ payment.total_amount}}</td>
+                <td>
+                  <div class="btn-group" role="group">
+                    <a href="#" class="btn  mr-1" style="background-color: #5679C0;" data-bs-toggle="modal"
+                        data-bs-target="#myModal{{ sitter.id }}">
+                        <i class="fa-brands fa-readme fa-lg" style="color: white;"></i>
+                    </a>
+
+                    <!-- Information Modal -->
+                    <div class="modal fade" id="myModal{{ sitter.id }}" tabindex="-1" aria-labelledby="myModallabel1"
+                        aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Sitter Payment Information</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <ul class="list-unstyled">
+                                        <li>Sitter Name: <strong>{{ payment.sitter }}</strong></li>
+                                        <li>Date: <strong>{{ payment.payment_date }}</strong></li>
+                                        <li>Babies Attended: <strong>{{ payment.payment_rate}}</strong></li>
+                                        <li>Amount Paid: <strong>{{ payment.amount_paid }}</strong></li>
+
+                                    </ul>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="#" class="btn  mr-1" style="background-color: #5679C0;">
+                        <i class="fa-solid fa-pen-nib fa-lg" style="color: white;"></i>
+                    </a>
+
+
+                    <!-- Delete Modal -->
+                    <div class="modal fade" id="deleteModal{{ sitter.id }}" tabindex="-1"
+                        aria-labelledby="deleteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to delete the payment "{{ payment.sitter }}"?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancel</button>
+                                    <form method="post" action="#">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

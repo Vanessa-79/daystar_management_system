@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<style>
+  body {
+    overflow-x: hidden;
+  }
+
+  .container {
+    padding-top: 20px;
+    margin-top: 20px;
+    width: calc(100% - 50px);
+    padding: 20px;
+    margin-left: 60px;
+    margin-right: 50px;
+  }
+
+  h2 {
+    text-align: center;
+    color: black;
+    margin-top: 50px;
+    font-weight: 800;
+    font-family: "Helvetica Neue";
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-left: -60px;
+    background-color: #cddef0;
+  }
+
+  th,
+  td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    white-space: nowrap;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  .sidebar {
+    margin-left: 0;
+  }
+
+  .modal-header {
+    background-color: #83aad7;
+    color: white;
+  }
+
+  .frame th {
+    background-color: #cddef0;
+    font-weight: bold;
+  }
+</style>
+
+<h2>List of On Duty sitters</h2>
+<a href="{% url 'sitter_arrival' %}" class="btn mb-3"
+  style="margin-left: 40px; background-color: #5679C0; color: white;">Add Sitter</a>
+<a href="{% url 'sitter_arrival_list' %}" class="btn btn-secondary mb-3"
+  style="float: right; margin-right: 40px; background-color: #5679C0; color: white;">Go Back</a>
+
+<!-- Filter Form -->
+<form method="GET" action="{% url 'sitter_arrival_list' %}" class="mb-3">
+  <div class="input-group" style="margin-left: 40px; width: 80%; margin-bottom: 10px;">
+    <input type="text" class="form-control" placeholder="Filter" name="search_query"
+      value="{{ request.GET.search_query }}">
+    <button class="btn btn-outline-secondary" type="submit">Filter</button>
+  </div>
+</form>
+
+<!-- Sitter Table -->
+<div class="container table-container">
+  <table class="table table-striped">
+    <thead class="frame">
+      <tr>
+
+        <th scope="col">Name</th>
+        <th scope="col">Date</th>
+        <th scope="col">Assigned Babies</th>
+        <th scope="col">Total Babies</th>
+        <th scope="col">Status</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <!-- Table Body -->
+    <tbody>
+      {% for sitter in sitter_arrival_list %}
+      <tr>
+
+        <td>{{ sitter.Sitter_name }}</td>
+        <td>{{ sitter.Arrival_Date }}</td>
+        <td>
+          {% if sitter.Assigned_Babies.count %}
+          <ul>
+            {% for baby in sitter.Assigned_Babies.all|dictsort:"Baby_Name" %}
+            <li>{{ baby.Baby_Name }}</li>
+            {% endfor %}
+          </ul>
+          {% else %}
+          {% for baby in sitter.Assigned_Babies.all %}
+          {{ baby.Baby_Name }}{% if not forloop.last %}, {% endif %}
+          {% endfor %}
+          {% endif %}
+        </td>
+        <td>{{ sitter.calculate_total_babies }}</td>
+        <td>{{ sitter.Status }}</td>
+        <td style="white-space: nowrap;">
+
+          <div class="btn-group" role="group">
+            <button type="button" class="btn  mr-1" style="background-color: #5679C0;" data-bs-toggle="modal"
+              data-bs-target="#myModal{{ sitter.id }}">
+              <i class="fa-brands fa-readme fa-lg" style="color: white;"></i>
+            </button>
+
+            <!-- Modal -->
+            <div class="modal" id="myModal{{ sitter.id }}" tabindex="-1" aria-labelledby="myModallabel1"
+              aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Sitter: {{ sitter.Name }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true"></span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <ul class="list-unstyled">
+                      <li>Name: <strong>{{ sitter.Sitter_name }}</strong></li>
+                      <li>Arrival Date: <strong>{{ sitter.Arrival_Date }}</strong></li>
+                      <li>Assigned Babies:
+                        <ul>
+                          {% for baby in sitter.Assigned_Babies.all %}
+                          <li>{{ baby.Baby_Name }}</li>
+                          {% endfor %}
+                        </ul>
+                      </li>
+                      <li>Status: <strong>{{ sitter.Status }}</strong></li>
+                    </ul>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <a class="btn  mr-1" style="background-color: #5679C0;" href="{% url 'sitter_edit' sitter.id %}">
+              <i class="fa-solid fa-pen-nib fa-lg" style="color: white;"></i>
+            </a>
+
+
+        
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+
+  </table>
+</div>
+
+
+
+{% endblock %}

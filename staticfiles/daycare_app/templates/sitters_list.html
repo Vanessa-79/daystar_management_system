@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+  body {
+    overflow-x: hidden;
+  }
+
+  .container {
+    padding-top: 20px;
+    margin-top: 20px;
+    width: calc(100% - 50px);
+    padding: 20px;
+    margin-left: 60px;
+    margin-right: 50px;
+  }
+
+  h2 {
+    text-align: center;
+    color: black;
+    margin-top: 50px;
+    font-weight: 800;
+    font-family: "Helvetica Neue";
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-left: -40px;
+    background-color: #cddef0;
+  }
+
+  th,
+  td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    white-space: nowrap;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+
+  .sidebar {
+    margin-left: 0;
+  }
+
+  .modal-header {
+    background-color: #83aad7;
+    color: white;
+  }
+
+  .frame th {
+    background-color: #cddef0;
+    font-weight: bold;
+  }
+</style>
+
+
+<h2>List of registered sitters</h2>
+<a href="{% url 'sitter' %}" class="btn btn-primary  mb-3 btn-add-sitter"
+  style="margin-left: 40px; background-color: #5679C0; color: white;">Add Sitter</a>
+<a href="{% url 'sitters_list' %}" class="btn btn-secondary mb-3 btn-go-back"
+  style="float: right; margin-right: 40px;background-color: #5679C0; color: white;">Go Back</a>
+
+<!-- Filter Form -->
+<form method="GET" action="{% url 'sitters_list' %}" class="mb-3">
+  <div class="input-group" style="margin-left: 40px; width: 80%; margin-bottom: 10px;">
+    <input type="text" class="form-control" placeholder="Filter" name="search_query"
+      value="{{ request.GET.search_query }}">
+    <input type="text" class="form-control" placeholder="Filter Gender" name="gender" value="{{ request.GET.gender }}">
+    <button class="btn btn-outline-secondary" type="submit">Filter</button>
+  </div>
+</form>
+
+
+<div class="container">
+
+  <table class="table table-striped">
+    <thead class="frame">
+      <tr>
+        <th scope="col">Sitter No</th>
+        <th scope="col">Name</th>
+        <th scope="col">Gender</th>
+        <th scope="col">Contact</th>
+        <th scope="col">Religion</th>
+        <th scope="col">Location</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for sitter in sitters_list %}
+      <tr>
+
+        <td>S{{ sitter.Sitter_No }}</td>
+        <td>{{ sitter.Name }}</td>
+        <td>{{ sitter.Gender }}</td>
+        <td>{{ sitter.Sitter_Contact }}</td>
+        <td>{{ sitter.Religion }}</td>
+        <td>{{ sitter.Location }}</td>
+        <td>
+          <div class="btn-group" role="group">
+            <button type="button" class="btn  mr-1" style="background-color: #5679C0;" data-bs-toggle="modal"
+              data-bs-target="#myModal{{ sitter.id }}">
+              <i class="fa-brands fa-readme fa-lg" style="color: white;"></i>
+            </button>
+
+            <!-- Modal -->
+            <div class="modal" id="myModal{{ sitter.id }}" tabindex="-1" aria-labelledby="myModallabel1"
+              aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Sitter: {{ sitter.Name }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true"></span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <ul class="list-unstyled">
+                      <li>Sitter No: <strong>{{ sitter.Sitter_No }}</strong></li>
+                      <li>Name: <strong>{{ sitter.Name }}</strong></li>
+                      <li>Gender: <strong>{{ sitter.Gender }}</strong></li>
+                      <li>Contact: <strong>{{ sitter.Sitter_Contact }}</strong></li>
+                      <li>Religion: <strong>{{ sitter.Religion }}</strong></li>
+                      <li>Location: <strong>{{ sitter.Location }}</strong></li>
+                      <li>Date of birth: <strong>{{ sitter.Date_of_birth }}</strong></li>
+                      <li>Next of kin: <strong>{{ sitter.Next_of_kin }}</strong></li>
+                      <li>NIN: <strong>{{ sitter.NIN }}</strong></li>
+                      <li>Recommenders name: <strong>{{ sitter.Recommenders_name }}</strong></li>
+                      <li>Recommenders contact: <strong>{{ sitter.Recommenders_contact }}</strong></li>
+                      <li>Level of education : <strong>{{ sitter.Level_of_education }}</strong></li>
+                    </ul>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <a class="btn  mr-1" style="background-color: #5679C0;" href="{% url 'sitter_edit' sitter.id %}">
+              <i class="fa-solid fa-pen-nib fa-lg" style="color: white;"></i>
+            </a>
+
+
+
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+
+
+{% endblock %}
