@@ -16,7 +16,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Use the environment variable for SECRET_KEY, or a default if not found.
+
 SECRET_KEY = os.getenv(
     "SECRET_KEY", "django-insecure-v%#exbn98p%a-iy2cwb0h9q$ean3oh@(oew9h9hs=101x3x=u+"
 )
