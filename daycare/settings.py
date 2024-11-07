@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     "daycare_app",
     "crispy_forms",
     "crispy_bootstrap4",
-    "bootstrap5",
+    "django_bootstrap5",
     "chartkick",
 ]
 
