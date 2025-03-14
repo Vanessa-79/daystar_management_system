@@ -29,11 +29,11 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect(request.GET.get('next', 'dashboard'))
+            next_url = request.GET.get('next', 'home')
+            return redirect(next_url)
         else:
-            return render(request, 'login.html', {'error_message': 'Invalid username or password'})
-    else:
-        return render(request, 'login.html')
+            messages.error(request, 'Invalid username or password')
+    return render(request, 'login.html')
 
 
 def logout_view(request):
@@ -48,7 +48,7 @@ def logout_view(request):
     return render(request, 'logout.html', {'form': form})
 
 
-def Index(request):
+def index(request):
     return render(request, 'index.html')
 
 

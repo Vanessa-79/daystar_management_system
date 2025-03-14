@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'daycare.middleware.HttpsRedirectMiddleware',
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -119,16 +120,21 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CRISPY_TEMPLATE_PACK = "bootstrap4"
-LOGIN_REDIRECT_URL = "home"
-LOGIN_URL = "/login/"
+LOGIN_REDIRECT_URL = '/home/'
+LOGIN_URL = '/login/'
 
 # Add these settings
-CSRF_TRUSTED_ORIGINS = ['https://daycare-daystar-management-system.onrender.com']
+CSRF_TRUSTED_ORIGINS = [
+    'https://daycare-daystar-management-system.onrender.com',
+    'https://daystar-daycare-management-system.onrender.com'
+]
 
 # If you're using HTTPS (which Render.com provides)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+
+# Cookie settings
+SESSION_COOKIE_SECURE = os.environ.get('DJANGO_ENVIRONMENT', 'development') != 'development'
+CSRF_COOKIE_SECURE = os.environ.get('DJANGO_ENVIRONMENT', 'development') != 'development'
 
 # Whitenoise settings
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
