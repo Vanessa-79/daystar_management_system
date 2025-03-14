@@ -170,7 +170,7 @@ class Procurement(models.Model):
     quantity = models.IntegerField(default=0, null=True, blank=True)
     quantity_received = models.IntegerField(default=0, null=True, blank=True)
     Total_amount = models.IntegerField(default=0, null=True, blank=True)
-    Date_of_purchase = models.DateField(default=timezone.now())
+    Date_of_purchase = models.DateField(default=timezone.now)
     quantity_issued_out = models.IntegerField(default=0, null=True, blank=True)
     stock_at_hand = models.IntegerField(default=0, null=True, blank=True)
     
@@ -208,11 +208,11 @@ class Stock(models.Model):
 class Sellingdoll(models.Model):
     item = models.ForeignKey(Stock, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0, null=True, blank=True)
-    date = models.DateField(default=timezone.now())
+    date = models.DateField(default=timezone.now)
     unit_price = models.IntegerField(default=0, null=True, blank=True)
     issued_to = models.ForeignKey(Babie_registration, on_delete=models.CASCADE, null=True, blank=True)
     sold_quantity = models.IntegerField(default=0, null=True, blank=True)
-    total_amount = models.IntegerField(max_length=10,null=True, blank=True)
+    total_amount = models.IntegerField(null=True, blank=True)
     def get_total_amount(self):
         return self.sold_quantity * self.unit_price
 

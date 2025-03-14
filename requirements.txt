@@ -1,0 +1,11 @@
+pillow
+pytz
+django
+django-crispy-forms
+crispy-bootstrap4
+gunicorn
+whitenoise
+psycopg2-binary
+python-dotenv
+django-bootstrap5
+chartkick
