@@ -74,10 +74,10 @@ WSGI_APPLICATION = "daycare.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DATABASE_NAME'),
-        'USER': os.environ.get('DATABASE_USER'),
-        'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
-        'HOST': os.environ.get('DATABASE_HOST'),
+        'NAME': 'daystar',  # From your screenshot
+        'USER': 'vanessa',  # From your screenshot
+        'PASSWORD': 'ZkKzrhG1fHPyRmoJNKOk8eWTb8zWPX9r',  # From your screenshot
+        'HOST': 'dpg-cv9t8ran91rc738srdj0-a',  # From your screenshot
         'PORT': '5432',
     }
 }
@@ -121,3 +121,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 LOGIN_REDIRECT_URL = "home"
 LOGIN_URL = "/login/"
+
+POSTGRES_DB = daystar
+POSTGRES_USER = vanessa
+POSTGRES_PASSWORD = ZkKzrhG1fHPyRmoJNKOk8eWTb8zWPX9r
+POSTGRES_HOST = dpg-cv9t8ran91rc738srdj0-a
+DJANGO_SECRET_KEY = (generate a new one or use your existing one)
+DEBUG = False
