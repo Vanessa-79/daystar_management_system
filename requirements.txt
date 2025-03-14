@@ -9,3 +9,4 @@ django-bootstrap5
 chartkick
 pillow
 pytz
+dj-database-url

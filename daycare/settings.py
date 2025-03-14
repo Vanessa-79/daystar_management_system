@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import os
 from pathlib import Path
+import dj_database_url  # Add this import at the top
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -72,14 +73,10 @@ WSGI_APPLICATION = "daycare.wsgi.application"
 
 # Database settings
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_DB', 'daystar'),
-        'USER': os.environ.get('POSTGRES_USER', 'vanessa'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'ZkKzrhG1fHPyRmoJNKOk8eWTb8zWPX9r'),
-        'HOST': os.environ.get('POSTGRES_HOST', 'dpg-cv9t8ran91rc738srdj0-a'),
-        'PORT': '5432',
-    }
+    'default': dj_database_url.config(
+        default='postgresql://vanessa:ZkKrrhGlfHPyRmoJNKOk8eWTb8zWPX9r@dpg-cv9t8ran91rc738srdj0-a/daystar',
+        conn_max_age=600
+    )
 }
 
 # DATABASES = {
