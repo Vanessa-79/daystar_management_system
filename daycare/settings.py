@@ -24,7 +24,12 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'your-default-secret-key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['daystar-daycare-management-system.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [
+    'localhost', 
+    '127.0.0.1',
+    'daycare-daystar-management-system.onrender.com',
+    'daystar-daycare-management-system.onrender.com'
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
