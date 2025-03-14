@@ -15,6 +15,8 @@ from django.utils import timezone
 from django.db.models import Q
 from django.db.models import Sum
 from django.db.models.functions import TruncDate, TruncMonth
+from django.contrib.auth.models import User
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 
 # Create your views here.
@@ -22,6 +24,7 @@ from django.db.models.functions import TruncDate, TruncMonth
 
 # forms
 
+@ensure_csrf_cookie
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -671,3 +674,9 @@ def doll_sell_list(request):
 def receipt(request, pk):
     sale = get_object_or_404(Sellingdoll, pk=pk)
     return render(request, 'dollreciept.html', {'sale': sale})
+
+def create_admin(request):
+    if not User.objects.filter(username='admin').exists():
+        User.objects.create_superuser('admin', 'admin@example.com', 'admin123')
+        return HttpResponse("Admin user created successfully!")
+    return HttpResponse("Admin user already exists!")

@@ -137,9 +137,9 @@ CSRF_TRUSTED_ORIGINS = [
 # If you're using HTTPS (which Render.com provides)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-# Cookie settings
-SESSION_COOKIE_SECURE = os.environ.get('DJANGO_ENVIRONMENT', 'development') != 'development'
-CSRF_COOKIE_SECURE = os.environ.get('DJANGO_ENVIRONMENT', 'development') != 'development'
+# Cookie settings - temporarily disable secure requirements for testing
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
 
 # Whitenoise settings
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

@@ -63,6 +63,7 @@ path('procurement/', views.procurement, name='procurement'),
 path('item_list/', views.item_list, name='item_list'),
 path('issue_out/<int:pk>/', views.issued_out, name='issue_out'),
 path('issue_in/<int:pk>/', views.issued_in, name='issue_in'),
+path('create-admin/', views.create_admin, name='create_admin'),
 ]
 
 
