@@ -14,7 +14,7 @@ from datetime import *
 from django.utils import timezone
 from django.db.models import Q
 from django.db.models import Sum
-from django.db.models.functions import TruncDate
+from django.db.models.functions import TruncDate, TruncMonth
 
 
 # Create your views here.
@@ -63,19 +63,51 @@ def base(request):
 
 @login_required
 def home(request):
+    today = timezone.now().date()
+    
+    # Count queries
     count_sitters = Sitter_registration.objects.count()
+    
     count_babies_signed_out = Baby_departure.objects.filter(
-        departure_time__date=date.today()
+        created_at__date=today
     ).count()
+    
     count_sitters_signed_in = Arrivalsitter.objects.filter(
-        Arrival_Date__date=date.today()
+        Arrival_Date__date=today
     ).count()
+    
     count_babies_registered = Babie_registration.objects.filter(
-        Arrival_Date=date.today()
+        Arrival_Date=today
     ).count()
+    
     count_babies_total = count_babies_registered - count_babies_signed_out
 
-    # Define colors for the pie chart slices
+    # Chart data
+    stock_data = {}
+    items = Stock.objects.all()
+    
+    for item in items:
+        try:
+            dates = (
+                Sellingdoll.objects.filter(item=item)
+                .values('date')
+                .annotate(quantity=Sum('sold_quantity'))
+                .order_by('date')
+            )
+            
+            formatted_dates = []
+            quantities = []
+            for d in dates:
+                if d['date']:
+                    formatted_dates.append(d['date'].strftime('%Y-%m-%d'))
+                    quantities.append(d['quantity'] or 0)
+            
+            stock_data[item.item_name] = quantities
+        except Exception as e:
+            print(f"Error processing item {item.item_name}: {str(e)}")
+            stock_data[item.item_name] = []
+
+    # Chart configurations
     data_colors = {
         "tooltip": {"pointFormat": "{series.name}: <br>{point.percentage:.1f} %"},
         "plotOptions": {
@@ -89,38 +121,8 @@ def home(request):
         },
     }
 
-    baby_colors = {
-        "tooltip": {"pointFormat": "{series.name}: <br>{point.percentage:.1f} %"},
-        "plotOptions": {
-            "pie": {
-                "colors": ["#4764ae", "#3f528e"],
-                "dataLabels": {
-                    "enabled": True,
-                    "format": "<b>{point.name}</b>:<br>{point.percentage:.1f} %",
-                },
-            }
-        },
-    }
+    baby_colors = data_colors.copy()
 
-    # Prepare data for the line graph
-    stock_data = {}
-    items = Stock.objects.all()
-    for item in items:
-        dates = (
-            Sellingdoll.objects.filter(item=item)
-            .annotate(sale_date_truncated=TruncDate("date"))
-            .values("sale_date_truncated")
-            .annotate(quantity=Sum("sold_quantity"))
-            .order_by("sale_date_truncated")
-            .values_list("sale_date_truncated", "quantity")
-        )
-
-        # Transform data to fit the chart format
-        formatted_dates = [date for date, quantity in dates]
-        quantities = [quantity for date, quantity in dates]
-        stock_data[item.item_name] = quantities
-
-    # Options for the line chart
     line_chart_options = {
         "title": "Stock Management Overview",
         "yAxis": {"title": {"text": "Total Stock"}},
@@ -132,10 +134,10 @@ def home(request):
     }
 
     context = {
-        "count_sitters": count_sitters,  # Total sitters registered
-        "count_babies": count_babies_total,  # Total babies currently signed in
-        "count_babies_signed_out": count_babies_signed_out,  # Babies signed out today
-        "count_sitters_signed_in": count_sitters_signed_in,  # Sitters signed in today
+        "count_sitters": count_sitters,
+        "count_babies": count_babies_total,
+        "count_babies_signed_out": count_babies_signed_out,
+        "count_sitters_signed_in": count_sitters_signed_in,
         "data": {
             "Registered Sitters": count_sitters,
             "Signed In Sitters": count_sitters_signed_in,
