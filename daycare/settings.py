@@ -121,3 +121,14 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 LOGIN_REDIRECT_URL = "home"
 LOGIN_URL = "/login/"
+
+# Add these settings
+CSRF_TRUSTED_ORIGINS = ['https://daycare-daystar-management-system.onrender.com']
+
+# If you're using HTTPS (which Render.com provides)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# Whitenoise settings
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
