@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load chartkick %}
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<script src="http://code.highcharts.com/highcharts.js"></script>
-<script src="/static/chartkick.js"></script>
 
-<!-- Add these in the head section or at the bottom of body -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartkick@5.0.1"></script>
+<!-- Required Chart.js first -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
+<!-- Then Chartkick -->
+<script src="https://cdn.jsdelivr.net/npm/chartkick@5.0.1/dist/chartkick.min.js"></script>
+<!-- Optional date adapter if you're using time/date charts -->
+<script
+  src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 
 <style>
   body {
@@ -61,9 +62,8 @@
   .card:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
-  
-  }
 
+  }
 
   .card:first-child {
     background-color: #e3ebf6;
@@ -108,25 +108,43 @@
   }
 
   .pie-chart-container {
-    background-color: #2d9be0;
+    background-color: #f5f5f5;
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
 
   .pie-chart {
-    width: 50%;
-    /* Equal width for both pie charts */
+    width: 48%;
+    background-color: white;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
+  .charts-container {
+    background-color: #f5f5f5;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 20px;
+  }
 
-  .line-graph-container {
-  background-color: #f5f5f5;
-  padding: 20px;
-  margin-top: 20px;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
+  .chart {
+    flex: 1;
+    background-color: white;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    height: 400px;
+    width: 48%;
+    overflow: visible;
+  }
 </style>
 
 <h1>Overviews</h1>
@@ -163,7 +181,7 @@
   </div>
 </div>
 
-<h5 style="margin-top: 10px; font-weight: 700; font-style: italic;">Attendance Overview</h5>
+<h5 style="margin-top: 10px; margin-left: 20px; font-weight: 700; font-style: italic;">Attendance Overview</h5>
 <div class="pie-chart-container">
   <div class="pie-chart">
     {% pie_chart data with library=data_colors %}
@@ -173,9 +191,16 @@
   </div>
 </div>
 
-<h5 style="margin-top: 20px; font-weight: 700; font-style: italic;">Stock Management Overview</h5>
-<div class="line-graph-container">
-    {% line_chart stock_data with library=line_chart_options %}
-</div>
+<h5 style="margin-top: 20px; margin-left: 20px; font-weight: 700; font-style: italic;">Stock Management Overview</h5>
+<div class="charts-container">
+  <div class="chart">
+    <h6 style="margin-bottom: 15px; font-weight: 600;">Current Stock Levels</h6>
+    {% column_chart procurement_data with library=procurement_chart_options %}
+  </div>
 
+  <div class="chart">
+    <h6 style="margin-bottom: 15px; font-weight: 600;">Dolls Inventory</h6>
+    {% column_chart dolls_data with library=dolls_chart_options %}
+  </div>
+</div>
 {% endblock %}

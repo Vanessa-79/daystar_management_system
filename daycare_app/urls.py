@@ -64,6 +64,8 @@ path('item_list/', views.item_list, name='item_list'),
 path('issue_out/<int:pk>/', views.issued_out, name='issue_out'),
 path('issue_in/<int:pk>/', views.issued_in, name='issue_in'),
 path('create-admin/', views.create_admin, name='create_admin'),
+path('profile/', views.profile, name='profile'),
+path('update-admin/', views.update_admin, name='update_admin'),
 ]
 
 

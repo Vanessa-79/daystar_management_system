@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h2>User Profile</h2>
+            
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <div class="card mb-4">
+                <div class="card-header">
+                    Change Username
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}">
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3">Update Username</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    Change Password
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="password_change" value="1">
+                        
+                        <div class="form-group">
+                            <label for="id_old_password">Current password</label>
+                            {{ password_form.old_password }}
+                            {% if password_form.old_password.errors %}
+                            <div class="text-danger">
+                                {{ password_form.old_password.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group mt-3">
+                            <label for="id_new_password1">New password</label>
+                            {{ password_form.new_password1 }}
+                            {% if password_form.new_password1.errors %}
+                            <div class="text-danger">
+                                {{ password_form.new_password1.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group mt-3">
+                            <label for="id_new_password2">Confirm new password</label>
+                            {{ password_form.new_password2 }}
+                            {% if password_form.new_password2.errors %}
+                            <div class="text-danger">
+                                {{ password_form.new_password2.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary mt-3">Change Password</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
