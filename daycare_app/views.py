@@ -69,8 +69,6 @@ def base(request):
 
 
 @login_required
-@login_required
-@login_required
 def home(request):
     count_sitters = Sitter_registration.objects.count()
     count_babies_signed_out = Baby_departure.objects.filter(
@@ -84,12 +82,12 @@ def home(request):
     ).count()
     count_babies_total = count_babies_registered - count_babies_signed_out
 
-    # Define colors for the pie charts - using blue shades
+    # Define colors for the pie charts - using blue shades only
     chart_colors = {
         "tooltip": {"pointFormat": "{series.name}: <br>{point.percentage:.1f} %"},
         "plotOptions": {
             "pie": {
-                "colors": ["#5679C0", "#7ab0ea"],
+                "colors": ["#5679C0", "#2A4D8C"],  # Two shades of blue
                 "dataLabels": {
                     "enabled": True,
                     "format": "<b>{point.name}</b>:<br>{point.percentage:.1f} %",
@@ -101,6 +99,9 @@ def home(request):
     # Use same theme colors for both pie charts
     data_colors = chart_colors.copy()
     baby_colors = chart_colors.copy()
+
+    # Using different blues for the second chart
+    baby_colors["plotOptions"]["pie"]["colors"] = ["#3A67AD", "#1E3C78"]
 
     # Configure procurement bar chart options
     procurement_data = []
@@ -133,7 +134,7 @@ def home(request):
     # Configure dolls chart options
     dolls_chart_options = {
         "title": "Dolls Inventory",
-        "colors": ["#7ab0ea"],
+        "colors": ["#3A67AD"],  # Use a shade of blue
         "height": "350px",
         "library": {
             "chart": {"type": "column", "height": 350},
